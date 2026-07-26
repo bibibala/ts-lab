@@ -2,12 +2,12 @@ export type EventType = string | symbol
 
 export type Handler<T = unknown> = (event: T) => void
 
-export type WildcardHandler<Events extends Record<EventType, unknown>> = (
+export type WildcardHandler<Events> = (
   type: keyof Events,
   event: Events[keyof Events],
 ) => void
 
-export interface Bus<Events extends Record<EventType, unknown>> {
+export interface Bus<Events> {
   /** Map of event types to their handlers */
   all: Map<EventType, Handler[]>
 
@@ -35,7 +35,7 @@ export interface Bus<Events extends Record<EventType, unknown>> {
  * bus.emit('foo', 'hello')
  * ```
  */
-export function createBus<Events extends Record<EventType, unknown>>(
+export function createBus<Events>(
   all?: Map<EventType, Handler[]>,
 ): Bus<Events> {
   const map = all ?? new Map()
@@ -78,7 +78,7 @@ export function createBus<Events extends Record<EventType, unknown>>(
       const wildcards = map.get('*')
       if (wildcards) {
         for (const handler of wildcards) {
-          ;(handler as WildcardHandler<Events>)(type, event!)
+          ;(handler as WildcardHandler<Events>)(type as keyof Events, event!)
         }
       }
     },
