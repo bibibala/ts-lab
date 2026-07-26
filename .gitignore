@@ -14,3 +14,4 @@ temp
 reasonix.toml
 .reasonix
 .pnpm-store/
+.npmrc

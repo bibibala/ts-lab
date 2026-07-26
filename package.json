@@ -1,5 +1,5 @@
 {
-  "name": "ts-lab",
+  "name": "@bilibaba/ts-lab",
   "type": "module",
   "version": "0.0.1",
   "packageManager": "pnpm@11.15.1",
