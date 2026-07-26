@@ -8,6 +8,14 @@ export interface Bus<Events> {
   on: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
   off: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
 }
+export interface NetworkInfo {
+  online: boolean;
+  effectiveType: string;
+  downlink: number;
+  rtt: number;
+  saveData: boolean;
+  connectionType: string;
+}
 export interface TreeNode {
   id?: string | number;
   children?: TreeNode[];
@@ -23,6 +31,7 @@ export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events])
 
 // #region Functions
 export declare function createBus<Events>(_?: Map<EventType, Handler[]>): Bus<Events>;
+export declare function getNetworkInfo(): NetworkInfo;
 export declare function getObjById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
 export declare function getParentNodes<T extends Record<string, any> = TreeNode>(_: T[], _: (string | number)[], _?: string, _?: string): T[];
 export declare function getPathById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T[] | null;

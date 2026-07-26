@@ -55,6 +55,28 @@ bus.emit('login', 'bibibala')
 bus.off('login', handler)
 ```
 
+### Clipboard
+
+Write a base64-encoded image to the clipboard. Falls back to downloading the image if the Clipboard API is unavailable.
+
+```ts
+import { writeImgToClipboard } from '@bilibaba/ts-lab'
+
+await writeImgToClipboard('data:image/png;base64,iVBOR...')
+```
+
+### Network
+
+Get current network environment info based on the browser's Network Information API. Prints a warning and returns defaults in non-browser environments.
+
+```ts
+import { getNetworkInfo } from '@bilibaba/ts-lab'
+
+const info = getNetworkInfo()
+console.log(info.online) // true
+console.log(info.effectiveType) // '4g'
+```
+
 ## API
 
 ### `recursion`
@@ -76,6 +98,19 @@ bus.off('login', handler)
 | `bus.off(type, handler)` | Remove an event handler |
 | `bus.emit(type, event?)` | Emit an event |
 | `bus.all` | Internal `Map` of all handlers (shareable across instances) |
+
+### `clipboard`
+
+| Function | Description |
+|---|---|
+| `writeImgToClipboard(src)` | Write a base64-encoded image to the clipboard, supports png/jpeg/jpg/gif |
+
+### `network`
+
+| Export | Description |
+|---|---|
+| `getNetworkInfo()` | Get current network info (online status, connection type, speed estimates) |
+| `NetworkInfo` | Interface describing the network state shape |
 
 ## License
 

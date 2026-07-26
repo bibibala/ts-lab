@@ -3,6 +3,7 @@
  */
 // #region Functions
 export function createBus(_) {}
+export function getNetworkInfo() {}
 export function getObjById(_, _, _, _) {}
 export function getParentNodes(_, _, _, _) {}
 export function getPathById(_, _, _, _) {}
