@@ -11,3 +11,6 @@ logs
 node_modules
 skills/npm-*
 temp
+reasonix.toml
+.reasonix
+.pnpm-store/
