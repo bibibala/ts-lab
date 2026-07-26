@@ -11,7 +11,7 @@ A collection of utility functions for everyday TypeScript development.
 ## Install
 
 ```bash
-pnpm add ts-lab
+pnpm add @bilibaba/ts-lab
 ```
 
 ## Modules
@@ -21,7 +21,7 @@ pnpm add ts-lab
 Tree traversal utilities.
 
 ```ts
-import { getObjById, getParentNodes, getPathById, getTopLevelNode } from 'ts-lab'
+import { getObjById, getParentNodes, getPathById, getTopLevelNode } from '@bilibaba/ts-lab'
 
 const tree = [
   { id: 1, children: [{ id: 11, children: [{ id: 111 }] }] },
@@ -39,7 +39,7 @@ getTopLevelNode(tree, 111) // { id: 1 }
 Lightweight event bus.
 
 ```ts
-import { createBus } from 'ts-lab'
+import { createBus } from '@bilibaba/ts-lab'
 
 interface Events { login: string, logout: void }
 
@@ -83,13 +83,13 @@ bus.off('login', handler)
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/ts-lab?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmx.dev/package/ts-lab
-[npm-downloads-src]: https://img.shields.io/npm/dm/ts-lab?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmx.dev/package/ts-lab
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/ts-lab?style=flat&colorA=080f12&colorB=1fa669&label=minzip
-[bundle-href]: https://bundlephobia.com/result?p=ts-lab
+[npm-version-src]: https://img.shields.io/npm/v/@bilibaba/ts-lab?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://www.npmjs.com/package/@bilibaba/ts-lab
+[npm-downloads-src]: https://img.shields.io/npm/dm/@bilibaba/ts-lab?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://www.npmjs.com/package/@bilibaba/ts-lab
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/@bilibaba/ts-lab?style=flat&colorA=080f12&colorB=1fa669&label=minzip
+[bundle-href]: https://bundlephobia.com/result?p=@bilibaba/ts-lab
 [license-src]: https://img.shields.io/github/license/bibibala/ts-lab.svg?style=flat&colorA=080f12&colorB=1fa669
 [license-href]: https://github.com/bibibala/ts-lab/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
-[jsdocs-href]: https://www.jsdocs.io/package/ts-lab
+[jsdocs-href]: https://www.jsdocs.io/package/@bilibaba/ts-lab
