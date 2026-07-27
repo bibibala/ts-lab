@@ -3,6 +3,7 @@
  */
 // #region Functions
 export function createBus(_) {}
+export function detectEnv(_) {}
 export function exposeAction(_, _, _) {}
 export function exposeData(_, _, _) {}
 export function exposeForm(_, _, _) {}
@@ -15,4 +16,8 @@ export function getTopLevelNode(_, _, _, _) {}
 export function isWebMCPSupported() {}
 export function registerTool(_, _) {}
 export async function writeImgToClipboard(_) {}
+// #endregion
+
+// #region Variables
+export var uiFeedback /* const */
 // #endregion

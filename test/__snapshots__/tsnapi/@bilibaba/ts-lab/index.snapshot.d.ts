@@ -8,6 +8,15 @@ export interface Bus<Events> {
   on: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
   off: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
 }
+export interface EnvResult {
+  isQQ: boolean;
+  isWechat: boolean;
+  isIOS: boolean;
+  isAndroid: boolean;
+  isInApp: boolean;
+  isBrowser: boolean;
+  ua: string;
+}
 export interface ExposeDataOptions<T extends Record<string, unknown>> {
   idField: keyof T;
   searchFields: (keyof T)[];
@@ -75,11 +84,13 @@ export interface WebMCPToolDefinition<T = Record<string, unknown>> {
 export type DataTool = 'search' | 'get' | 'add' | 'delete' | 'stats';
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (_: T) => void;
+export type ToastPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
 // #endregion
 
 // #region Functions
 export declare function createBus<Events>(_?: Map<EventType, Handler[]>): Bus<Events>;
+export declare function detectEnv(_?: string): EnvResult;
 export declare function exposeAction<T extends Record<string, unknown> = Record<string, never>>(_: string, _: (_: T) => Promise<void>, _: {
   description: string;
   params?: Record<string, FieldSchema>;
@@ -104,4 +115,8 @@ export declare function registerTool<T = Record<string, unknown>>(_: WebMCPToolD
   signal?: AbortSignal;
 }): boolean;
 export declare function writeImgToClipboard(_: string): Promise<void>;
+// #endregion
+
+// #region Variables
+export declare const uiFeedback: UIFeedback;
 // #endregion

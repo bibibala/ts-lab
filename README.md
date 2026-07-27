@@ -55,6 +55,41 @@ bus.emit('login', 'bibibala')
 bus.off('login', handler)
 ```
 
+### Env
+
+Detect the current runtime environment from the browser's User-Agent string: WeChat, QQ, iOS, Android, in-app webview, or plain browser.
+
+```ts
+import { detectEnv } from '@bilibaba/ts-lab'
+
+const env = detectEnv('MyAppWebView')
+console.log(env.isWechat) // true if inside WeChat
+console.log(env.isQQ) // true if inside QQ
+console.log(env.isIOS) // true on iOS devices
+console.log(env.isAndroid) // true on Android devices
+console.log(env.isInApp) // true when matching the custom appFlag
+console.log(env.isBrowser) // true only when not in any shell
+```
+
+### Feedback
+
+Singleton Toast + Loading utility. Manages its own DOM and styles — zero UI framework dependency.
+
+```ts
+import { uiFeedback } from '@bilibaba/ts-lab'
+
+// Toast
+uiFeedback.success('Saved!')
+uiFeedback.error('Something went wrong')
+uiFeedback.warning('Please check your input')
+uiFeedback.info('Here is a tip')
+uiFeedback.toast({ message: 'Custom', type: 'success', duration: 3000 })
+
+// Loading (supports nested calls)
+uiFeedback.showLoading('Loading...')
+uiFeedback.hideLoading()
+```
+
 ### Clipboard
 
 Write a base64-encoded image to the clipboard. Falls back to downloading the image if the Clipboard API is unavailable.
@@ -222,6 +257,26 @@ onUnmounted(() => controller.abort()) // → all tools unregistered
 | Function | Description |
 |---|---|
 | `writeImgToClipboard(src)` | Write a base64-encoded image to the clipboard, supports png/jpeg/jpg/gif |
+
+### `env`
+
+| Export | Description |
+|---|---|
+| `detectEnv(appFlag?)` | Detect runtime environment from User-Agent |
+| `EnvResult` | Interface for the environment detection result |
+
+### `feedback`
+
+| Export | Description |
+|---|---|
+| `uiFeedback` | Singleton instance for Toast + Loading |
+| `uiFeedback.toast(options)` | Show a toast notification (supports string shorthand) |
+| `uiFeedback.success(msg, duration?)` | Show a success toast |
+| `uiFeedback.error(msg, duration?)` | Show an error toast |
+| `uiFeedback.warning(msg, duration?)` | Show a warning toast |
+| `uiFeedback.info(msg, duration?)` | Show an info toast |
+| `uiFeedback.showLoading(text?)` | Show a full-screen loading mask (supports nested calls) |
+| `uiFeedback.hideLoading(force?)` | Hide the loading mask (force=true skips counter) |
 
 ### `network`
 
