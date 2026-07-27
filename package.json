@@ -1,9 +1,9 @@
 {
   "name": "@bilibaba/ts-lab",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "pnpm@11.15.1",
-  "description": "",
+  "description": "Browser utility library — WebMCP tool registration, event bus, clipboard, network info, tree traversal",
   "author": "bibibala <1140918095@qq.com>",
   "license": "MIT",
   "homepage": "https://github.com/bibibala/ts-lab#readme",
@@ -16,7 +16,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "keywords": [],
+  "keywords": ["webmcp", "mcp", "chrome-devtools-mcp", "ai-agent", "browser", "event-bus", "clipboard", "network", "tree", "utilities", "typescript"],
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",

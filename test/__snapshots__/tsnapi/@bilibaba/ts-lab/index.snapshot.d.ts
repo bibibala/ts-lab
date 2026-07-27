@@ -8,6 +8,25 @@ export interface Bus<Events> {
   on: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
   off: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
 }
+export interface ExposeDataOptions<T extends Record<string, unknown>> {
+  idField: keyof T;
+  searchFields: (keyof T)[];
+  fields?: Record<string, FieldSchema>;
+  tools?: DataTool[];
+  prefix?: string;
+  signal?: AbortSignal;
+}
+export interface ExposeFormOptions {
+  description: string;
+  fields: Record<string, FieldSchema>;
+  required?: string[];
+  allowSubmit?: boolean;
+  onSubmit?: () => Promise<void> | void;
+}
+export interface FieldSchema {
+  type: 'string' | 'number' | 'boolean';
+  description: string;
+}
 export interface NetworkInfo {
   online: boolean;
   effectiveType: string;
@@ -16,14 +35,44 @@ export interface NetworkInfo {
   saveData: boolean;
   connectionType: string;
 }
+export interface ToolError {
+  error: string;
+}
 export interface TreeNode {
   id?: string | number;
   children?: TreeNode[];
   [key: string]: any;
 }
+export interface WebMCPContentBlock {
+  type: 'text';
+  text: string;
+}
+export interface WebMCPExecuteResult {
+  content: WebMCPContentBlock[];
+}
+export interface WebMCPInputSchema {
+  type: 'object';
+  properties: Record<string, {
+    type: string;
+    description: string;
+  }>;
+  required?: string[];
+}
+export interface WebMCPModelContext {
+  registerTool: (_: WebMCPToolDefinition, _?: {
+    signal?: AbortSignal;
+  }) => void;
+}
+export interface WebMCPToolDefinition<T = Record<string, unknown>> {
+  name: string;
+  description: string;
+  inputSchema: WebMCPInputSchema;
+  execute: (_: T) => Promise<WebMCPExecuteResult>;
+}
 // #endregion
 
 // #region Types
+export type DataTool = 'search' | 'get' | 'add' | 'delete' | 'stats';
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (_: T) => void;
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
@@ -31,10 +80,28 @@ export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events])
 
 // #region Functions
 export declare function createBus<Events>(_?: Map<EventType, Handler[]>): Bus<Events>;
+export declare function exposeAction<T extends Record<string, unknown> = Record<string, never>>(_: string, _: (_: T) => Promise<void>, _: {
+  description: string;
+  params?: Record<string, FieldSchema>;
+  required?: string[];
+  signal?: AbortSignal;
+}): boolean;
+export declare function exposeData<T extends Record<string, unknown>>(_: string, _: T[] | (() => T[]), _: ExposeDataOptions<T>): boolean;
+export declare function exposeForm<T extends Record<string, unknown>>(_: string, _: T, _: ExposeFormOptions): boolean;
+export declare function exposeFunction<T extends Record<string, unknown>>(_: string, _: (_: T) => Promise<unknown>, _: {
+  description: string;
+  params?: Record<string, FieldSchema>;
+  required?: string[];
+  signal?: AbortSignal;
+}): boolean;
 export declare function getNetworkInfo(): NetworkInfo;
 export declare function getObjById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
 export declare function getParentNodes<T extends Record<string, any> = TreeNode>(_: T[], _: (string | number)[], _?: string, _?: string): T[];
 export declare function getPathById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T[] | null;
 export declare function getTopLevelNode<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
+export declare function isWebMCPSupported(): boolean;
+export declare function registerTool<T = Record<string, unknown>>(_: WebMCPToolDefinition<T>, _?: {
+  signal?: AbortSignal;
+}): boolean;
 export declare function writeImgToClipboard(_: string): Promise<void>;
 // #endregion

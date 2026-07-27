@@ -3,10 +3,16 @@
  */
 // #region Functions
 export function createBus(_) {}
+export function exposeAction(_, _, _) {}
+export function exposeData(_, _, _) {}
+export function exposeForm(_, _, _) {}
+export function exposeFunction(_, _, _) {}
 export function getNetworkInfo() {}
 export function getObjById(_, _, _, _) {}
 export function getParentNodes(_, _, _, _) {}
 export function getPathById(_, _, _, _) {}
 export function getTopLevelNode(_, _, _, _) {}
+export function isWebMCPSupported() {}
+export function registerTool(_, _) {}
 export async function writeImgToClipboard(_) {}
 // #endregion

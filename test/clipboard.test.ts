@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { writeImgToClipboard } from '../src/clipboard'
+import { writeImgToClipboard } from '../src/browser/clipboard'
 
 describe('writeImgToClipboard', () => {
   let clipboardWrite: ReturnType<typeof vi.fn>

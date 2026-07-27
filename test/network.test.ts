@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getNetworkInfo } from '../src/network'
+import { getNetworkInfo } from '../src/browser/network'
 
 describe('network', () => {
   describe('getNetworkInfo', () => {

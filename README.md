@@ -77,6 +77,124 @@ console.log(info.online) // true
 console.log(info.effectiveType) // '4g'
 ```
 
+### WebMCP
+
+Expose page data as WebMCP tools so AI agents (via `chrome-devtools-mcp`) can discover and call them.
+Requires **Chrome 149+** with `chrome://flags/#webmcp` and `chrome://flags/#devtools-webmcp-support` enabled.
+
+#### Quick start — `exposeData`
+
+Given an array, auto-generate search, add, delete, and stats tools:
+
+```ts
+import { exposeData } from '@bilibaba/ts-lab'
+
+const ORDERS = [
+  { id: 'SO-1001', customer: 'Alice', amount: 1280, status: 'shipped' },
+  { id: 'SO-1002', customer: 'Bob', amount: 560, status: 'pending' },
+]
+
+exposeData('orders', ORDERS, {
+  idField: 'id',
+  searchFields: ['id', 'customer'],
+  fields: {
+    id: { type: 'string', description: 'Order ID' },
+    customer: { type: 'string', description: 'Customer name' },
+    amount: { type: 'number', description: 'Order amount' },
+    status: { type: 'string', description: 'Order status' },
+  },
+})
+// → registers: orders_search, orders_add, orders_delete, orders_stats
+```
+
+#### `exposeFunction` — expose a single function
+
+```ts
+import { exposeFunction } from '@bilibaba/ts-lab'
+
+exposeFunction('greet', async ({ name }: { name: string }) => {
+  return { greeting: `Hello, ${name}!` }
+}, {
+  description: 'Say hello',
+  params: { name: { type: 'string', description: 'Your name' } },
+  required: ['name'],
+})
+```
+
+#### `exposeAction` — UI actions (open dialog, switch tab, etc.)
+
+```ts
+import { exposeAction } from '@bilibaba/ts-lab'
+import { ref } from 'vue'
+
+const dialogOpen = ref(false)
+
+exposeAction('openInvoiceDialog', async () => {
+  dialogOpen.value = true
+}, { description: 'Open the create-invoice dialog' })
+
+exposeAction('closeInvoiceDialog', async () => {
+  dialogOpen.value = false
+}, { description: 'Close the create-invoice dialog' })
+```
+
+#### `exposeForm` — fill a form (with optional auto-submit)
+
+```ts
+import { exposeForm } from '@bilibaba/ts-lab'
+import { reactive } from 'vue'
+
+const form = reactive({ customer: '', amount: 0, taxRate: 0 })
+
+exposeForm('invoiceForm', form, {
+  description: 'Fill the invoice form fields',
+  fields: {
+    customer: { type: 'string', description: 'Customer name' },
+    amount: { type: 'number', description: 'Invoice amount' },
+    taxRate: { type: 'number', description: 'Tax rate, e.g. 0.06' },
+  },
+  required: ['customer', 'amount'],
+  allowSubmit: true, // default false — only let AI submit low-risk forms
+  onSubmit: () => submitInvoice(form),
+})
+// → registers invoiceForm_fill, invoiceForm_submit
+```
+
+#### `registerTool` — full control
+
+```ts
+import { registerTool } from '@bilibaba/ts-lab'
+
+registerTool({
+  name: 'customAction',
+  description: 'Do something custom',
+  inputSchema: {
+    type: 'object',
+    properties: { x: { type: 'number', description: 'A number' } },
+    required: ['x'],
+  },
+  async execute({ x }) {
+    return { content: [{ type: 'text', text: `Result: ${x * 2}` }] }
+  },
+})
+```
+
+#### Cleanup with `AbortSignal` (Vue / React)
+
+```ts
+const controller = new AbortController()
+
+onMounted(() => {
+  exposeData('orders', ORDERS, {
+    idField: 'id',
+    searchFields: ['id'],
+    signal: controller.signal,
+  })
+})
+
+onUnmounted(() => controller.abort()) // → all tools unregistered
+```
+
 ## API
 
 ### `recursion`
@@ -111,6 +229,20 @@ console.log(info.effectiveType) // '4g'
 |---|---|
 | `getNetworkInfo()` | Get current network info (online status, connection type, speed estimates) |
 | `NetworkInfo` | Interface describing the network state shape |
+
+### `webmcp`
+
+| Export | Description |
+|---|---|
+| `exposeData(name, data, options)` | Expose an array as CRUD tools (search / add / delete / stats) |
+| `exposeFunction(name, fn, opts)` | Expose a single async function as a WebMCP tool |
+| `exposeAction(name, fn, opts)` | Expose a UI action (dialog, tab, toggle) — returns `{ done: true }` |
+| `exposeForm(name, state, opts)` | Expose a form as fill + optional submit tools |
+| `registerTool(definition, opts?)` | Register a fully custom WebMCP tool |
+| `isWebMCPSupported()` | Check whether the current browser supports WebMCP |
+| `FieldSchema` | Per-field metadata type (`string` \| `number` \| `boolean`) |
+| `ExposeDataOptions<T>` | Options type for `exposeData` |
+| `DataTool` | Generated tool union type (`'search'` \| `'get'` \| `'add'` \| `'delete'` \| `'stats'`) |
 
 ## License
 
