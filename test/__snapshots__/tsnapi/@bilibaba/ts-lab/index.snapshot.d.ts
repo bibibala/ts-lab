@@ -160,12 +160,7 @@ export declare function isSecureContext(): boolean;
 export declare function isWebMCPSupported(): boolean;
 export declare function isWritableMimeType(_: string): boolean;
 export declare function onClipboardEvent(_: ClipboardDomEventName, _: (_: ClipboardEventPayload) => void, _?: HTMLElement | Document): () => void;
-export declare function onFilePaste(_: (_: ProcessedPastedFile[], _: ClipboardEventPayload) => void, _?: OnFilePasteOptions & {
-  processed?: true;
-}, _?: HTMLElement | Document): () => void;
-export declare function onFilePaste(_: (_: File[], _: ClipboardEventPayload) => void, _: OnFilePasteOptions & {
-  processed: false;
-}, _?: HTMLElement | Document): () => void;
+export declare function onFilePaste(_: (_: ProcessedPastedFile[] | File[], _: ClipboardEventPayload) => void, _?: OnFilePasteOptions, _?: HTMLElement | Document): () => void;
 export declare function processPastedFiles(_: File[]): ProcessedPastedFile[];
 export declare function queryClipboardPermission(_: 'clipboard-read' | 'clipboard-write'): Promise<ClipboardPermissionState>;
 export declare function readImage(): Promise<Blob | null>;
