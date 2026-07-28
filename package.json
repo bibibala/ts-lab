@@ -1,7 +1,7 @@
 {
   "name": "@bilibaba/ts-lab",
   "type": "module",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "packageManager": "pnpm@11.15.1",
   "description": "Browser utility library — WebMCP tool registration, event bus, clipboard, network info, tree traversal",
   "author": "bibibala <1140918095@qq.com>",
@@ -31,7 +31,7 @@
     "dev": "tsdown --watch",
     "lint": "eslint --fix",
     "prepack": "nr build",
-    "release": "CI=true bumpp --yes",
+    "release": "CI=true bumpp",
     "start": "tsx src/index.ts",
     "test": "pnpm run build && vitest",
     "typecheck": "tsc",
