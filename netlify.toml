@@ -5,6 +5,4 @@ command = "pnpm install --frozen-lockfile && pnpm --filter docs run docs:build"
 publish = "docs/.vitepress/dist"
 
 [build.environment]
-NODE_VERSION = "20"
-# 启用 pnpm（Netlify 会根据此变量自动安装）
-PNPM_VERSION = "9"
+NODE_VERSION = "22"
