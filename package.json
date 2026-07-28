@@ -31,7 +31,7 @@
     "dev": "tsdown --watch",
     "lint": "eslint --fix",
     "prepack": "nr build",
-    "release": "bumpp",
+    "release": "CI=true bumpp",
     "start": "tsx src/index.ts",
     "test": "pnpm run build && vitest",
     "typecheck": "tsc",
