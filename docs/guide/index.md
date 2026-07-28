@@ -34,7 +34,7 @@ src/
 |------|------|
 | [Recursion](/api/recursion) | 树形数据遍历：按 ID 查找、获取父节点、路径追溯 |
 | [Bus](/api/bus) | 类型安全的轻量事件总线 |
-| [Clipboard](/api/browser/clipboard) | Base64 图片写入剪贴板 |
+| [Clipboard](/api/browser/clipboard/) | 文本 / HTML / 图片读写、文件粘贴、剪切 |
 | [Env](/api/browser/env) | 浏览器 UA 环境检测（微信 / QQ / iOS / Android） |
 | [Feedback](/api/browser/feedback) | 单例 Toast + Loading，零 UI 框架依赖 |
 | [Network](/api/browser/network) | 获取当前网络状态信息 |
@@ -49,7 +49,10 @@ import {
   getObjById,
   getNetworkInfo,
   uiFeedback,
-  writeImgToClipboard,
+  writeText,
+  readText,
+  writeImage,
+  onFilePaste,
   exposeData,
 } from '@bilibaba/ts-lab'
 ```

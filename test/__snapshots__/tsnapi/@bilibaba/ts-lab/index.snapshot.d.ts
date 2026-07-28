@@ -8,6 +8,20 @@ export interface Bus<Events> {
   on: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
   off: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
 }
+export interface ClipboardContentItem {
+  type: ClipboardMimeType;
+  data: string | Blob;
+}
+export interface ClipboardEventPayload {
+  originalEvent: ClipboardEvent;
+  text: string | null;
+  html: string | null;
+  files: File[];
+}
+export interface ClipboardReadItem {
+  type: ClipboardMimeType;
+  blob: Blob;
+}
 export interface EnvResult {
   isQQ: boolean;
   isWechat: boolean;
@@ -43,6 +57,20 @@ export interface NetworkInfo {
   rtt: number;
   saveData: boolean;
   connectionType: string;
+}
+export interface OnFilePasteOptions {
+  processed?: boolean;
+  preventDefault?: boolean;
+}
+export interface ProcessedPastedFile {
+  id: string;
+  file: File;
+  name: string;
+  size: number;
+  formattedSize: string;
+  mimeType: string;
+  isImage: boolean;
+  previewUrl: string | null;
 }
 export interface ToolError {
   error: string;
@@ -81,6 +109,9 @@ export interface WebMCPToolDefinition<T = Record<string, unknown>> {
 // #endregion
 
 // #region Types
+export type ClipboardErrorCode = 'NOT_SUPPORTED' | 'PERMISSION_DENIED' | 'NOT_FOCUSED' | 'EMPTY_CLIPBOARD' | 'INSECURE_CONTEXT' | 'UNSUPPORTED_MIME_TYPE' | 'UNKNOWN';
+export type ClipboardMimeType = 'text/plain' | 'text/html' | 'image/png' | 'image/jpeg' | 'image/gif' | 'image/svg+xml' | (string & {});
+export type ClipboardPermissionState = 'granted' | 'denied' | 'prompt' | 'unknown';
 export type DataTool = 'search' | 'get' | 'add' | 'delete' | 'stats';
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (_: T) => void;
@@ -88,8 +119,18 @@ export type ToastPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'botto
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
 // #endregion
 
+// #region Classes
+export declare class ClipboardError extends Error {
+  code: ClipboardErrorCode;
+  cause?: unknown;
+  constructor(_: ClipboardErrorCode, _: string, _?: unknown);
+}
+// #endregion
+
 // #region Functions
 export declare function createBus<Events>(_?: Map<EventType, Handler[]>): Bus<Events>;
+export declare function cutFromInput(_: HTMLInputElement | HTMLTextAreaElement): Promise<string>;
+export declare function cutText(_: string): Promise<void>;
 export declare function detectEnv(_?: string): EnvResult;
 export declare function exposeAction<T extends Record<string, unknown> = Record<string, never>>(_: string, _: (_: T) => Promise<void>, _: {
   description: string;
@@ -105,18 +146,43 @@ export declare function exposeFunction<T extends Record<string, unknown>>(_: str
   required?: string[];
   signal?: AbortSignal;
 }): boolean;
+export declare function formatFileSize(_: number): string;
+export declare function generateId(): string;
 export declare function getNetworkInfo(): NetworkInfo;
 export declare function getObjById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
 export declare function getParentNodes<T extends Record<string, any> = TreeNode>(_: T[], _: (string | number)[], _?: string, _?: string): T[];
 export declare function getPathById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T[] | null;
 export declare function getTopLevelNode<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
+export declare function isClipboardApiSupported(): boolean;
+export declare function isExecCommandSupported(): boolean;
+export declare function isRichClipboardSupported(): boolean;
+export declare function isSecureContext(): boolean;
 export declare function isWebMCPSupported(): boolean;
+export declare function isWritableMimeType(_: string): boolean;
+export declare function onClipboardEvent(_: ClipboardDomEventName, _: (_: ClipboardEventPayload) => void, _?: HTMLElement | Document): () => void;
+export declare function onFilePaste(_: (_: ProcessedPastedFile[], _: ClipboardEventPayload) => void, _?: OnFilePasteOptions & {
+  processed?: true;
+}, _?: HTMLElement | Document): () => void;
+export declare function onFilePaste(_: (_: File[], _: ClipboardEventPayload) => void, _: OnFilePasteOptions & {
+  processed: false;
+}, _?: HTMLElement | Document): () => void;
+export declare function processPastedFiles(_: File[]): ProcessedPastedFile[];
+export declare function queryClipboardPermission(_: 'clipboard-read' | 'clipboard-write'): Promise<ClipboardPermissionState>;
+export declare function readImage(): Promise<Blob | null>;
+export declare function readRich(): Promise<ClipboardReadItem[]>;
+export declare function readText(): Promise<string>;
 export declare function registerTool<T = Record<string, unknown>>(_: WebMCPToolDefinition<T>, _?: {
   signal?: AbortSignal;
 }): boolean;
-export declare function writeImgToClipboard(_: string): Promise<void>;
+export declare function revokePastedFilePreview(_: ProcessedPastedFile): void;
+export declare function writeFile(_: File): Promise<void>;
+export declare function writeHtml(_: string, _?: string): Promise<void>;
+export declare function writeImage(_: Blob, _?: ClipboardMimeType): Promise<void>;
+export declare function writeRich(_: ClipboardContentItem[]): Promise<void>;
+export declare function writeText(_: string): Promise<void>;
 // #endregion
 
 // #region Variables
 export declare const uiFeedback: UIFeedback;
+export declare const WRITABLE_MIME_TYPES: readonly string[];
 // #endregion

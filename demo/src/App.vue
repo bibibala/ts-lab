@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import InvoiceDemo from './components/InvoiceDemo.vue'
+import ClipboardDemo from './components/ClipboardDemo.vue'
 import FeedbackDemo from './components/FeedbackDemo.vue'
+import InvoiceDemo from './components/InvoiceDemo.vue'
 
-const activeTab = ref<'invoice' | 'feedback'>('invoice')
+const activeTab = ref<'invoice' | 'feedback' | 'clipboard'>('clipboard')
 </script>
 
 <template>
@@ -23,10 +24,17 @@ const activeTab = ref<'invoice' | 'feedback'>('invoice')
       >
         🔔 Feedback · Toast &amp; Loading
       </button>
+      <button
+        :class="['tab', { active: activeTab === 'clipboard' }]"
+        @click="activeTab = 'clipboard'"
+      >
+        📋 Clipboard
+      </button>
     </nav>
 
     <InvoiceDemo v-if="activeTab === 'invoice'" />
     <FeedbackDemo v-if="activeTab === 'feedback'" />
+    <ClipboardDemo v-if="activeTab === 'clipboard'" />
   </div>
 </template>
 
@@ -45,7 +53,7 @@ h1 { font-size: 20px; margin-bottom: 16px; }
   background: #fff; font-size: 13px; font-weight: 500; cursor: pointer;
   color: #666; transition: background .15s, color .15s;
 }
-.tab:first-child { border-right: 1px solid #d0d0d0; }
+.tab:not(:last-child) { border-right: 1px solid #d0d0d0; }
 .tab.active { background: #1967d2; color: #fff; }
 .tab:not(.active):hover { background: #f0f0f0; }
 </style>
