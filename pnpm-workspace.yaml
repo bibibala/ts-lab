@@ -6,7 +6,10 @@ minimumReleaseAgeExclude:
   - bumpp@12.0.0
 shellEmulator: true
 
-trustPolicy: no-downgrade
+trustPolicy:
+  default: no-downgrade
+  exceptions:
+    vite: allow-downgrade
 
 packages:
   - playground
