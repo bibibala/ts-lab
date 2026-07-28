@@ -6,7 +6,7 @@
   "description": "Browser utility library — WebMCP tool registration, event bus, clipboard, network info, tree traversal",
   "author": "bibibala <1140918095@qq.com>",
   "license": "MIT",
-  "homepage": "https://github.com/bibibala/ts-lab#readme",
+  "homepage": "https://ts-lab.netlify.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bibibala/ts-lab.git"
