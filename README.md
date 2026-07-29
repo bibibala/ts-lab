@@ -25,7 +25,7 @@
 
 ## 📖 文档
 
-完整 API 文档请访问：**[ts-lab 文档站](https://ts-lab.pages.dev/)**
+完整 API 文档请访问：**[ts-lab 文档站](https://ts-lab.netlify.app/)**
 
 ## 📦 安装
 
