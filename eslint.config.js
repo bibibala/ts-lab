@@ -7,6 +7,6 @@ export default antfu(
     pnpm: true,
   },
   {
-    ignores: ['docs/**'],
+    ignores: ['docs/**', 'src/wasm/image/fun.js'],
   },
 )

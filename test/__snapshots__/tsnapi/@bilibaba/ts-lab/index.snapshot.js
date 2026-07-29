@@ -20,11 +20,16 @@ export function exposeForm(_, _, _) {}
 export function exposeFunction(_, _, _) {}
 export function formatFileSize(_) {}
 export function generateId() {}
+export async function getIcns(_) {}
+export async function getIco(_) {}
+export async function getImageBoth(_) {}
 export function getNetworkInfo() {}
 export function getObjById(_, _, _, _) {}
 export function getParentNodes(_, _, _, _) {}
 export function getPathById(_, _, _, _) {}
+export async function getPngs(_) {}
 export function getTopLevelNode(_, _, _, _) {}
+export async function initModule() {}
 export function isClipboardApiSupported() {}
 export function isExecCommandSupported() {}
 export function isRichClipboardSupported() {}

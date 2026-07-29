@@ -44,6 +44,13 @@ const zhSidebar = [
       { text: 'Loading', link: '/api/browser/feedback/loading' },
     ],
   },
+  {
+    text: 'WASM',
+    collapsed: false,
+    items: [
+      { text: '图片转图标', link: '/api/wasm/image' },
+    ],
+  },
 ]
 
 export default defineConfig({

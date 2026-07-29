@@ -23,18 +23,6 @@
 - **🌐 浏览器原生** — 基于 Clipboard API、Navigator、WebMCP 等现代浏览器能力
 - **📦 模块化** — 按需导入，`@bilibaba/ts-lab/browser` / `bus` / `recursion` 独立入口
 
-## 📚 模块概览
-
-| 模块 | 说明 |
-|---|---|
-| **browser/clipboard** | 剪贴板读写（文本 / HTML / 图片 / 文件）、剪切、粘贴监听 |
-| **browser/env** | UA 环境检测（微信 / QQ / iOS / Android / 浏览器） |
-| **browser/feedback** | Toast 提示与 Loading 遮罩，零依赖自管理 DOM |
-| **browser/network** | 网络状态读取（在线状态、网络类型、下行速率、RTT） |
-| **browser/webmcp** | Chrome WebMCP 工具注册（exposeData / exposeForm / exposeFunction） |
-| **bus** | 类型安全的发布/订阅事件总线，支持 `'*'` 通配符 |
-| **recursion** | 树形结构遍历查找（按 id 查找、获取路径、父子关系） |
-
 ## 📖 文档
 
 完整 API 文档请访问：**[ts-lab 文档站](https://ts-lab.pages.dev/)**

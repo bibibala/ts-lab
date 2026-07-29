@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@bilibaba/ts-lab": "workspace:*",
+    "jszip": "^3.10.1",
     "vue": "^3.5.40"
   },
   "devDependencies": {

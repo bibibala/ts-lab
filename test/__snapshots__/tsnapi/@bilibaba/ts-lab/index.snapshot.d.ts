@@ -148,11 +148,20 @@ export declare function exposeFunction<T extends Record<string, unknown>>(_: str
 }): boolean;
 export declare function formatFileSize(_: number): string;
 export declare function generateId(): string;
+export declare function getIcns(_: Uint8Array): Promise<Uint8Array>;
+export declare function getIco(_: Uint8Array): Promise<Uint8Array>;
+export declare function getImageBoth(_: Uint8Array): Promise<{
+  ico: Uint8Array;
+  icns: Uint8Array;
+  pngs: Record<number, Uint8Array>;
+}>;
 export declare function getNetworkInfo(): NetworkInfo;
 export declare function getObjById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
 export declare function getParentNodes<T extends Record<string, any> = TreeNode>(_: T[], _: (string | number)[], _?: string, _?: string): T[];
 export declare function getPathById<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T[] | null;
+export declare function getPngs(_: Uint8Array): Promise<Record<number, Uint8Array>>;
 export declare function getTopLevelNode<T extends Record<string, any> = TreeNode>(_: T[], _: string | number, _?: string, _?: string): T | null;
+export declare function initModule(): Promise<WasmModule>;
 export declare function isClipboardApiSupported(): boolean;
 export declare function isExecCommandSupported(): boolean;
 export declare function isRichClipboardSupported(): boolean;

@@ -2,9 +2,10 @@
 import { ref } from 'vue'
 import ClipboardDemo from './components/ClipboardDemo.vue'
 import FeedbackDemo from './components/FeedbackDemo.vue'
+import IconDemo from './components/IconDemo.vue'
 import InvoiceDemo from './components/InvoiceDemo.vue'
 
-const activeTab = ref<'invoice' | 'feedback' | 'clipboard'>('clipboard')
+const activeTab = ref<'invoice' | 'feedback' | 'clipboard' | 'icon'>('clipboard')
 </script>
 
 <template>
@@ -30,11 +31,18 @@ const activeTab = ref<'invoice' | 'feedback' | 'clipboard'>('clipboard')
       >
         📋 Clipboard
       </button>
+      <button
+        :class="['tab', { active: activeTab === 'icon' }]"
+        @click="activeTab = 'icon'"
+      >
+        🖼️ 图片转图标
+      </button>
     </nav>
 
     <InvoiceDemo v-if="activeTab === 'invoice'" />
     <FeedbackDemo v-if="activeTab === 'feedback'" />
     <ClipboardDemo v-if="activeTab === 'clipboard'" />
+    <IconDemo v-if="activeTab === 'icon'" />
   </div>
 </template>
 
