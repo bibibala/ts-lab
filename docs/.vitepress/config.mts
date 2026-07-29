@@ -31,9 +31,17 @@ const zhSidebar = [
         ],
       },
       { text: '运行环境识别', link: '/api/browser/env' },
-      { text: 'Toast 与 Loading', link: '/api/browser/feedback' },
       { text: '网络状态读取', link: '/api/browser/network' },
       { text: 'WebMCP 工具暴露', link: '/api/browser/webmcp' },
+    ],
+  },
+  {
+    text: 'UI 组件',
+    collapsed: false,
+    items: [
+      { text: '概览', link: '/api/browser/feedback/' },
+      { text: 'Toast', link: '/api/browser/feedback/toast' },
+      { text: 'Loading', link: '/api/browser/feedback/loading' },
     ],
   },
 ]
@@ -43,12 +51,16 @@ export default defineConfig({
   title: 'ts-lab',
   description: '浏览器工具库 — WebMCP、事件总线、剪贴板、网络信息、树遍历',
 
+  head: [
+    ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
+  ],
+
   themeConfig: {
+    logo: '/logo.svg',
     search: { provider: 'local' },
     sidebarMenuLabel: '菜单',
     nav: [
-      { text: '指南', link: '/guide/' },
-      { text: '工具函数', link: '/api/recursion' },
+      { text: '指南', link: '/guide/' }
     ],
     sidebar: zhSidebar,
     socialLinks: [

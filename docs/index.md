@@ -5,6 +5,9 @@ hero:
   name: ts-lab
   text: TypeScript 工具实验室
   tagline: 一组轻量、零依赖、面向浏览器与数据处理场景的 TypeScript 工具集。
+  image:
+    src: /logo.svg
+    alt: ts-lab
   actions:
     - theme: brand
       text: 快速开始

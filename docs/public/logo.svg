@@ -1,0 +1,17 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>ts-lab logo</title>
+<desc>A rounded square badge logo for ts-lab, a TypeScript utility library. It combines angle brackets, the letters TS, and a small flask icon representing a lab.</desc>
+
+<rect x="0" y="0" width="240" height="240" rx="48" fill="#0f172a"/>
+
+<text x="25.6" y="128" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="96" fill="#2dd4bf">&lt;</text>
+<text x="214.4" y="128" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="96" fill="#2dd4bf" text-anchor="end">&gt;</text>
+
+<text x="120" y="142.4" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="73.6" fill="#f8fafc" text-anchor="middle">TS</text>
+
+<g>
+<rect x="182.4" y="166.4" width="20.8" height="14.4" rx="3.2" fill="none" stroke="#2dd4bf" stroke-width="3.2"/>
+<path d="M184 180.8 L184 193.6 L169.6 214.4 Q165.6 220.8 172.8 220.8 L212.8 220.8 Q220 220.8 216 214.4 L201.6 193.6 L201.6 180.8 Z" fill="none" stroke="#2dd4bf" stroke-width="3.2" stroke-linejoin="round"/>
+<path d="M172.8 201.6 L212.8 201.6 L215.2 205.6 Q217.6 209.6 214.4 212.8 L172.8 212.8 Q168 209.6 171.2 205.6 Z" fill="#fbbf24"/>
+</g>
+</svg>

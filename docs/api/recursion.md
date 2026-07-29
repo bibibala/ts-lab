@@ -1,4 +1,4 @@
-# Recursion · 树遍历
+# Recursion · 树形数据查询
 
 树形数据结构的遍历工具集。
 
