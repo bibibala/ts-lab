@@ -36,7 +36,7 @@ src/
 | [Bus](/api/bus) | 类型安全的轻量事件总线 |
 | [Clipboard](/api/browser/clipboard/) | 文本 / HTML / 图片读写、文件粘贴、剪切 |
 | [Env](/api/browser/env) | 浏览器 UA 环境检测（微信 / QQ / iOS / Android） |
-| [Feedback](/api/browser/feedback) | 单例 Toast + Loading，零 UI 框架依赖 |
+| [Feedback](/api/browser/feedback/) | 单例 Toast + Loading，零 UI 框架依赖 |
 | [Network](/api/browser/network) | 获取当前网络状态信息 |
 | [WebMCP](/api/browser/webmcp) | 将页面数据暴露为 WebMCP 工具供 AI Agent 调用 |
 
