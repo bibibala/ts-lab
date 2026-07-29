@@ -1,7 +1,7 @@
 {
   "name": "@bilibaba/ts-lab",
   "type": "module",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "packageManager": "pnpm@11.15.1",
   "description": "Browser utility library — WebMCP tool registration, event bus, clipboard, network info, tree traversal",
   "author": "bibibala <1140918095@qq.com>",
