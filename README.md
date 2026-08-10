@@ -23,10 +23,6 @@
 - **🌐 浏览器原生** — 基于 Clipboard API、Navigator、WebMCP 等现代浏览器能力
 - **📦 模块化** — 按需导入，`@bilibaba/ts-lab/browser` / `bus` / `recursion` 独立入口
 
-## 📖 文档
-
-完整 API 文档请访问：**[ts-lab 文档站](https://ts-lab.netlify.app/)**
-
 ## 📦 安装
 
 ```bash

@@ -13,7 +13,7 @@ export class ClipboardError extends Error {
 export function createBus(_) {}
 export async function cutFromInput(_) {}
 export async function cutText(_) {}
-export function detectEnv(_) {}
+export async function detectEnv(_) {}
 export function exposeAction(_, _, _) {}
 export function exposeData(_, _, _) {}
 export function exposeForm(_, _, _) {}

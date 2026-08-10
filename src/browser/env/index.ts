@@ -1,47 +1,133 @@
 /**
- * Environment detection result
+ * Operating system type
  */
-export interface EnvResult {
-  isQQ: boolean // QQ built-in browser / QQ App
-  isWechat: boolean // WeChat built-in browser
-  isIOS: boolean // iOS device
-  isAndroid: boolean // Android device
-  isInApp: boolean // Inside own app's webview
-  isBrowser: boolean // Plain external browser (not in any of the above shells)
-  ua: string // Raw UA string for debugging
+export type OSType = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown'
+
+/**
+ * CPU architecture type
+ */
+export type ArchType = 'arm64' | 'x64' | 'x86' | 'unknown'
+
+/**
+ * Unified environment detection result — OS, CPU architecture, and runtime
+ * container (WeChat / QQ / app webview / browser).
+ */
+export interface EnvInfo {
+  /** Detected operating system */
+  os: OSType
+  /** CPU architecture — resolved via UACH API when available, otherwise best-effort from UA */
+  arch: ArchType
+  /** QQ built-in browser / QQ App */
+  isQQ: boolean
+  /** WeChat built-in browser */
+  isWechat: boolean
+  /** Inside own app's webview (via UA-injected appFlag) */
+  isInApp: boolean
+  /** Plain external browser (not in any of the above shells) */
+  isBrowser: boolean
+  /** Raw UA string for debugging */
+  ua: string
 }
 
 /**
- * Detect the current runtime environment from the browser's User-Agent.
- * @param appFlag Custom identifier injected by your own app in the User-Agent,
- *                e.g. the native side appends "MyApp/1.0.0" or "MyAppWebView"
- *                to the UA. Agree on this string with the client team.
- *                Defaults to a common example value.
+ * Detect the full runtime environment: OS, CPU architecture, and which
+ * container (WeChat / QQ / app webview / plain browser) the code runs in.
+ *
+ * Architecture detection tries the User-Agent Client Hints API first; when
+ * unavailable it falls back to UA / platform heuristics.
+ *
+ * @param appFlag Custom string your native app injects into the User-Agent,
+ *                e.g. `"MyAppWebView"`. Used to detect in-app webview.
  */
-export function detectEnv(appFlag: string = 'MyAppWebView'): EnvResult {
+export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvInfo> {
   const ua = navigator.userAgent || ''
   const lowerUA = ua.toLowerCase()
+  const platform = navigator.platform || ''
+  const uaData = (navigator as any).userAgentData
 
-  const isIOS = /iphone|ipad|ipod/i.test(ua)
-  const isAndroid = /android/i.test(ua)
+  const appFlagLower = appFlag.toLowerCase()
 
-  const isWechat = /micromessenger/i.test(lowerUA)
-  // QQ browser or QQ App built-in (note: qq/ usually QQ App, mqqbrowser is QQ Browser)
+  // ---- OS ----------------------------------------------------------------
+  let os: OSType
+
+  if (/iphone|ipad|ipod/i.test(ua) || /iphone|ipad|ipod/i.test(platform)) {
+    os = 'ios'
+  }
+  else if (/android/i.test(ua) || /android/i.test(platform)) {
+    os = 'android'
+  }
+  else if (/mac\sos\sx|macintosh/i.test(ua) || platform === 'MacIntel' || platform === 'MacPPC') {
+    os = 'macos'
+  }
+  else if (/windows\snt|win(?:dows|32|64)/i.test(ua) || platform === 'Win32' || platform === 'Win64') {
+    os = 'windows'
+  }
+  else if (/linux/i.test(ua) || /linux/i.test(platform)) {
+    os = 'linux'
+  }
+  else {
+    os = 'unknown'
+  }
+
+  // ---- Architecture ------------------------------------------------------
+  let arch: ArchType = 'unknown'
+
+  // 1. Try UACH API for precise architecture
+  if (uaData?.getHighEntropyValues) {
+    try {
+      const { architecture } = await uaData.getHighEntropyValues(['architecture'])
+      if (architecture) {
+        const a = architecture.toLowerCase()
+        if (a === 'arm' || a.includes('arm')) {
+          arch = 'arm64'
+        }
+        else if (a === 'x86') {
+          arch = 'x86'
+        }
+        else {
+          arch = 'x64'
+        }
+      }
+    }
+    catch {
+      // API failed — fall through to UA heuristics
+    }
+  }
+
+  // 2. Fallback: parse arch from UA
+  if (arch === 'unknown') {
+    if (/arm64|aarch64/i.test(ua)) {
+      arch = 'arm64'
+    }
+    else if (/\barm\b/i.test(ua)) {
+      arch = 'arm64'
+    }
+    else if (/x86_64|amd64|x64|win64|wow64/i.test(ua)) {
+      arch = 'x64'
+    }
+    else if (/i[3-6]86/i.test(ua)) {
+      arch = 'x86'
+    }
+  }
+
+  // 3. Still unknown — infer from OS context
+  if (arch === 'unknown') {
+    if (os === 'macos') {
+      arch = uaData?.platform === 'macOS' ? 'arm64' : 'x64'
+    }
+    else if (os === 'ios' || os === 'android') {
+      arch = 'arm64'
+    }
+    else {
+      arch = 'x64'
+    }
+  }
+
+  // ---- Container ---------------------------------------------------------
   const isQQ = /\sqq\//i.test(ua) || /mqqbrowser/i.test(lowerUA) || /qqtheme/i.test(lowerUA)
-
-  // In-app webview detection, relies on the client-injected appFlag
-  const isInApp = appFlag ? lowerUA.includes(appFlag.toLowerCase()) : false
-
-  // Only treat as "plain browser" when WeChat / QQ / in-app are all absent
+  const isWechat = /micromessenger/i.test(lowerUA)
+  const isInApp = lowerUA.includes(appFlagLower)
   const isBrowser = !isWechat && !isQQ && !isInApp
 
-  return {
-    isQQ,
-    isWechat,
-    isIOS,
-    isAndroid,
-    isInApp,
-    isBrowser,
-    ua,
-  }
+  return { os, arch, isQQ, isWechat, isInApp, isBrowser, ua }
 }

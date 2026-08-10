@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ClipboardDemo from './components/ClipboardDemo.vue'
+import EnvDemo from './components/EnvDemo.vue'
 import FeedbackDemo from './components/FeedbackDemo.vue'
 import IconDemo from './components/IconDemo.vue'
 import InvoiceDemo from './components/InvoiceDemo.vue'
 
-const activeTab = ref<'invoice' | 'feedback' | 'clipboard' | 'icon'>('clipboard')
+const activeTab = ref<'invoice' | 'feedback' | 'clipboard' | 'icon' | 'env'>('clipboard')
 </script>
 
 <template>
@@ -37,12 +38,19 @@ const activeTab = ref<'invoice' | 'feedback' | 'clipboard' | 'icon'>('clipboard'
       >
         🖼️ 图片转图标
       </button>
+      <button
+        :class="['tab', { active: activeTab === 'env' }]"
+        @click="activeTab = 'env'"
+      >
+        🌐 环境检测
+      </button>
     </nav>
 
     <InvoiceDemo v-if="activeTab === 'invoice'" />
     <FeedbackDemo v-if="activeTab === 'feedback'" />
     <ClipboardDemo v-if="activeTab === 'clipboard'" />
     <IconDemo v-if="activeTab === 'icon'" />
+    <EnvDemo v-if="activeTab === 'env'" />
   </div>
 </template>
 
