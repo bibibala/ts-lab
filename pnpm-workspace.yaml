@@ -8,6 +8,8 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 
+trustLockfile: true
+
 packages:
   - playground
   - docs
