@@ -8,10 +8,6 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 
-# trustPolicy removed — pnpm 11 treats provenance-attestation as weaker than
-# trusted-publisher, which blocks transitive deps like vite@5.4.21 (pulled by
-# vitepress). Disabling avoids spurious supply-chain blocks on every install.
-
 packages:
   - playground
   - docs
