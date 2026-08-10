@@ -15,7 +15,8 @@ const osLabel: Record<string, string> = {
 }
 
 const archLabel: Record<string, string> = {
-  arm64: 'ARM64 (Apple Silicon / Snapdragon)',
+  arm64: 'ARM64 (Apple Silicon / Snapdragon X)',
+  arm: 'ARM (32-bit, ARMv7+)',
   x64: 'x64 (Intel / AMD 64-bit)',
   x86: 'x86 (Intel 32-bit)',
   unknown: '未知架构',
@@ -43,6 +44,11 @@ onMounted(async () => {
         <h2>🔧 CPU 架构</h2>
         <div class="value">{{ archLabel[env.arch] ?? env.arch }}</div>
         <div class="meta">arch: {{ env.arch }}</div>
+      </div>
+
+      <div v-if="env.osVersion" class="card">
+        <h2>📌 系统版本</h2>
+        <div class="value">{{ env.osVersion }}</div>
       </div>
 
       <div class="card">

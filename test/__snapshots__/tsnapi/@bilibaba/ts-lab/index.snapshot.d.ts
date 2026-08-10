@@ -25,6 +25,7 @@ export interface ClipboardReadItem {
 export interface EnvInfo {
   os: OS;
   arch: Arch;
+  osVersion: string | null;
   isQQ: boolean;
   isWechat: boolean;
   isInApp: boolean;
@@ -109,7 +110,7 @@ export interface WebMCPToolDefinition<T = Record<string, unknown>> {
 // #endregion
 
 // #region Types
-export type Arch = 'arm64' | 'x64' | 'x86' | 'unknown';
+export type Arch = 'arm64' | 'arm' | 'x64' | 'x86' | 'unknown';
 export type ClipboardErrorCode = 'NOT_SUPPORTED' | 'PERMISSION_DENIED' | 'NOT_FOCUSED' | 'EMPTY_CLIPBOARD' | 'INSECURE_CONTEXT' | 'UNSUPPORTED_MIME_TYPE' | 'UNKNOWN';
 export type ClipboardMimeType = 'text/plain' | 'text/html' | 'image/png' | 'image/jpeg' | 'image/gif' | 'image/svg+xml' | (string & {});
 export type ClipboardPermissionState = 'granted' | 'denied' | 'prompt' | 'unknown';

@@ -4,9 +4,17 @@
 export type OS = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown'
 
 /**
- * CPU architecture type
+ * CPU architecture detected in the browser.
+ *
+ * Common values:
+ * - `arm64` — Apple Silicon (M1–M4), Snapdragon X, AWS Graviton, etc.
+ * - `arm`   — 32-bit ARM (ARMv7, legacy Android / Raspberry Pi)
+ * - `x64`   — 64-bit Intel / AMD (x86-64, amd64)
+ * - `x86`   — 32-bit Intel / AMD (i386–i686, legacy)
+ *
+ * Falls back to `"unknown"` when no UA / UACH signal is available.
  */
-export type Arch = 'arm64' | 'x64' | 'x86' | 'unknown'
+export type Arch = 'arm64' | 'arm' | 'x64' | 'x86' | 'unknown'
 
 /**
  * Unified environment detection result — OS, CPU architecture, and runtime
@@ -17,6 +25,8 @@ export interface EnvInfo {
   os: OS
   /** CPU architecture — resolved via UACH API when available, otherwise best-effort from UA */
   arch: Arch
+  /** OS version when detectable, e.g. "15.3" / "10.0.22631" / "17.5" / "14". null on Linux or unknown. */
+  osVersion: string | null
   /** QQ built-in browser / QQ App */
   isQQ: boolean
   /** WeChat built-in browser */
@@ -69,25 +79,17 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
     os = 'unknown'
   }
 
-  // ---- Architecture ------------------------------------------------------
+  // ---- Architecture + OS version (UACH) ----------------------------------
   let arch: Arch = 'unknown'
+  let uachVersion: string | null = null
 
-  // 1. Try UACH API for precise architecture
   if (uaData?.getHighEntropyValues) {
     try {
-      const { architecture } = await uaData.getHighEntropyValues(['architecture'])
-      if (architecture) {
-        const a = architecture.toLowerCase()
-        if (a === 'arm' || a.includes('arm')) {
-          arch = 'arm64'
-        }
-        else if (a === 'x86') {
-          arch = 'x86'
-        }
-        else {
-          arch = 'x64'
-        }
+      const hints = await uaData.getHighEntropyValues(['architecture', 'platformVersion'])
+      if (hints.architecture) {
+        arch = normalizeArch(hints.architecture, ua)
       }
+      uachVersion = hints.platformVersion ?? null
     }
     catch {
       // API failed — fall through to UA heuristics
@@ -100,7 +102,7 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
       arch = 'arm64'
     }
     else if (/\barm\b/i.test(ua)) {
-      arch = 'arm64'
+      arch = 'arm'
     }
     else if (/x86_64|amd64|x64|win64|wow64/i.test(ua)) {
       arch = 'x64'
@@ -129,5 +131,56 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
   const isInApp = lowerUA.includes(appFlagLower)
   const isBrowser = !isWechat && !isQQ && !isInApp
 
-  return { os, arch, isQQ, isWechat, isInApp, isBrowser, ua }
+  // ---- OS version (UACH first, UA fallback) ------------------------------
+  const osVersion = uachVersion ?? parseOSVersion(ua, os)
+
+  return { os, arch, osVersion, isQQ, isWechat, isInApp, isBrowser, ua }
+}
+
+/**
+ * Normalize the free-form architecture string from UACH into a canonical
+ * {@link Arch} value, cross-referencing the UA for ARM bit-width disambiguation.
+ */
+function normalizeArch(raw: string, ua: string): Arch {
+  const a = raw.toLowerCase()
+
+  if (a === 'arm') {
+    // UACH often reports "arm" for both 32-bit and 64-bit ARM.
+    // Use UA signals (arm64/aarch64 vs standalone ARM) to decide bit-width.
+    return /arm64|aarch64/i.test(ua) ? 'arm64' : 'arm'
+  }
+  if (a.includes('arm'))
+    return 'arm64' // arm64, aarch64, etc.
+  if (a === 'x86')
+    return 'x86'
+  if (a === 'ia64')
+    return 'x64' // Itanium → treated as x64-compatible
+  return 'x64' // x86_64, amd64, x64, etc.
+}
+
+/**
+ * Parse OS version from User-Agent string. Returns null when unknown
+ * (common on Linux, or when the UA omits version info like macOS ≥10.15).
+ */
+function parseOSVersion(ua: string, os: OS): string | null {
+  switch (os) {
+    case 'macos': {
+      const m = ua.match(/Mac OS X (\d+[._]\d+(?:[._]\d+)?)/)
+      return m ? m[1].replace(/_/g, '.') : null
+    }
+    case 'ios': {
+      const m = ua.match(/(?:iPhone|iPad|iPod) OS (\d+[._]\d+(?:[._]\d+)?)/)
+      return m ? m[1].replace(/_/g, '.') : null
+    }
+    case 'android': {
+      const m = ua.match(/Android (\d+(?:\.\d+)*)/)
+      return m ? m[1] : null
+    }
+    case 'windows': {
+      const m = ua.match(/Windows NT (\d+\.\d+)/)
+      return m ? m[1] : null
+    }
+    default:
+      return null
+  }
 }
