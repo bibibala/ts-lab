@@ -25,8 +25,6 @@ export interface EnvInfo {
   os: OS
   /** CPU architecture — resolved via UACH API when available, otherwise best-effort from UA */
   arch: Arch
-  /** OS version when detectable, e.g. "15.3" / "10.0.22631" / "17.5" / "14". null on Linux or unknown. */
-  osVersion: string | null
   /** QQ built-in browser / QQ App */
   isQQ: boolean
   /** WeChat built-in browser */
@@ -79,17 +77,15 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
     os = 'unknown'
   }
 
-  // ---- Architecture + OS version (UACH) ----------------------------------
+  // ---- Architecture (UACH first, UA fallback) ----------------------------
   let arch: Arch = 'unknown'
-  let uachVersion: string | null = null
 
   if (uaData?.getHighEntropyValues) {
     try {
-      const hints = await uaData.getHighEntropyValues(['architecture', 'platformVersion'])
-      if (hints.architecture) {
-        arch = normalizeArch(hints.architecture, ua)
+      const { architecture } = await uaData.getHighEntropyValues(['architecture'])
+      if (architecture) {
+        arch = normalizeArch(architecture, ua)
       }
-      uachVersion = hints.platformVersion ?? null
     }
     catch {
       // API failed — fall through to UA heuristics
@@ -131,10 +127,7 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
   const isInApp = lowerUA.includes(appFlagLower)
   const isBrowser = !isWechat && !isQQ && !isInApp
 
-  // ---- OS version (UACH first, UA fallback) ------------------------------
-  const osVersion = uachVersion ?? parseOSVersion(ua, os)
-
-  return { os, arch, osVersion, isQQ, isWechat, isInApp, isBrowser, ua }
+  return { os, arch, isQQ, isWechat, isInApp, isBrowser, ua }
 }
 
 /**
@@ -156,31 +149,4 @@ function normalizeArch(raw: string, ua: string): Arch {
   if (a === 'ia64')
     return 'x64' // Itanium → treated as x64-compatible
   return 'x64' // x86_64, amd64, x64, etc.
-}
-
-/**
- * Parse OS version from User-Agent string. Returns null when unknown
- * (common on Linux, or when the UA omits version info like macOS ≥10.15).
- */
-function parseOSVersion(ua: string, os: OS): string | null {
-  switch (os) {
-    case 'macos': {
-      const m = ua.match(/Mac OS X (\d+[._]\d+(?:[._]\d+)?)/)
-      return m ? m[1].replace(/_/g, '.') : null
-    }
-    case 'ios': {
-      const m = ua.match(/(?:iPhone|iPad|iPod) OS (\d+[._]\d+(?:[._]\d+)?)/)
-      return m ? m[1].replace(/_/g, '.') : null
-    }
-    case 'android': {
-      const m = ua.match(/Android (\d+(?:\.\d+)*)/)
-      return m ? m[1] : null
-    }
-    case 'windows': {
-      const m = ua.match(/Windows NT (\d+\.\d+)/)
-      return m ? m[1] : null
-    }
-    default:
-      return null
-  }
 }

@@ -46,11 +46,6 @@ onMounted(async () => {
         <div class="meta">arch: {{ env.arch }}</div>
       </div>
 
-      <div v-if="env.osVersion" class="card">
-        <h2>📌 系统版本</h2>
-        <div class="value">{{ env.osVersion }}</div>
-      </div>
-
       <div class="card">
         <h2>📦 运行时容器</h2>
         <div class="tags">

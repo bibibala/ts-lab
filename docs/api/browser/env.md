@@ -18,7 +18,6 @@ function detectEnv(appFlag?: string): Promise<EnvInfo>
 interface EnvInfo {
   os: OS                // 操作系统类型
   arch: Arch            // CPU 架构（优先走 UACH API，降级为 UA 推断）
-  osVersion: string | null  // OS 版本号，Linux 上通常为 null
   isQQ: boolean         // QQ 内置浏览器 / QQ App
   isWechat: boolean     // 微信内置浏览器
   isInApp: boolean      // 匹配 appFlag 的自定义 App WebView
@@ -56,7 +55,6 @@ const env = await detectEnv('MyAppWebView')
 
 // 操作系统
 console.log(env.os)        // 'macos' | 'windows' | 'ios' | ...
-console.log(env.osVersion) // "15.3" / "10.0.22631" / "17.5" / null
 // CPU 架构
 console.log(env.arch)      // 'arm64' | 'arm' | 'x64' | 'x86' | 'unknown'
 // 运行时容器
@@ -70,5 +68,4 @@ console.log(env.isBrowser)  // 在普通浏览器中
 
 - **OS**：通过 `navigator.userAgent` + `navigator.platform` 综合判断。
 - **架构**：优先使用 [User-Agent Client Hints](https://developer.mozilla.org/en-US/docs/Web/API/User-Agent_Client_Hints_API) 异步获取精确架构；不可用时通过 UA 关键字 + OS 上下文推断。UACH 返回 `"arm"` 时会交叉比对 UA 中的 `arm64`/`aarch64` 信号来区分 32/64 位 ARM。
-- **版本**：通过 UACH `platformVersion` 获取；不可用时解析 UA（macOS / iOS / Android / Windows NT）。
 - **容器**：`isBrowser` 为 `true` 时不在微信、QQ 或自定义 App WebView 中。

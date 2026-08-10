@@ -25,7 +25,6 @@ export interface ClipboardReadItem {
 export interface EnvInfo {
   os: OS;
   arch: Arch;
-  osVersion: string | null;
   isQQ: boolean;
   isWechat: boolean;
   isInApp: boolean;
