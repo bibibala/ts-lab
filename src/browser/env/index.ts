@@ -1,12 +1,12 @@
 /**
  * Operating system type
  */
-export type OSType = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown'
+export type OS = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown'
 
 /**
  * CPU architecture type
  */
-export type ArchType = 'arm64' | 'x64' | 'x86' | 'unknown'
+export type Arch = 'arm64' | 'x64' | 'x86' | 'unknown'
 
 /**
  * Unified environment detection result — OS, CPU architecture, and runtime
@@ -14,9 +14,9 @@ export type ArchType = 'arm64' | 'x64' | 'x86' | 'unknown'
  */
 export interface EnvInfo {
   /** Detected operating system */
-  os: OSType
+  os: OS
   /** CPU architecture — resolved via UACH API when available, otherwise best-effort from UA */
-  arch: ArchType
+  arch: Arch
   /** QQ built-in browser / QQ App */
   isQQ: boolean
   /** WeChat built-in browser */
@@ -48,7 +48,7 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
   const appFlagLower = appFlag.toLowerCase()
 
   // ---- OS ----------------------------------------------------------------
-  let os: OSType
+  let os: OS
 
   if (/iphone|ipad|ipod/i.test(ua) || /iphone|ipad|ipod/i.test(platform)) {
     os = 'ios'
@@ -70,7 +70,7 @@ export async function detectEnv(appFlag: string = 'MyAppWebView'): Promise<EnvIn
   }
 
   // ---- Architecture ------------------------------------------------------
-  let arch: ArchType = 'unknown'
+  let arch: Arch = 'unknown'
 
   // 1. Try UACH API for precise architecture
   if (uaData?.getHighEntropyValues) {

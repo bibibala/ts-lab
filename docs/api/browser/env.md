@@ -16,8 +16,8 @@ function detectEnv(appFlag?: string): Promise<EnvInfo>
 
 ```ts
 interface EnvInfo {
-  os: OSType          // 操作系统类型
-  arch: ArchType      // CPU 架构（优先走 UACH API，降级为 UA 推断）
+  os: OS              // 操作系统类型
+  arch: Arch          // CPU 架构（优先走 UACH API，降级为 UA 推断）
   isQQ: boolean       // QQ 内置浏览器 / QQ App
   isWechat: boolean   // 微信内置浏览器
   isInApp: boolean    // 匹配 appFlag 的自定义 App WebView
@@ -26,16 +26,16 @@ interface EnvInfo {
 }
 ```
 
-## OSType
+## OS
 
 ```ts
-type OSType = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown'
+type OS = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown'
 ```
 
-## ArchType
+## Arch
 
 ```ts
-type ArchType = 'arm64' | 'x64' | 'x86' | 'unknown'
+type Arch = 'arm64' | 'x64' | 'x86' | 'unknown'
 ```
 
 ## 使用示例

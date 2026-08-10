@@ -23,8 +23,8 @@ export interface ClipboardReadItem {
   blob: Blob;
 }
 export interface EnvInfo {
-  os: OSType;
-  arch: ArchType;
+  os: OS;
+  arch: Arch;
   isQQ: boolean;
   isWechat: boolean;
   isInApp: boolean;
@@ -109,14 +109,14 @@ export interface WebMCPToolDefinition<T = Record<string, unknown>> {
 // #endregion
 
 // #region Types
-export type ArchType = 'arm64' | 'x64' | 'x86' | 'unknown';
+export type Arch = 'arm64' | 'x64' | 'x86' | 'unknown';
 export type ClipboardErrorCode = 'NOT_SUPPORTED' | 'PERMISSION_DENIED' | 'NOT_FOCUSED' | 'EMPTY_CLIPBOARD' | 'INSECURE_CONTEXT' | 'UNSUPPORTED_MIME_TYPE' | 'UNKNOWN';
 export type ClipboardMimeType = 'text/plain' | 'text/html' | 'image/png' | 'image/jpeg' | 'image/gif' | 'image/svg+xml' | (string & {});
 export type ClipboardPermissionState = 'granted' | 'denied' | 'prompt' | 'unknown';
 export type DataTool = 'search' | 'get' | 'add' | 'delete' | 'stats';
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (_: T) => void;
-export type OSType = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown';
+export type OS = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown';
 export type ToastPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
 // #endregion
