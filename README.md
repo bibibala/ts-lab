@@ -29,13 +29,6 @@
 pnpm add @bilibaba/ts-lab
 ```
 
-```ts
-import { readText, writeText } from '@bilibaba/ts-lab'
-
-await writeText('Hello ts-lab!')
-const text = await readText()
-```
-
 ## License
 
 [MIT](./LICENSE) License © [bibibala](https://github.com/bibibala)
