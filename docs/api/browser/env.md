@@ -23,7 +23,6 @@ onMounted(async () => { env.value = await detectEnv() })
   margin: 16px 0 24px;
   background: var(--vp-c-bg-soft);
 }
-.env-demo h3 { margin: 0 0 12px; font-size: 14px; color: var(--vp-c-text-2); }
 .env-grid { display: flex; gap: 24px; flex-wrap: wrap; }
 .env-item { display: flex; flex-direction: column; }
 .env-item .label { font-size: 12px; color: var(--vp-c-text-3); }
@@ -37,11 +36,8 @@ onMounted(async () => { env.value = await detectEnv() })
 .env-ua { margin-top: 12px; font-size: 11px; color: var(--vp-c-text-3); word-break: break-all; }
 </style>
 
-## 实时检测
-
 <ClientOnly>
   <div class="env-demo">
-    <h3>当前浏览器环境</h3>
     <div v-if="env" class="env-grid">
       <div class="env-item">
         <span class="label">操作系统</span>
