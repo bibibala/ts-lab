@@ -1,3 +1,64 @@
+<script setup>
+import { ref } from 'vue'
+import { getIco, initModule } from '@bilibaba/ts-lab'
+
+const loading = ref(false)
+const result = ref(null)
+const error = ref('')
+
+async function handleFile(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  loading.value = true; error.value = ''; result.value = null
+  try {
+    await initModule()
+    const buf = await file.arrayBuffer()
+    const ico = await getIco(new Uint8Array(buf))
+    const blob = new Blob([ico], { type: 'image/x-icon' })
+    result.value = {
+      size: (blob.size / 1024).toFixed(1),
+      url: URL.createObjectURL(blob),
+    }
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+<style>
+.wasm-demo {
+  border: 1px solid var(--vp-c-divider); border-radius: 8px;
+  padding: 16px 20px; margin: 16px 0 24px; background: var(--vp-c-bg-soft);
+}
+.wasm-upload { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.wasm-btn {
+  padding: 6px 16px; border: none; border-radius: 6px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: var(--vp-c-brand-1); color: #fff;
+}
+.wasm-result { margin-top: 12px; font-size: 13px; }
+.wasm-result img { max-height: 64px; display: block; margin-top: 4px; border-radius: 4px; }
+.wasm-error { color: #ef4444; font-size: 12px; margin-top: 8px; }
+</style>
+
+<ClientOnly>
+  <div class="wasm-demo">
+    <div class="wasm-upload">
+      <input type="file" accept="image/png" @change="handleFile" />
+      <span v-if="loading" style="font-size:13px">⏳ 转换中…</span>
+    </div>
+    <div v-if="result" class="wasm-result">
+      ✅ ICO 文件 {{ result.size }} KB
+      <img :src="result.url" />
+    </div>
+    <div v-if="error" class="wasm-error">{{ error }}</div>
+  </div>
+</ClientOnly>
+
+---
+
 # Image · 图片转图标
 
 基于 WebAssembly 的图片格式转换工具，将 PNG 转换为 ICO（Windows 图标）、ICNS（macOS 图标）以及多尺寸 PNG。

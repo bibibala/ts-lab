@@ -63,6 +63,8 @@ onMounted(async () => { env.value = await detectEnv() })
 
 # Env · 环境检测
 
+基于 [Navigator.userAgent](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/userAgent) + [User-Agent Client Hints API](https://developer.mozilla.org/en-US/docs/Web/API/User-Agent_Client_Hints_API)
+
 检测浏览器运行环境：操作系统、CPU 架构、以及所在容器（微信 / QQ / App WebView / 普通浏览器）。
 
 ## detectEnv

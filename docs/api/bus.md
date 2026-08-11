@@ -1,3 +1,56 @@
+<script setup>
+import { ref } from 'vue'
+import { createBus } from '@bilibaba/ts-lab'
+
+const bus = createBus()
+const logs = ref([])
+const count = ref(0)
+
+bus.on('ping', (msg) => {
+  count.value++
+  logs.value.push(`[ping] ${msg}`)
+})
+bus.on('clear', () => { logs.value = []; count.value = 0 })
+
+function send() { bus.emit('ping', `消息 #${count.value + 1}`) }
+function clearLogs() { bus.emit('clear') }
+</script>
+
+<style>
+.bus-demo {
+  border: 1px solid var(--vp-c-divider); border-radius: 8px;
+  padding: 16px 20px; margin: 16px 0 24px; background: var(--vp-c-bg-soft);
+}
+.bus-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.bus-btn {
+  padding: 6px 16px; border: none; border-radius: 6px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: var(--vp-c-brand-1); color: #fff;
+}
+.bus-log {
+  margin-top: 8px; max-height: 120px; overflow-y: auto;
+  font-size: 12px; font-family: monospace; color: var(--vp-c-text-2);
+  border: 1px solid var(--vp-c-divider); border-radius: 4px;
+  padding: 6px 10px; background: var(--vp-c-bg);
+}
+.bus-count { font-size: 13px; color: var(--vp-c-text-3); margin-left: 8px; }
+</style>
+
+<ClientOnly>
+  <div class="bus-demo">
+    <div class="bus-row">
+      <button class="bus-btn" @click="send">触发 ping 事件</button>
+      <button class="bus-btn" @click="clearLogs">清空</button>
+      <span class="bus-count">收到 {{ count }} 条消息</span>
+    </div>
+    <div v-if="logs.length" class="bus-log">
+      <div v-for="(l, i) in logs" :key="i">{{ l }}</div>
+    </div>
+  </div>
+</ClientOnly>
+
+---
+
 # Bus · 事件总线
 
 类型安全的轻量级事件总线，支持通配符监听、重复注册检测、跨实例共享。

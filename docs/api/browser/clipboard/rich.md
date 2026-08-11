@@ -1,3 +1,57 @@
+<script setup>
+import { ref } from 'vue'
+import { writeHtml, readRich } from '@bilibaba/ts-lab'
+
+const htmlText = ref('')
+const plainText = ref('')
+const result = ref('')
+
+async function copyRich() {
+  await writeHtml(
+    `<p style="color:#1967d2;font-size:16px"><b>${htmlText.value || '一条富文本'}</b></p>`,
+    plainText.value || htmlText.value || ('纯文本回退：' + (htmlText.value || '一条富文本')),
+  )
+}
+async function read() {
+  const items = await readRich()
+  result.value = items.map(i => `${i.type} (${(i.blob.size / 1024).toFixed(1)} KB)`).join(', ')
+}
+</script>
+
+<style>
+.rich-demo {
+  border: 1px solid var(--vp-c-divider); border-radius: 8px;
+  padding: 16px 20px; margin: 16px 0 24px; background: var(--vp-c-bg-soft);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.rich-demo input {
+  padding: 6px 10px; border: 1px solid var(--vp-c-divider);
+  border-radius: 6px; font-size: 13px;
+}
+.rich-row { display: flex; gap: 8px; }
+.rich-btn {
+  padding: 6px 16px; border: none; border-radius: 6px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  background: var(--vp-c-brand-1); color: #fff;
+}
+.rich-info { font-size: 12px; color: var(--vp-c-text-3); }
+</style>
+
+<ClientOnly>
+  <div class="rich-demo">
+    <input v-model="htmlText" placeholder="HTML 内容（粘贴到飞书/邮件看效果）" />
+    <input v-model="plainText" placeholder="纯文本回退（可选）" />
+    <div class="rich-row">
+      <button class="rich-btn" @click="copyRich">写入剪贴板</button>
+      <button class="rich-btn" @click="read">读取剪贴板</button>
+    </div>
+    <div v-if="result" class="rich-info">📋 剪贴板内容：{{ result }}</div>
+    <div class="rich-info">⚠️ 粘贴到飞书 / 邮件 / 文档看格式效果；Firefox 不支持 readRich</div>
+  </div>
+</ClientOnly>
+
+---
+
 # 图片与富文本
 
 剪贴板不只存文字——你在网页上选中一段带格式的表格 Ctrl+C，粘贴到飞书时表格还在，这是因为剪贴板同时存了 `text/html` 和 `text/plain` 两份数据。下面这些 API 就是做这类事的，需要浏览器支持 `ClipboardItem`（`isRichClipboardSupported()` 返回 `true`）。

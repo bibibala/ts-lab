@@ -1,6 +1,59 @@
+<script setup>
+import { onMounted, ref } from 'vue'
+import { getNetworkInfo } from '@bilibaba/ts-lab'
+
+const info = ref(null)
+
+onMounted(() => { info.value = getNetworkInfo() })
+</script>
+
+<style>
+.net-demo {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin: 16px 0 24px;
+  background: var(--vp-c-bg-soft);
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+}
+.net-item { display: flex; flex-direction: column; }
+.net-item .label { font-size: 12px; color: var(--vp-c-text-3); }
+.net-item .value { font-size: 18px; font-weight: 600; }
+</style>
+
+<ClientOnly>
+  <div class="net-demo">
+    <div v-if="info" class="net-item">
+      <span class="label">状态</span>
+      <span class="value">{{ info.online ? '🟢 在线' : '🔴 离线' }}</span>
+    </div>
+    <div v-if="info" class="net-item">
+      <span class="label">网络类型</span>
+      <span class="value">{{ info.connectionType === 'unknown' ? '未知' : info.connectionType }}</span>
+    </div>
+    <div v-if="info" class="net-item">
+      <span class="label">速度等级</span>
+      <span class="value">{{ info.effectiveType }}</span>
+    </div>
+    <div v-if="info" class="net-item">
+      <span class="label">下行带宽</span>
+      <span class="value">{{ info.downlink ? info.downlink + ' Mbps' : '未知' }}</span>
+    </div>
+    <div v-if="info" class="net-item">
+      <span class="label">RTT</span>
+      <span class="value">{{ info.rtt ? info.rtt + ' ms' : '未知' }}</span>
+    </div>
+    <div v-else style="color:var(--vp-c-text-3); font-size:13px;">检测中…</div>
+  </div>
+</ClientOnly>
+
+---
+
 # Network · 网络信息
 
-基于浏览器 [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API) 获取网络环境信息。
+基于 [Network Information API](https://developer.mozilla.org/zh-CN/docs/Web/API/Network_Information_API)
+
+获取浏览器网络环境信息。
 
 ## getNetworkInfo
 

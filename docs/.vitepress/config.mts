@@ -1,13 +1,8 @@
 import { defineConfig } from 'vitepress'
 
 const zhSidebar = [
-  {
-    text: '指南',
-    items: [
-      { text: '快速开始', link: '/guide/' },
-      { text: '安装', link: '/guide/installation' },
-    ],
-  },
+  { text: '快速开始', link: '/guide/' },
+  { text: '安装', link: '/guide/installation' },
   {
     text: '工具函数',
     collapsed: false,
@@ -17,7 +12,7 @@ const zhSidebar = [
     ],
   },
   {
-    text: '浏览器工具',
+    text: '浏览器 API',
     collapsed: false,
     items: [
       {
@@ -67,7 +62,7 @@ export default defineConfig({
     search: { provider: 'local' },
     sidebarMenuLabel: '菜单',
     nav: [
-      { text: '指南', link: '/guide/' }
+      { text: '快速开始', link: '/guide/' }
     ],
     sidebar: zhSidebar,
     socialLinks: [

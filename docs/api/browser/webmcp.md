@@ -1,4 +1,38 @@
+<script setup>
+import { onMounted, ref } from 'vue'
+import { isWebMCPSupported } from '@bilibaba/ts-lab'
+
+const supported = ref(null)
+
+onMounted(() => { supported.value = isWebMCPSupported() })
+</script>
+
+<style>
+.wm-demo {
+  border: 1px solid var(--vp-c-divider); border-radius: 8px;
+  padding: 16px 20px; margin: 16px 0 24px; background: var(--vp-c-bg-soft);
+}
+.wm-status { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.wm-hint { font-size: 12px; color: var(--vp-c-text-3); margin-top: 8px; }
+</style>
+
+<ClientOnly>
+  <div class="wm-demo">
+    <div v-if="supported !== null" class="wm-status">
+      <span v-if="supported" style="color:#22c55e">✓ WebMCP 已支持</span>
+      <span v-else style="color:#ef4444">✗ WebMCP 不可用</span>
+    </div>
+    <div class="wm-hint">
+      需要 Chrome 149+ 并开启 chrome://flags/#webmcp 和 chrome://flags/#devtools-webmcp-support
+    </div>
+  </div>
+</ClientOnly>
+
+---
+
 # WebMCP · AI 工具注册
+
+基于 [document.modelContext](https://developer.mozilla.org/en-US/docs/Web/API/Document/modelContext)（Chrome 149+）
 
 将页面数据暴露为 WebMCP 工具，使 AI Agent（通过 `chrome-devtools-mcp`）能够发现并调用。
 

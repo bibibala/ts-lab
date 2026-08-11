@@ -1,3 +1,54 @@
+<script setup>
+import { onMounted, onUnmounted, ref } from 'vue'
+
+const files = ref([])
+let unbind = null
+
+onMounted(async () => {
+  const { onFilePaste } = await import('@bilibaba/ts-lab')
+  unbind = onFilePaste((items) => {
+    files.value = items.map(f => ({
+      name: f.name,
+      size: f.formattedSize,
+      type: f.mimeType,
+      isImg: f.isImage,
+      preview: f.previewUrl,
+    }))
+  })
+})
+onUnmounted(() => { unbind?.() })
+</script>
+
+<style>
+.file-demo {
+  border: 2px dashed var(--vp-c-divider);
+  border-radius: 8px; padding: 40px 20px; text-align: center;
+  margin: 16px 0 24px; background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-3); font-size: 14px;
+}
+.file-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; justify-content: center; }
+.file-card {
+  background: var(--vp-c-bg); border: 1px solid var(--vp-c-divider);
+  border-radius: 6px; padding: 8px 12px; font-size: 12px; max-width: 200px;
+}
+.file-card img { max-width: 100%; max-height: 100px; border-radius: 4px; margin-bottom: 4px; }
+</style>
+
+<ClientOnly>
+  <div class="file-demo">
+    <div>📁 在文件管理器中复制文件，回到此页面按 Ctrl+V 粘贴</div>
+    <div v-if="files.length" class="file-list">
+      <div v-for="(f, i) in files" :key="i" class="file-card">
+        <img v-if="f.isImg && f.preview" :src="f.preview" />
+        <div>{{ f.name }}</div>
+        <div style="color:var(--vp-c-text-3)">{{ f.size }} · {{ f.type }}</div>
+      </div>
+    </div>
+  </div>
+</ClientOnly>
+
+---
+
 # 文件 · 剪切 · 事件
 
 文件粘贴、剪切操作、底层事件监听以及辅助工具函数。
