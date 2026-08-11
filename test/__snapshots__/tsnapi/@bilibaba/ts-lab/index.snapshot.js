@@ -53,6 +53,7 @@ export async function writeText(_) {}
 // #endregion
 
 // #region Variables
+export var progress /* const */
 export var uiFeedback /* const */
 export var WRITABLE_MIME_TYPES /* const */
 // #endregion

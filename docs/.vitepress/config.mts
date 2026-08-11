@@ -37,6 +37,7 @@ const zhSidebar = [
       { text: '概览', link: '/api/browser/feedback/' },
       { text: 'Toast', link: '/api/browser/feedback/toast' },
       { text: 'Loading', link: '/api/browser/feedback/loading' },
+      { text: '顶部进度条', link: '/api/browser/progress' },
     ],
   },
   {

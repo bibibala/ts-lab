@@ -72,6 +72,15 @@ export interface ProcessedPastedFile {
   isImage: boolean;
   previewUrl: string | null;
 }
+export interface ProgressOptions {
+  color?: ProgressColor;
+  height?: number;
+  speed?: number;
+  trickle?: boolean;
+  trickleSpeed?: number;
+  minimum?: number;
+  easing?: string;
+}
 export interface ToolError {
   error: string;
 }
@@ -117,6 +126,7 @@ export type DataTool = 'search' | 'get' | 'add' | 'delete' | 'stats';
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (_: T) => void;
 export type OS = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown';
+export type ProgressColor = string | string[];
 export type ToastPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
 // #endregion
@@ -189,6 +199,7 @@ export declare function writeText(_: string): Promise<void>;
 // #endregion
 
 // #region Variables
+export declare const progress: ProgressBar;
 export declare const uiFeedback: UIFeedback;
 export declare const WRITABLE_MIME_TYPES: readonly string[];
 // #endregion
