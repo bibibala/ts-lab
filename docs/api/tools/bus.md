@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { createBus } from '@bilibaba/ts-lab'
+import { createBus } from '@bilibaba/ts-lab/tools'
 
 const bus = createBus()
 const logs = ref([])
@@ -102,7 +102,7 @@ interface Bus<Events> {
 ## 基本用法
 
 ```ts
-import { createBus } from '@bilibaba/ts-lab'
+import { createBus } from '@bilibaba/ts-lab/tools'
 
 interface Events {
   login: string

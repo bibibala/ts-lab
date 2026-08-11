@@ -20,16 +20,11 @@ export function exposeForm(_, _, _) {}
 export function exposeFunction(_, _, _) {}
 export function formatFileSize(_) {}
 export function generateId() {}
-export async function getIcns(_) {}
-export async function getIco(_) {}
-export async function getImageBoth(_) {}
 export function getNetworkInfo() {}
 export function getObjById(_, _, _, _) {}
 export function getParentNodes(_, _, _, _) {}
 export function getPathById(_, _, _, _) {}
-export async function getPngs(_) {}
 export function getTopLevelNode(_, _, _, _) {}
-export async function initModule() {}
 export function isClipboardApiSupported() {}
 export function isExecCommandSupported() {}
 export function isRichClipboardSupported() {}
@@ -53,7 +48,16 @@ export async function writeText(_) {}
 // #endregion
 
 // #region Variables
+export var loading /* const */
 export var progress /* const */
 export var uiFeedback /* const */
 export var WRITABLE_MIME_TYPES /* const */
+// #endregion
+
+// #region Other
+export { getIcns }
+export { getIco }
+export { getImageBoth }
+export { getPngs }
+export { initModule }
 // #endregion

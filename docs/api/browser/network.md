@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getNetworkInfo } from '@bilibaba/ts-lab'
+import { getNetworkInfo } from '@bilibaba/ts-lab/browser'
 
 const info = ref(null)
 
@@ -75,7 +75,7 @@ interface NetworkInfo {
 ```
 
 ```ts
-import { getNetworkInfo } from '@bilibaba/ts-lab'
+import { getNetworkInfo } from '@bilibaba/ts-lab/browser'
 
 const info = getNetworkInfo()
 console.log(info.online)        // true

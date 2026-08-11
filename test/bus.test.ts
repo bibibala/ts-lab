@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createBus } from '../src/bus'
+import { createBus } from '../src/tools/bus'
 
 interface Events {
   foo: string

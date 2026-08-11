@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { detectEnv } from '@bilibaba/ts-lab'
+import { detectEnv } from '@bilibaba/ts-lab/browser'
 
 const env = ref(null)
 
@@ -114,7 +114,7 @@ type Arch = 'arm64' | 'arm' | 'x64' | 'x86' | 'unknown'
 ## 使用示例
 
 ```ts
-import { detectEnv } from '@bilibaba/ts-lab'
+import { detectEnv } from '@bilibaba/ts-lab/browser'
 
 const env = await detectEnv('MyAppWebView')
 

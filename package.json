@@ -16,10 +16,26 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "keywords": ["webmcp", "mcp", "chrome-devtools-mcp", "ai-agent", "browser", "event-bus", "clipboard", "network", "tree", "utilities", "typescript"],
+  "keywords": [
+    "webmcp",
+    "mcp",
+    "chrome-devtools-mcp",
+    "ai-agent",
+    "browser",
+    "event-bus",
+    "clipboard",
+    "network",
+    "tree",
+    "utilities",
+    "typescript"
+  ],
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",
+    "./browser": "./dist/browser/index.mjs",
+    "./tools": "./dist/tools/index.mjs",
+    "./ui": "./dist/ui/index.mjs",
+    "./wasm": "./dist/wasm/index.mjs",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",

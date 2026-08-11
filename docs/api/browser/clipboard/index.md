@@ -7,7 +7,7 @@ const clipboardText = ref('')
 const copied = ref(false)
 
 onMounted(async () => {
-  const mod = await import('@bilibaba/ts-lab')
+  const mod = await import('@bilibaba/ts-lab/browser')
   supported.value = {
     secure: mod.isSecureContext(),
     api: mod.isClipboardApiSupported(),
@@ -17,14 +17,14 @@ onMounted(async () => {
 })
 
 async function doCopy() {
-  const { writeText } = await import('@bilibaba/ts-lab')
+  const { writeText } = await import('@bilibaba/ts-lab/browser')
   await writeText(text.value)
   copied.value = true
   setTimeout(() => { copied.value = false }, 1500)
 }
 
 async function doRead() {
-  const { readText } = await import('@bilibaba/ts-lab')
+  const { readText } = await import('@bilibaba/ts-lab/browser')
   clipboardText.value = await readText()
 }
 </script>
@@ -86,7 +86,7 @@ async function doRead() {
 ## 快速开始
 
 ```ts
-import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab'
+import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab/browser'
 
 // 复制
 await writeText('Hello, world!')
@@ -109,7 +109,7 @@ import {
   isRichClipboardSupported,
   isExecCommandSupported,
   queryClipboardPermission,
-} from '@bilibaba/ts-lab'
+} from '@bilibaba/ts-lab/browser'
 
 isSecureContext()              // boolean — 是否 HTTPS / localhost
 isClipboardApiSupported()      // boolean — 是否支持 Clipboard API
@@ -126,7 +126,7 @@ await queryClipboardPermission('clipboard-read')
 所有 API 抛出统一的 `ClipboardError`：
 
 ```ts
-import { ClipboardError } from '@bilibaba/ts-lab'
+import { ClipboardError } from '@bilibaba/ts-lab/browser'
 
 try {
   await writeText('hello')

@@ -6,7 +6,7 @@ const running = ref(false)
 const mode = ref('默认')
 
 onMounted(async () => {
-  const mod = await import('@bilibaba/ts-lab')
+  const mod = await import('@bilibaba/ts-lab/ui')
   progress.value = mod.progress
 })
 
@@ -59,7 +59,7 @@ NProgress 风格的页面顶部进度条。零 UI 框架依赖，自行管理 DO
 全局单例，直接调用：
 
 ```ts
-import { progress } from '@bilibaba/ts-lab'
+import { progress } from '@bilibaba/ts-lab/ui'
 ```
 
 ## start
@@ -128,7 +128,7 @@ progress.configure({ color: ['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f'] })
 ## 典型用法
 
 ```ts
-import { progress } from '@bilibaba/ts-lab'
+import { progress } from '@bilibaba/ts-lab/ui'
 
 // 路由切换 — 默认蓝色
 progress.start()

@@ -1,20 +1,20 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 
-const uiFeedback = ref(null)
-const loading = ref(false)
+const loadingMod = ref(null)
+const isLoading = ref(false)
 
 onMounted(async () => {
-  const mod = await import('@bilibaba/ts-lab')
-  uiFeedback.value = mod.uiFeedback
+  const mod = await import('@bilibaba/ts-lab/ui')
+  loadingMod.value = mod.loading
 })
 
 function trigger() {
-  loading.value = true
-  uiFeedback.value?.showLoading('加载中…')
+  isLoading.value = true
+  loadingMod.value?.show('加载中…')
   setTimeout(() => {
-    uiFeedback.value?.hideLoading()
-    loading.value = false
+    loadingMod.value?.hide()
+    isLoading.value = false
   }, 2000)
 }
 </script>
@@ -36,8 +36,8 @@ function trigger() {
 
 <ClientOnly>
   <div class="load-demo">
-    <button v-if="uiFeedback" class="load-btn" :disabled="loading" @click="trigger">
-      {{ loading ? '加载中…' : '显示 Loading (2s)' }}
+    <button v-if="loadingMod" class="load-btn" :disabled="isLoading" @click="trigger">
+      {{ isLoading ? '加载中…' : '显示 Loading (2s)' }}
     </button>
   </div>
 </ClientOnly>
@@ -51,24 +51,26 @@ function trigger() {
 ## 基本用法
 
 ```ts
-uiFeedback.showLoading('加载中...')
+import { loading } from '@bilibaba/ts-lab/ui'
+
+loading.show('加载中...')
 await someAsyncTask()
-uiFeedback.hideLoading()
+loading.hide()
 ```
 
 ## 嵌套场景
 
 ```ts
 async function fetchA() {
-  uiFeedback.showLoading('加载 A...')
+  loading.show('加载 A...')
   await delay(1000)
-  uiFeedback.hideLoading() // 计数器未归零，不会关闭
+  loading.hide() // 计数器未归零，不会关闭
 }
 
 async function fetchB() {
-  uiFeedback.showLoading('加载 B...')
+  loading.show('加载 B...')
   await delay(2000)
-  uiFeedback.hideLoading() // 计数器归零，真正关闭
+  loading.hide() // 计数器归零，真正关闭
 }
 
 await Promise.all([fetchA(), fetchB()])
@@ -77,5 +79,5 @@ await Promise.all([fetchA(), fetchB()])
 ## force 参数
 
 ```ts
-uiFeedback.hideLoading(true) // 强制关闭，重置计数器
+loading.hide(true) // 强制关闭，重置计数器
 ```

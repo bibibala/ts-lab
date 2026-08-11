@@ -14,7 +14,7 @@ hero:
       link: /guide/
     - theme: alt
       text: API 参考
-      link: /api/recursion
+      link: /api/tools/recursion
 
 features:
   - title: 做什么

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { progress } from '../src/browser/progress'
+import { progress } from '../src/ui/progress'
 
 const instance = progress as any
 

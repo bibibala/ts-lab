@@ -13,7 +13,7 @@ function initModule(): Promise<WasmModule>
 多次调用是幂等的，返回同一个 Module 实例。
 
 ```ts
-import { initModule } from '@bilibaba/ts-lab'
+import { initModule } from '@bilibaba/ts-lab/wasm'
 
 // 可选：提前预热 WASM
 await initModule()
@@ -87,7 +87,7 @@ const { ico, icns, pngs } = await getImageBoth(imageData)
 ## 完整示例
 
 ```ts
-import { getIco, getIcns, getPngs, getImageBoth } from '@bilibaba/ts-lab'
+import { getIco, getIcns, getPngs, getImageBoth } from '@bilibaba/ts-lab/wasm'
 
 // 假设你已经从 input[type=file] 或 fetch 拿到 PNG 的字节数据
 const response = await fetch('/photo.png')

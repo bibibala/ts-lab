@@ -5,7 +5,7 @@ const files = ref([])
 let unbind = null
 
 onMounted(async () => {
-  const { onFilePaste } = await import('@bilibaba/ts-lab')
+  const { onFilePaste } = await import('@bilibaba/ts-lab/browser')
   unbind = onFilePaste((items) => {
     files.value = items.map(f => ({
       name: f.name,
@@ -64,7 +64,7 @@ onUnmounted(() => { unbind?.() })
 仅当文件是图片（MIME 在白名单内）时才能写入，否则抛出 `UNSUPPORTED_MIME_TYPE`：
 
 ```ts
-import { writeFile } from '@bilibaba/ts-lab'
+import { writeFile } from '@bilibaba/ts-lab/browser'
 
 const file = new File(['...'], 'photo.png', { type: 'image/png' })
 await writeFile(file)
@@ -75,8 +75,8 @@ await writeFile(file)
 监听用户粘贴文件。用户在文件管理器里选中几张图和一个 PDF，回到网页 Ctrl+V——回调一次拿到**全部**文件，图片和文档混在一起也没问题，`isImage` 标记帮你区分：
 
 ```ts
-import { onFilePaste } from '@bilibaba/ts-lab'
-import type { ProcessedPastedFile } from '@bilibaba/ts-lab'
+import { onFilePaste } from '@bilibaba/ts-lab/browser'
+import type { ProcessedPastedFile } from '@bilibaba/ts-lab/browser'
 
 const unbind = onFilePaste((files: ProcessedPastedFile[]) => {
   for (const f of files) {
@@ -116,7 +116,7 @@ onFilePaste((files: File[]) => {
 手动处理粘贴文件或释放预览 URL：
 
 ```ts
-import { processPastedFiles, revokePastedFilePreview } from '@bilibaba/ts-lab'
+import { processPastedFiles, revokePastedFilePreview } from '@bilibaba/ts-lab/browser'
 
 const processed = processPastedFiles(rawFiles)
 // 使用完毕后释放
@@ -132,7 +132,7 @@ for (const item of processed) {
 将文本剪切到剪贴板（等价于复制，不清空来源）：
 
 ```ts
-import { cutText } from '@bilibaba/ts-lab'
+import { cutText } from '@bilibaba/ts-lab/browser'
 
 await cutText('选中的文本')
 ```
@@ -142,7 +142,7 @@ await cutText('选中的文本')
 从 `input` / `textarea` 中剪切选中内容：
 
 ```ts
-import { cutFromInput } from '@bilibaba/ts-lab'
+import { cutFromInput } from '@bilibaba/ts-lab/browser'
 
 const el = document.querySelector('textarea')!
 const selected = await cutFromInput(el)
@@ -156,7 +156,7 @@ console.log(selected) // 被剪切的内容，同时已从输入框中移除
 监听 `copy` / `cut` / `paste` 事件，返回取消监听函数：
 
 ```ts
-import { onClipboardEvent } from '@bilibaba/ts-lab'
+import { onClipboardEvent } from '@bilibaba/ts-lab/browser'
 
 const unbind = onClipboardEvent('paste', (payload) => {
   console.log(payload.text)   // clipboardData 中的纯文本

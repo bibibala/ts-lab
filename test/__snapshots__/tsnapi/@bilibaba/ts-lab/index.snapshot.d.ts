@@ -199,6 +199,7 @@ export declare function writeText(_: string): Promise<void>;
 // #endregion
 
 // #region Variables
+export declare const loading: Loading;
 export declare const progress: ProgressBar;
 export declare const uiFeedback: UIFeedback;
 export declare const WRITABLE_MIME_TYPES: readonly string[];

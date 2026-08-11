@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { writeHtml, readRich } from '@bilibaba/ts-lab'
+import { writeHtml, readRich } from '@bilibaba/ts-lab/browser'
 
 const htmlText = ref('')
 const plainText = ref('')
@@ -63,7 +63,7 @@ async function read() {
 用 `writeHtml` —— 它同时写入 HTML 和一份纯文本回退：
 
 ```ts
-import { writeHtml } from '@bilibaba/ts-lab'
+import { writeHtml } from '@bilibaba/ts-lab/browser'
 
 await writeHtml(
   `<table style="border-collapse:collapse">
@@ -77,7 +77,7 @@ await writeHtml(
 底层原理就是一次往剪贴板里塞了两个 MIME 类型。如果你想自己控制塞哪些格式——比如额外加一个 `text/csv`——用更底层的 `writeRich`：
 
 ```ts
-import { writeRich } from '@bilibaba/ts-lab'
+import { writeRich } from '@bilibaba/ts-lab/browser'
 
 await writeRich([
   { type: 'text/html', data: '<table>...</table>' },
@@ -89,7 +89,7 @@ await writeRich([
 反过来也成立——`readRich` 能拿到剪贴板里所有格式。用户在网页上复制一段文字，剪贴板里通常同时有 `text/plain` 和 `text/html`：
 
 ```ts
-import { readRich } from '@bilibaba/ts-lab'
+import { readRich } from '@bilibaba/ts-lab/browser'
 
 const items = await readRich()
 // items[0] — { type: 'text/plain', blob: ... }
@@ -101,7 +101,7 @@ const items = await readRich()
 做完一个 canvas 统计图，用户想直接 Ctrl+V 贴到飞书或 PPT 里。不用先下载再插入——`writeImage` 把 Blob 写进剪贴板：
 
 ```ts
-import { writeImage } from '@bilibaba/ts-lab'
+import { writeImage } from '@bilibaba/ts-lab/browser'
 
 // canvas 导出 → 直接进剪贴板
 canvas.toBlob(async (blob) => {
@@ -120,7 +120,7 @@ await writeImage(blob)
 聊天框里用户 Ctrl+V 贴了张截图——用 `readImage` 拿到 Blob，预览或上传都行：
 
 ```ts
-import { readImage } from '@bilibaba/ts-lab'
+import { readImage } from '@bilibaba/ts-lab/browser'
 
 const blob = await readImage()
 if (blob) {

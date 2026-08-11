@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { uiFeedback } from '../src/browser/feedback'
+import { uiFeedback } from '../src/ui/feedback'
 
 // Access the private singleton for teardown
 const instance = uiFeedback as any
@@ -36,8 +36,6 @@ describe('uiFeedback', () => {
   afterEach(() => {
     instance.toastContainer = null
     instance.toastPosition = 'top'
-    instance.loadingMask = null
-    instance.loadingCount = 0
     instance.styleInjected = false
     attachedChildren.length = 0
   })
@@ -122,48 +120,6 @@ describe('uiFeedback', () => {
       uiFeedback.info('fyi')
       flushToast()
       vi.useRealTimers()
-    })
-  })
-
-  describe('loading', () => {
-    it('showLoading should create a mask', () => {
-      uiFeedback.showLoading('Loading...')
-      expect(bodyAppendSpy).toHaveBeenCalled()
-    })
-
-    it('should not create duplicate masks for nested calls', () => {
-      uiFeedback.showLoading()
-      const callCount = bodyAppendSpy.mock.calls.length
-      uiFeedback.showLoading()
-      expect(bodyAppendSpy).toHaveBeenCalledTimes(callCount)
-    })
-
-    it('hideLoading should only remove after counter reaches 0', () => {
-      uiFeedback.showLoading()
-      uiFeedback.showLoading()
-      uiFeedback.hideLoading()
-      expect(instance.loadingMask).not.toBeNull()
-      uiFeedback.hideLoading()
-      expect(instance.loadingMask).toBeNull()
-    })
-
-    it('force hideLoading should reset counter and remove mask immediately', () => {
-      uiFeedback.showLoading()
-      uiFeedback.showLoading()
-      uiFeedback.hideLoading(true)
-      expect(instance.loadingCount).toBe(0)
-      expect(instance.loadingMask).toBeNull()
-    })
-
-    it('hideLoading should not go below zero', () => {
-      uiFeedback.hideLoading()
-      expect(instance.loadingCount).toBe(0)
-    })
-
-    it('should do nothing when document is undefined (SSR)', () => {
-      vi.stubGlobal('document', undefined)
-      expect(() => uiFeedback.showLoading()).not.toThrow()
-      expect(() => uiFeedback.hideLoading()).not.toThrow()
     })
   })
 })

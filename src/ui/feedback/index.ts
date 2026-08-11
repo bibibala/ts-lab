@@ -1,3 +1,5 @@
+export { loading } from '../loading'
+
 type ToastType = 'success' | 'error' | 'warning' | 'info'
 export type ToastPosition
   = | 'top'
@@ -23,7 +25,7 @@ const ICON_MAP: Record<ToastType, string> = {
 }
 
 /**
- * Global Toast + Loading utility class.
+ * Global Toast utility class.
  * Singleton — manages its own DOM nodes and styles, zero UI framework dependency.
  */
 class UIFeedback {
@@ -31,8 +33,6 @@ class UIFeedback {
 
   private toastContainer: HTMLDivElement | null = null
   private toastPosition: ToastPosition = 'top'
-  private loadingMask: HTMLDivElement | null = null
-  private loadingCount = 0 // nested loading call counter
   private styleInjected = false
 
   private constructor() {
@@ -149,50 +149,6 @@ class UIFeedback {
       .uif-toast-error   { background: #d93025; }
       .uif-toast-warning { background: #e37400; }
 
-      /* ---- Loading mask ---- */
-      .uif-loading-mask {
-        position: fixed;
-        inset: 0;
-        height: 100dvh;
-        background: rgba(0,0,0,0.45);
-        backdrop-filter: blur(2px);
-        -webkit-backdrop-filter: blur(2px);
-        z-index: 99998;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: auto;
-      }
-      .uif-loading-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        padding: 32px 40px;
-        max-width: calc(100vw - 40px);
-        box-sizing: border-box;
-        background: rgba(0,0,0,0.65);
-        border-radius: 12px;
-      }
-      .uif-loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid rgba(255,255,255,0.2);
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: uif-spin 0.7s linear infinite;
-      }
-      .uif-loading-text {
-        color: #fff;
-        font-size: 14px;
-        max-width: 260px;
-        text-align: center;
-        line-height: 1.4;
-        word-break: break-word;
-      }
-      @keyframes uif-spin {
-        to { transform: rotate(360deg); }
-      }
     `
     document.head.appendChild(style)
     this.styleInjected = true
@@ -271,58 +227,6 @@ class UIFeedback {
 
   info(message: string, duration?: number, position?: ToastPosition): void {
     this.toast({ message, type: 'info', duration, position })
-  }
-
-  /* ---------------- Global Loading ---------------- */
-  /**
-   * Show a global loading mask. Supports nested calls via an internal counter.
-   * The full-screen fixed mask with pointer-events:auto naturally blocks
-   * all clicks from reaching elements underneath.
-   * @param text Optional description text shown below the spinner.
-   */
-  showLoading(text?: string): void {
-    if (typeof document === 'undefined')
-      return
-    this.loadingCount++
-
-    if (!this.loadingMask) {
-      this.loadingMask = document.createElement('div')
-      this.loadingMask.className = 'uif-loading-mask'
-
-      const box = document.createElement('div')
-      box.className = 'uif-loading-box'
-
-      const spinner = document.createElement('div')
-      spinner.className = 'uif-loading-spinner'
-      box.appendChild(spinner)
-
-      if (text) {
-        const textEl = document.createElement('div')
-        textEl.className = 'uif-loading-text'
-        textEl.textContent = text
-        box.appendChild(textEl)
-      }
-
-      this.loadingMask.appendChild(box)
-      document.body.appendChild(this.loadingMask)
-    }
-  }
-
-  /**
-   * Hide the loading mask. The mask is only removed when the counter reaches 0.
-   * Pass force=true to forcibly close (e.g. error recovery).
-   */
-  hideLoading(force = false): void {
-    if (force) {
-      this.loadingCount = 0
-    }
-    else {
-      this.loadingCount = Math.max(0, this.loadingCount - 1)
-    }
-    if (this.loadingCount === 0 && this.loadingMask) {
-      this.loadingMask.remove()
-      this.loadingMask = null
-    }
   }
 }
 

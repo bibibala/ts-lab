@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { writeText, readText } from '@bilibaba/ts-lab'
+import { writeText, readText } from '@bilibaba/ts-lab/browser'
 
 const text = ref('Hello, world!')
 const result = ref('')
@@ -57,7 +57,7 @@ async function read() { result.value = await readText() }
 写入纯文本到剪贴板。优先使用 Clipboard API，失败或不支持时自动降级为 `execCommand('copy')`。
 
 ```ts
-import { writeText } from '@bilibaba/ts-lab'
+import { writeText } from '@bilibaba/ts-lab/browser'
 
 await writeText('Hello, world!')
 ```
@@ -69,7 +69,7 @@ await writeText('Hello, world!')
 从剪贴板读取纯文本。仅支持 Clipboard API，需要用户授予剪贴板读取权限。
 
 ```ts
-import { readText } from '@bilibaba/ts-lab'
+import { readText } from '@bilibaba/ts-lab/browser'
 
 const text = await readText()
 console.log(text) // 'Hello, world!'

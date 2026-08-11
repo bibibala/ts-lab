@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue'
 const uiFeedback = ref(null)
 
 onMounted(async () => {
-  const mod = await import('@bilibaba/ts-lab')
+  const mod = await import('@bilibaba/ts-lab/ui')
   uiFeedback.value = mod.uiFeedback
 })
 </script>

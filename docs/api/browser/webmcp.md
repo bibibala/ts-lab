@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { isWebMCPSupported } from '@bilibaba/ts-lab'
+import { isWebMCPSupported } from '@bilibaba/ts-lab/browser'
 
 const supported = ref(null)
 
@@ -50,7 +50,7 @@ export type {
   WebMCPInputSchema,     // { type: 'object', properties, required? }
   WebMCPModelContext,    // document.modelContext 的类型定义
   WebMCPToolDefinition,  // 完整工具定义 { name, description, inputSchema, execute }
-} from '@bilibaba/ts-lab'
+} from '@bilibaba/ts-lab/browser'
 ```
 
 ::: warning 前置条件
@@ -64,7 +64,7 @@ export type {
 检查当前浏览器是否支持 WebMCP。
 
 ```ts
-import { isWebMCPSupported } from '@bilibaba/ts-lab'
+import { isWebMCPSupported } from '@bilibaba/ts-lab/browser'
 
 if (isWebMCPSupported()) {
   // 可以注册工具
@@ -127,7 +127,7 @@ interface ExposeDataOptions<T> {
 ### 基本示例
 
 ```ts
-import { exposeData } from '@bilibaba/ts-lab'
+import { exposeData } from '@bilibaba/ts-lab/browser'
 
 const ORDERS = [
   { id: 'SO-1001', customer: 'Alice', amount: 1280, status: 'shipped' },
@@ -204,7 +204,7 @@ function exposeFunction<T extends Record<string, unknown>>(
 **返回值：** `boolean`。
 
 ```ts
-import { exposeFunction } from '@bilibaba/ts-lab'
+import { exposeFunction } from '@bilibaba/ts-lab/browser'
 
 exposeFunction('greet', async ({ name }: { name: string }) => {
   return { greeting: `Hello, ${name}!` }
@@ -239,7 +239,7 @@ function exposeAction<T extends Record<string, unknown> = Record<string, never>>
 **返回值：** `boolean`。
 
 ```ts
-import { exposeAction } from '@bilibaba/ts-lab'
+import { exposeAction } from '@bilibaba/ts-lab/browser'
 import { ref } from 'vue'
 
 const dialogOpen = ref(false)
@@ -289,7 +289,7 @@ interface ExposeFormOptions {
 ### 示例
 
 ```ts
-import { exposeForm } from '@bilibaba/ts-lab'
+import { exposeForm } from '@bilibaba/ts-lab/browser'
 import { reactive } from 'vue'
 
 const form = reactive({ customer: '', amount: 0, taxRate: 0 })
@@ -328,7 +328,7 @@ function registerTool<T = Record<string, unknown>>(
 **返回值：** `boolean`。
 
 ```ts
-import { registerTool } from '@bilibaba/ts-lab'
+import { registerTool } from '@bilibaba/ts-lab/browser'
 
 registerTool({
   name: 'customAction',

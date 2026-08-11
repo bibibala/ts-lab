@@ -7,8 +7,8 @@ const zhSidebar = [
     text: '工具函数',
     collapsed: false,
     items: [
-      { text: '树形数据查询', link: '/api/recursion' },
-      { text: '事件总线', link: '/api/bus' },
+      { text: '树形数据查询', link: '/api/tools/recursion' },
+      { text: '事件总线', link: '/api/tools/bus' },
     ],
   },
   {
@@ -34,10 +34,9 @@ const zhSidebar = [
     text: 'UI 组件',
     collapsed: false,
     items: [
-      { text: '概览', link: '/api/browser/feedback/' },
-      { text: 'Toast', link: '/api/browser/feedback/toast' },
-      { text: 'Loading', link: '/api/browser/feedback/loading' },
-      { text: '顶部进度条', link: '/api/browser/progress' },
+      { text: 'Toast', link: '/api/ui/feedback/index' },
+      { text: 'Loading', link: '/api/ui/loading/' },
+      { text: '顶部进度条', link: '/api/ui/progress' },
     ],
   },
   {
