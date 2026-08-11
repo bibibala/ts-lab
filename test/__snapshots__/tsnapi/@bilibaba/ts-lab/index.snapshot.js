@@ -11,8 +11,10 @@ export class ClipboardError extends Error {
 
 // #region Functions
 export function createBus(_) {}
+export function createWatermark(_) {}
 export async function cutFromInput(_) {}
 export async function cutText(_) {}
+export function decodeWatermark(_) {}
 export async function detectEnv(_) {}
 export function exposeAction(_, _, _) {}
 export function exposeData(_, _, _) {}

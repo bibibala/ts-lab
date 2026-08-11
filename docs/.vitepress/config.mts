@@ -37,6 +37,7 @@ const zhSidebar = [
       { text: 'Toast', link: '/api/ui/feedback/index' },
       { text: 'Loading', link: '/api/ui/loading/' },
       { text: '顶部进度条', link: '/api/ui/progress' },
+      { text: '页面水印', link: '/api/ui/watermark' },
     ],
   },
   {

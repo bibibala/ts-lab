@@ -89,6 +89,31 @@ export interface TreeNode {
   children?: TreeNode[];
   [key: string]: any;
 }
+export interface WatermarkInstance {
+  update: (_: Partial<WatermarkOptions>) => void;
+  destroy: () => void;
+  show: () => void;
+  hide: () => void;
+}
+export interface WatermarkOptions {
+  text: string | string[];
+  width?: number;
+  height?: number;
+  rotate?: number;
+  opacity?: number;
+  fontSize?: number;
+  color?: string;
+  colorScheme?: 'light' | 'dark';
+  fontFamily?: string;
+  gap?: [number, number];
+  protect?: boolean;
+  userId?: string;
+  dynamic?: boolean;
+  interval?: number;
+  zIndex?: number;
+  invisibleId?: boolean;
+  stegoDebug?: boolean;
+}
 export interface WebMCPContentBlock {
   type: 'text';
   text: string;
@@ -141,8 +166,10 @@ export declare class ClipboardError extends Error {
 
 // #region Functions
 export declare function createBus<Events>(_?: Map<EventType, Handler[]>): Bus<Events>;
+export declare function createWatermark(_: WatermarkOptions): WatermarkInstance;
 export declare function cutFromInput(_: HTMLInputElement | HTMLTextAreaElement): Promise<string>;
 export declare function cutText(_: string): Promise<void>;
+export declare function decodeWatermark(_: HTMLImageElement | HTMLCanvasElement | ImageData): number | null;
 export declare function detectEnv(_?: string): Promise<EnvInfo>;
 export declare function exposeAction<T extends Record<string, unknown> = Record<string, never>>(_: string, _: (_: T) => Promise<void>, _: {
   description: string;
