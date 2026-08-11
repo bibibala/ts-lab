@@ -1,7 +1,7 @@
 # Netlify 部署配置 — VitePress 文档站点
 
 [build]
-command = "pnpm install --frozen-lockfile && pnpm --filter docs run docs:build"
+command = "pnpm install --frozen-lockfile && pnpm run build && pnpm --filter docs run docs:build"
 publish = "docs/.vitepress/dist"
 
 [build.environment]
