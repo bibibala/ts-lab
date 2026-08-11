@@ -1,3 +1,70 @@
+<script setup>
+import { onMounted, ref } from 'vue'
+import { detectEnv } from '@bilibaba/ts-lab'
+
+const env = ref(null)
+
+const osLabel = {
+  macos: '💻 macOS', windows: '🪟 Windows', linux: '🐧 Linux',
+  ios: '🍎 iOS', android: '🤖 Android', unknown: '❓ 未知',
+}
+const archLabel = {
+  arm64: 'ARM64', arm: 'ARM (32-bit)', x64: 'x64', x86: 'x86', unknown: '未知',
+}
+
+onMounted(async () => { env.value = await detectEnv() })
+</script>
+
+<style>
+.env-demo {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0 24px;
+  background: var(--vp-c-bg-soft);
+}
+.env-demo h3 { margin: 0 0 12px; font-size: 14px; color: var(--vp-c-text-2); }
+.env-grid { display: flex; gap: 24px; flex-wrap: wrap; }
+.env-item { display: flex; flex-direction: column; }
+.env-item .label { font-size: 12px; color: var(--vp-c-text-3); }
+.env-item .value { font-size: 18px; font-weight: 600; }
+.env-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.env-tag {
+  font-size: 12px; padding: 2px 10px; border-radius: 12px;
+  background: var(--vp-c-bg-alt); color: var(--vp-c-text-3);
+}
+.env-tag.on { background: var(--vp-c-brand-1); color: #fff; }
+.env-ua { margin-top: 12px; font-size: 11px; color: var(--vp-c-text-3); word-break: break-all; }
+</style>
+
+## 实时检测
+
+<ClientOnly>
+  <div class="env-demo">
+    <h3>当前浏览器环境</h3>
+    <div v-if="env" class="env-grid">
+      <div class="env-item">
+        <span class="label">操作系统</span>
+        <span class="value">{{ osLabel[env.os] ?? env.os }}</span>
+      </div>
+      <div class="env-item">
+        <span class="label">CPU 架构</span>
+        <span class="value">{{ archLabel[env.arch] ?? env.arch }}</span>
+      </div>
+    </div>
+    <div v-if="env" class="env-tags">
+      <span :class="['env-tag', { on: env.isQQ }]">QQ</span>
+      <span :class="['env-tag', { on: env.isWechat }]">微信</span>
+      <span :class="['env-tag', { on: env.isInApp }]">App WebView</span>
+      <span :class="['env-tag', { on: env.isBrowser }]">浏览器</span>
+    </div>
+    <div v-if="env" class="env-ua">{{ env.ua }}</div>
+    <div v-else style="color:var(--vp-c-text-3); font-size:13px;">检测中…</div>
+  </div>
+</ClientOnly>
+
+---
+
 # Env · 环境检测
 
 检测浏览器运行环境：操作系统、CPU 架构、以及所在容器（微信 / QQ / App WebView / 普通浏览器）。

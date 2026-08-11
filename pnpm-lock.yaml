@@ -185,6 +185,10 @@ importers:
         version: 3.3.9(typescript@6.0.3)
 
   docs:
+    dependencies:
+      '@bilibaba/ts-lab':
+        specifier: workspace:*
+        version: link:..
     devDependencies:
       vitepress:
         specifier: ^1.6.3

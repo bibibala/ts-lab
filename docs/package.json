@@ -6,6 +6,9 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
+  "dependencies": {
+    "@bilibaba/ts-lab": "workspace:*"
+  },
   "devDependencies": {
     "vitepress": "^1.6.3"
   }
