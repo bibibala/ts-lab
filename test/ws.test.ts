@@ -1,6 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createWS } from '../src/tools/ws'
 
+// Polyfill CloseEvent for Node.js < 22
+if (typeof CloseEvent === 'undefined') {
+  ;(globalThis as any).CloseEvent = class CloseEvent extends Event {
+    code: number
+    reason: string
+    wasClean: boolean
+    constructor(type: string, init?: CloseEventInit) {
+      super(type)
+      this.code = init?.code ?? 0
+      this.reason = init?.reason ?? ''
+      this.wasClean = init?.wasClean ?? false
+    }
+  }
+}
+
 class MockWebSocket {
   static OPEN = 1
   static CLOSED = 3
