@@ -55,6 +55,7 @@ export default defineConfig({
   lang: 'zh-CN',
   title: 'ts-lab',
   description: '浏览器工具库 — WebMCP、事件总线、剪贴板、网络信息、树遍历、二维码',
+  lastUpdated: true,
 
   head: [
     ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
@@ -64,6 +65,10 @@ export default defineConfig({
     logo: '/logo.svg',
     search: { provider: 'local' },
     sidebarMenuLabel: '菜单',
+    lastUpdated: {
+      text: '最后更新',
+      formatOptions: { dateStyle: 'short', timeStyle: 'short' },
+    },
     nav: [
       { text: '快速开始', link: '/guide/' }
     ],
