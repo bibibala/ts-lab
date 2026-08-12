@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.1",
   "packageManager": "pnpm@11.15.1",
-  "description": "Browser utility library — WebMCP tool registration, event bus, clipboard, network info, tree traversal",
+  "description": "Browser utility library — WebMCP tool registration, event bus, clipboard, network info, tree traversal, QR code",
   "author": "bibibala <1140918095@qq.com>",
   "license": "MIT",
   "homepage": "https://ts-lab.netlify.app",
@@ -26,6 +26,7 @@
     "clipboard",
     "network",
     "tree",
+    "qrcode",
     "utilities",
     "typescript"
   ],

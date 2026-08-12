@@ -9,6 +9,8 @@ const zhSidebar = [
     items: [
       { text: '树形数据查询', link: '/api/tools/recursion' },
       { text: '事件总线', link: '/api/tools/bus' },
+      { text: 'WebSocket', link: '/api/tools/ws' },
+      { text: '二维码生成和读取', link: '/api/tools/qrCode' },
     ],
   },
   {
@@ -52,7 +54,7 @@ const zhSidebar = [
 export default defineConfig({
   lang: 'zh-CN',
   title: 'ts-lab',
-  description: '浏览器工具库 — WebMCP、事件总线、剪贴板、网络信息、树遍历',
+  description: '浏览器工具库 — WebMCP、事件总线、剪贴板、网络信息、树遍历、二维码',
 
   head: [
     ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],

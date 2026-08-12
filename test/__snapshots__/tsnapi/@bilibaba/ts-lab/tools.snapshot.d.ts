@@ -4,6 +4,7 @@
 // #region Other
 export { Bus }
 export { createBus }
+export { createWS }
 export { EventType }
 export { getObjById }
 export { getParentNodes }
@@ -12,4 +13,6 @@ export { getTopLevelNode }
 export { Handler }
 export { TreeNode }
 export { WildcardHandler }
+export { WSClient }
+export { WSOptions }
 // #endregion

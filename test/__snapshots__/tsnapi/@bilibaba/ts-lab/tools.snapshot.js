@@ -3,6 +3,7 @@
  */
 // #region Other
 export { createBus }
+export { createWS }
 export { getObjById }
 export { getParentNodes }
 export { getPathById }

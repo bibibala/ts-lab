@@ -140,6 +140,31 @@ export interface WebMCPToolDefinition<T = Record<string, unknown>> {
   inputSchema: WebMCPInputSchema;
   execute: (_: T) => Promise<WebMCPExecuteResult>;
 }
+export interface WSClient {
+  send: (_: string | ArrayBuffer | Blob | object) => void;
+  close: (_?: number, _?: string) => void;
+  reconnectNow: () => void;
+  onOpen: (_: OpenHandler) => () => void;
+  onClose: (_: CloseHandler) => () => void;
+  onError: (_: ErrorHandler) => () => void;
+  onMessage: <T = unknown>(_: (_: T, _: MessageEvent) => void) => () => void;
+  readonly readyState: number;
+  readonly ws: WebSocket | null;
+}
+export interface WSOptions {
+  reconnect?: boolean;
+  reconnectInterval?: number;
+  backoffMultiplier?: number;
+  maxReconnectInterval?: number;
+  jitter?: boolean;
+  maxReconnectAttempts?: number;
+  heartbeatInterval?: number;
+  heartbeatMessage?: string | (() => string | ArrayBuffer);
+  heartbeatTimeoutMultiplier?: number;
+  protocols?: string | string[];
+  queueWhenOffline?: boolean;
+  maxQueueSize?: number;
+}
 // #endregion
 
 // #region Types
@@ -167,6 +192,7 @@ export declare class ClipboardError extends Error {
 // #region Functions
 export declare function createBus<Events>(_?: Map<EventType, Handler[]>): Bus<Events>;
 export declare function createWatermark(_: WatermarkOptions): WatermarkInstance;
+export declare function createWS(_: string | URL, _?: WSOptions): WSClient;
 export declare function cutFromInput(_: HTMLInputElement | HTMLTextAreaElement): Promise<string>;
 export declare function cutText(_: string): Promise<void>;
 export declare function decodeWatermark(_: HTMLImageElement | HTMLCanvasElement | ImageData): number | null;
