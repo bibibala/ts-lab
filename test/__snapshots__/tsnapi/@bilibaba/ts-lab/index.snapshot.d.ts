@@ -50,6 +50,11 @@ export interface FieldSchema {
   type: 'string' | 'number' | 'boolean';
   description: string;
 }
+export interface ImageInput {
+  data: Uint8ClampedArray | Uint8Array | number[];
+  width: number;
+  height: number;
+}
 export interface NetworkInfo {
   online: boolean;
   effectiveType: string;
@@ -80,6 +85,18 @@ export interface ProgressOptions {
   trickleSpeed?: number;
   minimum?: number;
   easing?: string;
+}
+export interface QRCode {
+  modules: boolean[][];
+  version: number;
+  size: number;
+  ecLevel: ECLevel;
+}
+export interface RenderOptions {
+  moduleSize?: number;
+  margin?: number;
+  darkColor?: string;
+  lightColor?: string;
 }
 export interface ToolError {
   error: string;
@@ -181,6 +198,15 @@ export type ToastPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'botto
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
 // #endregion
 
+// #region Enums
+export declare enum ECLevel {
+  L = 0,
+  M = 1,
+  Q = 2,
+  H = 3
+}
+// #endregion
+
 // #region Classes
 export declare class ClipboardError extends Error {
   code: ClipboardErrorCode;
@@ -213,6 +239,7 @@ export declare function exposeFunction<T extends Record<string, unknown>>(_: str
 }): boolean;
 export declare function formatFileSize(_: number): string;
 export declare function generateId(): string;
+export declare function generateQRCode(_: string, _?: ECLevel, _?: number): QRCode;
 export declare function getIcns(_: Uint8Array): Promise<Uint8Array>;
 export declare function getIco(_: Uint8Array): Promise<Uint8Array>;
 export declare function getImageBoth(_: Uint8Array): Promise<{
@@ -238,11 +265,14 @@ export declare function onFilePaste(_: (_: ProcessedPastedFile[] | File[], _: Cl
 export declare function processPastedFiles(_: File[]): ProcessedPastedFile[];
 export declare function queryClipboardPermission(_: 'clipboard-read' | 'clipboard-write'): Promise<ClipboardPermissionState>;
 export declare function readImage(): Promise<Blob | null>;
+export declare function readQRCode(_: ImageInput): string | null;
 export declare function readRich(): Promise<ClipboardReadItem[]>;
 export declare function readText(): Promise<string>;
 export declare function registerTool<T = Record<string, unknown>>(_: WebMCPToolDefinition<T>, _?: {
   signal?: AbortSignal;
 }): boolean;
+export declare function renderQRCodeToCanvas(_: QRCode, _: HTMLCanvasElement, _?: RenderOptions): void;
+export declare function renderQRCodeToDataURL(_: QRCode, _?: RenderOptions): string;
 export declare function revokePastedFilePreview(_: ProcessedPastedFile): void;
 export declare function writeFile(_: File): Promise<void>;
 export declare function writeHtml(_: string, _?: string): Promise<void>;

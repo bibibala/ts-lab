@@ -23,6 +23,7 @@ export function exposeForm(_, _, _) {}
 export function exposeFunction(_, _, _) {}
 export function formatFileSize(_) {}
 export function generateId() {}
+export function generateQRCode(_, _, _) {}
 export function getNetworkInfo() {}
 export function getObjById(_, _, _, _) {}
 export function getParentNodes(_, _, _, _) {}
@@ -39,9 +40,12 @@ export function onFilePaste(_, _, _) {}
 export function processPastedFiles(_) {}
 export async function queryClipboardPermission(_) {}
 export async function readImage() {}
+export function readQRCode(_) {}
 export async function readRich() {}
 export async function readText() {}
 export function registerTool(_, _) {}
+export function renderQRCodeToCanvas(_, _, _) {}
+export function renderQRCodeToDataURL(_, _) {}
 export function revokePastedFilePreview(_) {}
 export async function writeFile(_) {}
 export async function writeHtml(_, _) {}
@@ -51,6 +55,7 @@ export async function writeText(_) {}
 // #endregion
 
 // #region Variables
+export var ECLevel /* let */
 export var loading /* const */
 export var progress /* const */
 export var uiFeedback /* const */

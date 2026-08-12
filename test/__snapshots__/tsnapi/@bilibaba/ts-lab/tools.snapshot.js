@@ -4,8 +4,13 @@
 // #region Other
 export { createBus }
 export { createWS }
+export { ECLevel }
+export { generateQRCode }
 export { getObjById }
 export { getParentNodes }
 export { getPathById }
 export { getTopLevelNode }
+export { readQRCode }
+export { renderQRCodeToCanvas }
+export { renderQRCodeToDataURL }
 // #endregion
