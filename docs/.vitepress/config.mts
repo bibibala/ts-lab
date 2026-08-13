@@ -11,6 +11,7 @@ const zhSidebar = [
       { text: '事件总线', link: '/api/tools/bus' },
       { text: 'WebSocket', link: '/api/tools/ws' },
       { text: '二维码生成和读取', link: '/api/tools/qrCode' },
+      { text: 'MD5', link: '/api/tools/md5' },
     ],
   },
   {
@@ -69,8 +70,12 @@ export default defineConfig({
       text: '最后更新',
       formatOptions: { dateStyle: 'short', timeStyle: 'short' },
     },
+    editLink: {
+      pattern: 'https://github.com/bibibala/ts-lab/edit/main/docs/:path',
+      text: '在 GitHub 上编辑此页',
+    },
     nav: [
-      { text: '快速开始', link: '/guide/' }
+      { text: '快速开始', link: '/guide/' },
     ],
     sidebar: zhSidebar,
     socialLinks: [

@@ -17,3 +17,7 @@ reasonix.toml
 .npmrc
 docs/.vitepress/cache/
 docs/.vitepress/dist/
+
+# MCP tool local state
+.codegraph/
+.serena/

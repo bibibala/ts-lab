@@ -260,6 +260,7 @@ export declare function isRichClipboardSupported(): boolean;
 export declare function isSecureContext(): boolean;
 export declare function isWebMCPSupported(): boolean;
 export declare function isWritableMimeType(_: string): boolean;
+export declare function md5(_: string | ArrayBuffer | Uint8Array): Promise<string>;
 export declare function onClipboardEvent(_: ClipboardDomEventName, _: (_: ClipboardEventPayload) => void, _?: HTMLElement | Document): () => void;
 export declare function onFilePaste(_: (_: ProcessedPastedFile[] | File[], _: ClipboardEventPayload) => void, _?: OnFilePasteOptions, _?: HTMLElement | Document): () => void;
 export declare function processPastedFiles(_: File[]): ProcessedPastedFile[];

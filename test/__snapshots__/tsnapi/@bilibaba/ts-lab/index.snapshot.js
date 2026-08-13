@@ -35,6 +35,7 @@ export function isRichClipboardSupported() {}
 export function isSecureContext() {}
 export function isWebMCPSupported() {}
 export function isWritableMimeType(_) {}
+export async function md5(_) {}
 export function onClipboardEvent(_, _, _) {}
 export function onFilePaste(_, _, _) {}
 export function processPastedFiles(_) {}

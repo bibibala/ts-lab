@@ -14,6 +14,7 @@ export { getPathById }
 export { getTopLevelNode }
 export { Handler }
 export { ImageInput }
+export { md5 }
 export { QRCode }
 export { readQRCode }
 export { RenderOptions }

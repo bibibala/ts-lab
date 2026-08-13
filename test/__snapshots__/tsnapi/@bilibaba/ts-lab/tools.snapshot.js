@@ -10,6 +10,7 @@ export { getObjById }
 export { getParentNodes }
 export { getPathById }
 export { getTopLevelNode }
+export { md5 }
 export { readQRCode }
 export { renderQRCodeToCanvas }
 export { renderQRCodeToDataURL }
