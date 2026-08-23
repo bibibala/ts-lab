@@ -1,8 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 const zhSidebar = [
-  { text: '快速开始', link: '/guide/' },
-  { text: '安装', link: '/guide/installation' },
+  { text: '快速开始', link: '/' },
   {
     text: '工具函数',
     collapsed: false,
@@ -75,7 +74,7 @@ export default defineConfig({
       text: '在 GitHub 上编辑此页',
     },
     nav: [
-      { text: '快速开始', link: '/guide/' },
+      { text: '快速开始', link: '/' },
     ],
     sidebar: zhSidebar,
     socialLinks: [
