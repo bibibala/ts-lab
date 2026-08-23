@@ -21,6 +21,26 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
+/* 侧边栏：隐藏折叠箭头，仅保留加粗标题 */
+.VPSidebarItem .caret {
+  display: none !important;
+}
+
+.VPSidebarItem.level-1 > .item > .indicator,
+.VPSidebarItem.level-2 > .item > .indicator {
+  display: none;
+}
+
+.VPSidebarItem .item {
+  cursor: default !important;
+}
+
+.VPSidebarItem.level-1 > .item:hover,
+.VPSidebarItem.level-2 > .item:hover {
+  background: none;
+  cursor: default;
+}
+
 /* 深色模式适配 */
 html.dark .VPFeature:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);

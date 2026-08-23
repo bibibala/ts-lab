@@ -15,6 +15,7 @@ reasonix.toml
 .reasonix
 .pnpm-store/
 .npmrc
+.mimocode
 docs/.vitepress/cache/
 docs/.vitepress/dist/
 
