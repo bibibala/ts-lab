@@ -82,9 +82,6 @@ function createBus<Events>(all?: Map<EventType, Handler[]>): Bus<Events>
 
 ```ts
 interface Bus<Events> {
-  /** Mapping of all event types to handlers (can be shared with other instances) */
-  all: Map<EventType, Handler[]>
-
   /** Emit event (omit payload for void events) */
   emit<Key extends keyof Events>(type: Key, event: Events[Key]): void
   emit<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void
@@ -136,25 +133,15 @@ Wildcard handlers receive callbacks for **all** events — the first argument is
 
 ## Shared Handler Map
 
-Multiple Bus instances can share the same `all` Map for cross-instance communication:
-
-```ts
-const busA = createBus<Events>()
-const busB = createBus<Events>()
-
-// Make busB share busA's handlers
-busB.all = busA.all
-
-busA.on('login', user => console.log('A:', user))
-busB.emit('login', 'shared!') // → "A: shared!"
-```
-
-You can also pass it directly via the `createBus` constructor parameter:
+Multiple Bus instances can share the same handler Map for cross-instance communication. Pass a shared `Map` via the `createBus` constructor parameter:
 
 ```ts
 const sharedMap = new Map()
 const busA = createBus<Events>(sharedMap)
 const busB = createBus<Events>(sharedMap)
+
+busA.on('login', user => console.log('A:', user))
+busB.emit('login', 'shared!') // → "A: shared!"
 ```
 
 ## Duplicate Registration Detection

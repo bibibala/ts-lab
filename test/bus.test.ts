@@ -130,15 +130,7 @@ describe('createBus', () => {
     })
   })
 
-  describe('all', () => {
-    it('should expose the internal Map', () => {
-      const bus = createBus<Events>()
-      const h = vi.fn()
-
-      bus.on('foo', h)
-      expect(bus.all.get('foo')).toEqual([h])
-    })
-
+  describe('shared state', () => {
     it('should share state when given an external Map', () => {
       const shared = new Map()
       const bus1 = createBus<Events>(shared)

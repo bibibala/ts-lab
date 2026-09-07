@@ -84,7 +84,10 @@ export function createWatermark(options: WatermarkOptions): WatermarkInstance {
     if (!container)
       return
     if (opts.protect && !protector) {
-      protector = createProtector(container, () => hidden)
+      protector = createProtector(container, () => hidden, {
+        styleCheckInterval: opts.styleCheckInterval,
+        onTamperDetected: opts.onTamperDetected,
+      })
       protector.setExpected({
         display: hidden ? 'none' : '',
         visibility: 'visible',
@@ -112,15 +115,22 @@ export function createWatermark(options: WatermarkOptions): WatermarkInstance {
   }
 
   // ---- initial render --------------------------------------------------
-  const initialDataUrl = renderCanvas(opts, opts.text)
-  container = createContainer(initialDataUrl, opts.zIndex, opts.opacity)
-  document.body.appendChild(container)
-
-  syncProtector()
-  syncTimer()
-
-  if (opts.userId)
+  if (opts.userId) {
+    // Async path: needs to compute stego hash before first render
+    container = createContainer('', opts.zIndex, opts.opacity)
+    document.body.appendChild(container)
+    syncProtector()
+    syncTimer()
     refresh()
+  }
+  else {
+    // Sync path: no stego code needed
+    const initialDataUrl = renderCanvas(opts, opts.text)
+    container = createContainer(initialDataUrl, opts.zIndex, opts.opacity)
+    document.body.appendChild(container)
+    syncProtector()
+    syncTimer()
+  }
 
   // ---- instance API ----------------------------------------------------
   return {

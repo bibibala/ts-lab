@@ -46,7 +46,7 @@ class ProgressBar {
   private percent = 0
   private status: ProgressStatus = 'idle'
   private trickleTimer: ReturnType<typeof setTimeout> | null = null
-  private styleInjected = false
+  private styleEl: HTMLStyleElement | null = null
 
   private options: Required<Omit<ProgressOptions, 'color'>> & { color: ProgressColor } = {
     color: '#29d',
@@ -73,10 +73,13 @@ class ProgressBar {
 
   /* ---------------- Base style (layout only, no colors) ---------------- */
   private injectBaseStyle(): void {
-    if (this.styleInjected || typeof document === 'undefined')
+    if (typeof document === 'undefined')
       return
-    const style = document.createElement('style')
-    style.textContent = `
+    if (!this.styleEl) {
+      this.styleEl = document.createElement('style')
+      document.head.appendChild(this.styleEl)
+    }
+    this.styleEl.textContent = `
       .tsl-progress {
         pointer-events: none;
         position: fixed;
@@ -92,8 +95,6 @@ class ProgressBar {
         transition: width ${this.options.speed}ms ${this.options.easing};
       }
     `
-    document.head.appendChild(style)
-    this.styleInjected = true
   }
 
   /* ---------------- Public API ---------------- */
@@ -176,21 +177,31 @@ class ProgressBar {
    * Update runtime options. Takes effect on the next `start()` call.
    */
   configure(opts: Partial<ProgressOptions>): void {
+    let needsStyleUpdate = false
     if (opts.color !== undefined) {
       this.options.color = opts.color
     }
-    if (opts.height !== undefined)
+    if (opts.height !== undefined) {
       this.options.height = opts.height
-    if (opts.speed !== undefined)
+      needsStyleUpdate = true
+    }
+    if (opts.speed !== undefined) {
       this.options.speed = opts.speed
+      needsStyleUpdate = true
+    }
     if (opts.trickle !== undefined)
       this.options.trickle = opts.trickle
     if (opts.trickleSpeed !== undefined)
       this.options.trickleSpeed = opts.trickleSpeed
     if (opts.minimum !== undefined)
       this.options.minimum = opts.minimum
-    if (opts.easing !== undefined)
+    if (opts.easing !== undefined) {
       this.options.easing = opts.easing
+      needsStyleUpdate = true
+    }
+    if (needsStyleUpdate) {
+      this.injectBaseStyle()
+    }
   }
 
   /* ---------------- Internal ---------------- */
@@ -236,7 +247,10 @@ class ProgressBar {
   _reset(): void {
     this.stopTrickle()
     this.resetBar()
-    this.styleInjected = false
+    if (this.styleEl) {
+      this.styleEl.remove()
+      this.styleEl = null
+    }
   }
 }
 

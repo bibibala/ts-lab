@@ -3,7 +3,6 @@
  */
 // #region Interfaces
 export interface Bus<Events> {
-  all: Map<EventType, Handler[]>;
   emit: (<Key extends keyof Events>(_: Key, _: Events[Key]) => void) & (<Key extends keyof Events>(_: undefined extends Events[Key] ? Key : never) => void);
   on: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
   off: (<Key extends keyof Events>(_: Key, _: Handler<Events[Key]>) => void) & ((_: '*', _: WildcardHandler<Events>) => void);
@@ -130,6 +129,8 @@ export interface WatermarkOptions {
   zIndex?: number;
   invisibleId?: boolean;
   stegoDebug?: boolean;
+  styleCheckInterval?: number;
+  onTamperDetected?: () => void;
 }
 export interface WebMCPContentBlock {
   type: 'text';

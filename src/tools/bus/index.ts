@@ -8,9 +8,6 @@ export type WildcardHandler<Events> = (
 ) => void
 
 export interface Bus<Events> {
-  /** Map of event types to their handlers */
-  all: Map<EventType, Handler[]>
-
   /** Register an event handler */
   emit: (<Key extends keyof Events>(type: Key, event: Events[Key]) => void) & (<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never) => void)
 
@@ -41,8 +38,6 @@ export function createBus<Events>(
   const map = all ?? new Map()
 
   return {
-    all: map,
-
     on<Key extends keyof Events>(type: Key | '*', handler: Handler<Events[Key]> | WildcardHandler<Events>): void {
       const handlers = map.get(type as EventType)
       if (handlers) {

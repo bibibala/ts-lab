@@ -1,10 +1,6 @@
 import type { DataTool, ExposeDataOptions, FieldSchema, WebMCPToolDefinition } from './types'
 import { errorResult, getModelContext, jsonResult, warnNotAvailable, warnRegistrationFailed } from './internal'
 
-function resolveData<T>(data: T[] | (() => T[])): T[] {
-  return typeof data === 'function' ? data() : data
-}
-
 const DEFAULT_TOOLS: DataTool[] = ['search', 'add', 'delete', 'stats']
 
 function idSchema(idField: string): Record<string, { type: string, description: string }> {
@@ -62,6 +58,10 @@ export function exposeData<T extends Record<string, unknown>>(
   const fieldsMeta = fields ?? ({} as Record<string, FieldSchema>)
   const regOpts = signal != null ? { signal } : undefined
 
+  // Cache the resolved array so that mutations (add/delete) persist across reads.
+  // When data is a getter function, the result is cached on first access.
+  const cachedData: T[] = typeof data === 'function' ? data() : data
+
   const reg = (def: WebMCPToolDefinition): boolean => {
     try {
       ctx.registerTool(def, regOpts)
@@ -91,12 +91,11 @@ export function exposeData<T extends Record<string, unknown>>(
       execute: async (params) => {
         const { keyword = '', page = 1, pageSize = 50 } = params as Record<string, unknown>
         const kw = String(keyword)
-        const list = resolveData(data)
         const filtered = kw
-          ? list.filter(item =>
+          ? cachedData.filter(item =>
               searchFields.some(f => String(item[f] ?? '').includes(kw)),
             )
-          : list
+          : cachedData
         const p = Math.max(1, Number(page))
         const ps = Math.max(1, Number(pageSize))
         const start = (p - 1) * ps
@@ -118,7 +117,7 @@ export function exposeData<T extends Record<string, unknown>>(
       inputSchema: { type: 'object', properties: idSchema(id), required: [id] },
       execute: async (params) => {
         const val = (params as Record<string, unknown>)[id]
-        const item = resolveData(data).find(o => String(o[idField]) === String(val))
+        const item = cachedData.find(o => String(o[idField]) === String(val))
         return item ? jsonResult(item) : errorResult(`${name} ${val} not found`)
       },
     })
@@ -127,7 +126,7 @@ export function exposeData<T extends Record<string, unknown>>(
   // --- add ---
   if (tools.includes('add')) {
     const props: Record<string, { type: string, description: string }> = {}
-    const sample = resolveData(data)[0]
+    const sample = cachedData[0]
     if (sample) {
       for (const k of Object.keys(sample)) {
         if (k === id)
@@ -146,9 +145,8 @@ export function exposeData<T extends Record<string, unknown>>(
       inputSchema: { type: 'object', properties: props },
       execute: async (params) => {
         const record = params as Record<string, unknown>
-        const source = resolveData(data) as Record<string, unknown>[]
         if (!(id in record) || record[id] == null || record[id] === '') {
-          const maxId = source.reduce((max, o) => {
+          const maxId = cachedData.reduce((max, o) => {
             const v = String(o[id] ?? '')
             const num = Number.parseInt(v.replace(/\D/g, ''), 10)
             return Number.isNaN(num) ? max : Math.max(max, num)
@@ -161,7 +159,7 @@ export function exposeData<T extends Record<string, unknown>>(
             record[k] = Number(v)
           }
         }
-        source.push(record as T)
+        cachedData.push(record as T)
         return jsonResult(record)
       },
     })
@@ -175,11 +173,10 @@ export function exposeData<T extends Record<string, unknown>>(
       inputSchema: { type: 'object', properties: idSchema(id), required: [id] },
       execute: async (params) => {
         const val = String((params as Record<string, unknown>)[id])
-        const source = resolveData(data)
-        const idx = source.findIndex(o => String(o[idField]) === val)
+        const idx = cachedData.findIndex(o => String(o[idField]) === val)
         if (idx === -1)
           return errorResult(`${name} ${val} not found`)
-        const [removed] = source.splice(idx, 1)
+        const [removed] = cachedData.splice(idx, 1)
         return jsonResult({ deleted: removed })
       },
     })
@@ -192,7 +189,7 @@ export function exposeData<T extends Record<string, unknown>>(
       description: `Get summary statistics for ${name} (total count, sum of numeric fields, distribution of string fields).`,
       inputSchema: { type: 'object', properties: {} },
       execute: async () => {
-        const list = resolveData(data)
+        const list = cachedData
         const totals: Record<string, number> = {}
         const distributions: Record<string, Record<string, number>> = {}
 

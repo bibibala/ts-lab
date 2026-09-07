@@ -102,7 +102,7 @@ progress.done()     // 完成
 
 ## configure
 
-运行时更新配置，下次 `start()` 生效。
+运行时更新配置。`height`、`speed`、`easing` 会立即生效（更新已注入的 CSS）。其余选项（`color`、`trickle`、`trickleSpeed`、`minimum`）在下次 `start()` 时生效。
 
 ```ts
 // 单色

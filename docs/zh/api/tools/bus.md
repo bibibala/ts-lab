@@ -82,9 +82,6 @@ function createBus<Events>(all?: Map<EventType, Handler[]>): Bus<Events>
 
 ```ts
 interface Bus<Events> {
-  /** 所有事件类型到处理器的映射（可被其他实例共享） */
-  all: Map<EventType, Handler[]>
-
   /** 触发事件（支持 void 事件不传 payload） */
   emit<Key extends keyof Events>(type: Key, event: Events[Key]): void
   emit<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void
@@ -136,25 +133,15 @@ bus.emit('login', 'bibibala')
 
 ## 共享处理器 Map
 
-多个 Bus 实例可以共享同一个 `all` Map，实现跨实例通信：
-
-```ts
-const busA = createBus<Events>()
-const busB = createBus<Events>()
-
-// 让 busB 共享 busA 的处理器
-busB.all = busA.all
-
-busA.on('login', user => console.log('A:', user))
-busB.emit('login', 'shared!') // → "A: shared!"
-```
-
-也可以通过 `createBus` 的构造参数直接传入：
+多个 Bus 实例可以通过构造参数传入同一个 `Map`，实现跨实例通信：
 
 ```ts
 const sharedMap = new Map()
 const busA = createBus<Events>(sharedMap)
 const busB = createBus<Events>(sharedMap)
+
+busA.on('login', user => console.log('A:', user))
+busB.emit('login', 'shared!') // → "A: shared!"
 ```
 
 ## 重复注册检测

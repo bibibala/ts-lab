@@ -7,7 +7,7 @@ class Loading {
 
   private mask: HTMLDivElement | null = null
   private count = 0
-  private styleInjected = false
+  private styleEl: HTMLStyleElement | null = null
 
   private constructor() {
     this.injectStyle()
@@ -22,10 +22,13 @@ class Loading {
 
   /* ---------------- Style injection ---------------- */
   private injectStyle(): void {
-    if (this.styleInjected || typeof document === 'undefined')
+    if (typeof document === 'undefined')
       return
-    const style = document.createElement('style')
-    style.textContent = `
+    if (!this.styleEl) {
+      this.styleEl = document.createElement('style')
+      document.head.appendChild(this.styleEl)
+    }
+    this.styleEl.textContent = `
       .tsl-loading-mask {
         position: fixed;
         inset: 0;
@@ -70,8 +73,6 @@ class Loading {
         to { transform: rotate(360deg); }
       }
     `
-    document.head.appendChild(style)
-    this.styleInjected = true
   }
 
   /* ---------------- Public API ---------------- */
@@ -134,7 +135,10 @@ class Loading {
       this.mask.remove()
       this.mask = null
     }
-    this.styleInjected = false
+    if (this.styleEl) {
+      this.styleEl.remove()
+      this.styleEl = null
+    }
   }
 }
 

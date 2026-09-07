@@ -26,6 +26,8 @@ export function resolveOptions(raw: WatermarkOptions): ResolvedOptions {
     zIndex: raw.zIndex ?? DEFAULTS.zIndex,
     invisibleId: raw.invisibleId ?? DEFAULTS.invisibleId,
     stegoDebug: raw.stegoDebug ?? DEFAULTS.stegoDebug,
+    styleCheckInterval: raw.styleCheckInterval ?? DEFAULTS.styleCheckInterval,
+    onTamperDetected: raw.onTamperDetected,
   }
 }
 

@@ -51,6 +51,19 @@ export interface WatermarkOptions {
    * production — it defeats the purpose of being invisible. Default false.
    */
   stegoDebug?: boolean
+  /**
+   * Interval in ms for computed style checks to detect CSS !important injections.
+   * Set to 0 to disable periodic checks. Default 1000.
+   * Note: MutationObserver already detects DOM structure changes; this catches
+   * stylesheet-based attacks that !important overrides cannot be caught by
+   * MutationObserver alone.
+   */
+  styleCheckInterval?: number
+  /**
+   * Callback fired when CSS tampering is detected. Can be used to log
+   * security events or trigger additional protection measures.
+   */
+  onTamperDetected?: () => void
 }
 
 /**
@@ -86,6 +99,8 @@ export interface ResolvedOptions {
   zIndex: number
   invisibleId: boolean
   stegoDebug: boolean
+  styleCheckInterval: number
+  onTamperDetected?: () => void
 }
 
 export const DEFAULTS = {
@@ -102,4 +117,5 @@ export const DEFAULTS = {
   zIndex: 9999,
   invisibleId: false,
   stegoDebug: false,
+  styleCheckInterval: 1000,
 } as const

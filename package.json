@@ -44,18 +44,20 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdown && cp src/wasm/image/fun.wasm dist/",
+    "build": "tsdown && node --input-type=module -e \"import{copyFileSync}from'node:fs';copyFileSync('src/wasm/image/fun.wasm','dist/fun.wasm')\"",
     "dev": "tsdown --watch",
     "lint": "eslint --fix",
     "prepack": "nr build",
     "release": "CI=true bumpp",
     "start": "tsx src/index.ts",
     "test": "pnpm run build && vitest",
+    "check-deps": "CI=true pnpm dedupe --check",
     "typecheck": "tsc",
     "prepare": "git config core.hooksPath .githooks && simple-git-hooks && skills-npm"
   },
   "scripts-info": {
     "build": "Build the library for publishing",
+    "check-deps": "Check for duplicate/satisfiable dependencies that could be deduped",
     "dev": "Rebuild on change during development",
     "lint": "Check for code style issues",
     "prepack": "Build before publishing",

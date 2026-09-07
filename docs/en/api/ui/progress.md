@@ -102,7 +102,7 @@ progress.done()     // Complete
 
 ## configure
 
-Update configuration at runtime; takes effect on next `start()`.
+Update configuration at runtime. `height`, `speed`, and `easing` take effect immediately (updating the injected CSS). Other options (`color`, `trickle`, `trickleSpeed`, `minimum`) take effect on the next `start()`.
 
 ```ts
 // Single color

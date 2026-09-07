@@ -560,17 +560,126 @@ function decodeQRData(
   if (bits.length < 4)
     return null
   const mode = (bits[0] << 3) | (bits[1] << 2) | (bits[2] << 1) | bits[3]
-  if (mode !== 4)
-    return null // Only Byte mode supported for now
 
-  // Read character count
-  const ccBits = version <= 9 ? 8 : 16
+  if (mode === 1)
+    return decodeNumericMode(bits, version)
+  if (mode === 2)
+    return decodeAlphanumericMode(bits, version)
+  if (mode === 4)
+    return decodeByteMode(bits, version)
+
+  return null // unsupported mode
+}
+
+// ---- Numeric mode (mode indicator 0001) ----
+
+function decodeNumericMode(bits: number[], version: number): string | null {
+  const ccBits = version <= 9 ? 10 : version <= 26 ? 12 : 14
+  if (bits.length < 4 + ccBits)
+    return null
+
   let charCount = 0
   for (let i = 0; i < ccBits; i++) {
     charCount = (charCount << 1) | bits[4 + i]
   }
 
-  // Read data bytes
+  const dataStart = 4 + ccBits
+  let pos = dataStart
+  let result = ''
+
+  // Groups of 3 digits → 10 bits
+  while (pos + 10 <= bits.length && result.length + 3 <= charCount) {
+    let val = 0
+    for (let i = 0; i < 10; i++) {
+      val = (val << 1) | (bits[pos++] || 0)
+    }
+    if (val > 999)
+      return null
+    result += String(val).padStart(3, '0')
+  }
+
+  // 2 digits → 7 bits
+  if (pos + 7 <= bits.length && result.length + 2 <= charCount) {
+    let val = 0
+    for (let i = 0; i < 7; i++) {
+      val = (val << 1) | (bits[pos++] || 0)
+    }
+    if (val > 99)
+      return null
+    result += String(val).padStart(2, '0')
+  }
+
+  // 1 digit → 4 bits
+  if (pos + 4 <= bits.length && result.length + 1 <= charCount) {
+    let val = 0
+    for (let i = 0; i < 4; i++) {
+      val = (val << 1) | (bits[pos++] || 0)
+    }
+    if (val > 9)
+      return null
+    result += String(val)
+  }
+
+  return result.length === charCount ? result : null
+}
+
+// ---- Alphanumeric mode (mode indicator 0010) ----
+
+const ALPHA_TABLE = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
+
+function decodeAlphanumericMode(bits: number[], version: number): string | null {
+  const ccBits = version <= 9 ? 9 : version <= 26 ? 11 : 13
+  if (bits.length < 4 + ccBits)
+    return null
+
+  let charCount = 0
+  for (let i = 0; i < ccBits; i++) {
+    charCount = (charCount << 1) | bits[4 + i]
+  }
+
+  const dataStart = 4 + ccBits
+  let pos = dataStart
+  let result = ''
+
+  // Pairs of characters → 11 bits
+  while (pos + 11 <= bits.length && result.length + 2 <= charCount) {
+    let val = 0
+    for (let i = 0; i < 11; i++) {
+      val = (val << 1) | (bits[pos++] || 0)
+    }
+    if (val > 1092)
+      return null
+    const hi = Math.floor(val / 45)
+    const lo = val % 45
+    result += ALPHA_TABLE[hi] + ALPHA_TABLE[lo]
+  }
+
+  // Single character → 6 bits
+  if (pos + 6 <= bits.length && result.length + 1 <= charCount) {
+    let val = 0
+    for (let i = 0; i < 6; i++) {
+      val = (val << 1) | (bits[pos++] || 0)
+    }
+    if (val >= ALPHA_TABLE.length)
+      return null
+    result += ALPHA_TABLE[val]
+  }
+
+  return result.length === charCount ? result : null
+}
+
+// ---- Byte mode (mode indicator 0100) ----
+
+function decodeByteMode(bits: number[], version: number): string | null {
+  const ccBits = version <= 9 ? 8 : 16
+  if (bits.length < 4 + ccBits)
+    return null
+
+  let charCount = 0
+  for (let i = 0; i < ccBits; i++) {
+    charCount = (charCount << 1) | bits[4 + i]
+  }
+
   const dataStart = 4 + ccBits
   const dataBits = charCount * 8
   const resultBytes: number[] = []
