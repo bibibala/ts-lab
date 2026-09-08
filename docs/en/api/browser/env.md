@@ -132,5 +132,5 @@ console.log(env.isBrowser)  // In regular browser
 ## Detection Logic
 
 - **OS**: Determined via `navigator.userAgent` + `navigator.platform` combined analysis.
-- **Architecture**: Prefers [User-Agent Client Hints](https://developer.mozilla.org/en-US/docs/Web/API/User-Agent_Client_Hints_API) for precise async detection; falls back to UA keyword + OS context inference when unavailable. When UACH returns `"arm"`, it cross-references `arm64`/`aarch64` signals in the UA to distinguish 32/64-bit ARM.
+- **Architecture**: Prefers [User-Agent Client Hints](https://developer.mozilla.org/en-US/docs/Web/API/User-Agent_Client_Hints_API) for precise async detection; falls back to UA keyword + OS context inference. When UACH returns `"arm"`, it cross-references `arm64`/`aarch64` signals in the UA to distinguish 32/64-bit ARM.
 - **Container**: `isBrowser` is `true` when not in WeChat, QQ, or a custom App WebView.

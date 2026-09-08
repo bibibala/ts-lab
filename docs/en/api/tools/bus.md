@@ -68,7 +68,7 @@ export type WildcardHandler<Events> = (
 
 ## createBus
 
-Create a new event bus instance. You can pass an existing `Map` to share the same set of handlers across multiple Bus instances.
+Create a new event bus instance. Pass an existing `Map` to share handlers across multiple Bus instances.
 
 ```ts
 function createBus<Events>(all?: Map<EventType, Handler[]>): Bus<Events>
@@ -129,11 +129,11 @@ bus.emit('login', 'bibibala')
 // → "login" "bibibala"
 ```
 
-Wildcard handlers receive callbacks for **all** events — the first argument is the event type, the second is the event data.
+Wildcard handlers receive callbacks for **all** events — first argument is the event type, second is the event data.
 
 ## Shared Handler Map
 
-Multiple Bus instances can share the same handler Map for cross-instance communication. Pass a shared `Map` via the `createBus` constructor parameter:
+Multiple Bus instances can share the same handler Map for cross-instance communication. Pass a shared `Map` via the constructor:
 
 ```ts
 const sharedMap = new Map()
@@ -146,7 +146,7 @@ busB.emit('login', 'shared!') // → "A: shared!"
 
 ## Duplicate Registration Detection
 
-When the same handler reference is registered for the same event type, the second registration is ignored and a warning is printed:
+When the same handler reference is registered twice for the same event type, the second registration is ignored with a warning:
 
 ```ts
 const handler = (user: string) => {}

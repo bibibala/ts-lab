@@ -153,7 +153,7 @@ async function decodeFromFile(e: Event) {
 
 # Watermark · Page Watermark
 
-A zero-dependency page watermark component. Canvas-generated background image + MutationObserver tamper protection. Supports multi-line text, light/dark themes, hidden identity tracking, pixel-domain steganographic watermark, and dynamic refresh.
+A zero-dependency page watermark component. Canvas-generated background + MutationObserver tamper protection. Supports multi-line text, light/dark themes, identity tracking, pixel-domain steganographic watermark, and dynamic refresh.
 
 > **Note:** The default watermark text is white (suited for this page's dark theme). For light-themed pages, change `colorScheme` to `'dark'` (black text).
 
@@ -170,7 +170,7 @@ const wm = createWatermark({
 })
 ```
 
-The page immediately gets a semi-transparent watermark overlay (`pointer-events: none`, no impact on any interactions). Defaults to black text (`colorScheme: 'dark'`); for dark-themed pages, change to `'light'`.
+The page immediately gets a semi-transparent watermark overlay (`pointer-events: none`, no impact on interactions). Defaults to white text (`colorScheme: 'light'`); for light-themed pages, use `'dark'`.
 
 ---
 
@@ -291,13 +291,13 @@ With `protect: true` (default), MutationObserver monitors and restores the follo
 | `backgroundImage` replaced | Restore |
 | Ancestor nodes cleared | Re-mount |
 
-> This is a front-end defense that raises the tamper bar — it's not absolutely secure. In a browser environment where DevTools has full control, 100% deletion prevention is not possible.
+> This is a front-end defense that raises the tampering bar — it's not absolutely secure. In a browser environment where DevTools has full control, 100% deletion prevention is not possible.
 
 ---
 
 ## Identity Tracking
 
-`userId` is only used as the payload for the invisible watermark — **no visible text is appended to the watermark**. If you need visible tracking info, write it directly in `text`:
+`userId` is only used as the invisible watermark payload — **no visible text is appended to the watermark**. For visible tracking info, write it directly in `text`:
 
 ```ts
 createWatermark({
@@ -311,14 +311,14 @@ createWatermark({
 
 ## Invisible Watermark (Experimental)
 
-`invisibleId: true` embeds the low 16 bits of the `userId` hash into canvas blocks using pixel-domain spread-spectrum. How it works:
+`invisibleId: true` embeds the low 16 bits of the `userId` hash into canvas blocks via pixel-domain spread-spectrum. How it works:
 
 - Divides the canvas into 16×16 px blocks
 - Each block applies deterministic pseudo-random ±1 noise (mulberry32 PRNG) to RGB channels
 - Amplitude is only 3/255 — invisible to the naked eye
 - Production-grade JPEG recompression may destroy this pattern
 
-**Debug**: `stegoDebug: true` amplifies the amplitude to 60/255, making the block grid visible to the naked eye for verifying the embedding logic works correctly. **Never enable in production**.
+**Debug**: `stegoDebug: true` amplifies the amplitude to 60/255, making the block grid visible for verifying the embedding logic. **Never enable in production**.
 
 ```ts
 createWatermark({
@@ -331,7 +331,7 @@ createWatermark({
 
 ### Decoding
 
-`decodeWatermark` can reverse-extract the embedded 16-bit code from screenshots or images:
+`decodeWatermark` extracts the embedded 16-bit code from screenshots or images:
 
 ```ts
 import { decodeWatermark } from '@bilibaba/ts-lab/ui'
@@ -372,7 +372,7 @@ wm.show()  // Restores timer
 
 ## SSR Safe
 
-In non-browser environments (`window` or `document` unavailable), returns a no-op instance — all method calls are safely no-ops:
+In non-browser environments (`window` or `document` unavailable), returns a no-op instance — all method calls are safe no-ops:
 
 ```ts
 // Safe to call in Node / SSR

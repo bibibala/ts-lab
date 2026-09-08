@@ -1,6 +1,6 @@
 # WebSocket · 实时连接
 
-支持自动重连、心跳保活、僵尸连接检测、离线消息队列的 WebSocket 客户端封装。
+WebSocket 客户端封装，支持自动重连、心跳保活、僵尸连接检测和离线消息队列。
 
 ## 类型导出
 
@@ -11,7 +11,7 @@ export interface WSClient { ... }
 
 ## createWS
 
-创建一个 WebSocket 客户端实例。对象传入 `send()` 自动 `JSON.stringify`，接收数据原样透传 — 由调用方自行解析。
+创建一个 WebSocket 客户端实例。对象传入 `send()` 会自动 `JSON.stringify`，接收的数据原样返回——由调用方自行解析。
 
 ```ts
 function createWS(url: string | URL, options?: WSOptions): WSClient
@@ -61,7 +61,7 @@ interface WSClient {
 }
 ```
 
-`onClose` 在每次断连时都会触发（包括中间断连和最终关闭），调用方可通过 `ev.code` / `readyState` 自行区分。
+`onClose` 在每次断连时都会触发（包括中间断连和最终关闭），调用方可通过 `ev.code` / `readyState` 来区分。
 
 ## 基本用法
 
@@ -74,7 +74,7 @@ ws.onOpen(() => console.log('已连接'))
 ws.onClose((ev) => console.log('已断开', ev.code))
 ws.onError((ev) => console.error('出错'))
 
-// 接收消息 — 数据原样透传，调用方自行解析
+// 接收消息 — 数据原样返回，需自行解析
 ws.onMessage((data) => {
   const parsed = typeof data === 'string' ? JSON.parse(data) : data
   console.log('收到:', parsed)
@@ -138,11 +138,11 @@ const ws = createWS('wss://example.com/ws', {
 })
 ```
 
-收到任何消息都会重置心跳超时计时器，无论消息内容。
+收到任何消息都会重置心跳超时计时器，不论消息内容。
 
 ## 离线消息队列
 
-设置 `queueWhenOffline` 后，断连期间 `send()` 不会抛错，消息会缓存到队列中。重连成功后自动发送：
+设置 `queueWhenOffline` 后，断连期间 `send()` 不会抛错，消息会缓存在队列中。重连成功后自动发送：
 
 ```ts
 const ws = createWS('wss://example.com/ws', {

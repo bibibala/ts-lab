@@ -54,13 +54,13 @@ async function read() {
 
 # 图片与富文本
 
-剪贴板不只存文字——你在网页上选中一段带格式的表格 Ctrl+C，粘贴到飞书时表格还在，这是因为剪贴板同时存了 `text/html` 和 `text/plain` 两份数据。下面这些 API 就是做这类事的，需要浏览器支持 `ClipboardItem`（`isRichClipboardSupported()` 返回 `true`）。
+剪贴板不只存文字——你在网页上选中一段带格式的表格 Ctrl+C，粘贴到飞书时表格还在，因为剪贴板同时存了 `text/html` 和 `text/plain` 两份数据。下面这些 API 就是处理这类富文本场景的，需要浏览器支持 `ClipboardItem`（`isRichClipboardSupported()` 返回 `true`）。
 
 ## 复制带格式的内容到邮件 / 飞书
 
 想做一个「分享报价单」按钮：用户一点，HTML 表格进剪贴板，粘贴到邮件或飞书时保留格式；粘贴到纯文本输入框时自动显示纯文本版本。
 
-用 `writeHtml` —— 它同时写入 HTML 和一份纯文本回退：
+用 `writeHtml` —— 同时写入 HTML 和纯文本回退：
 
 ```ts
 import { writeHtml } from '@bilibaba/ts-lab/browser'
@@ -74,7 +74,7 @@ await writeHtml(
 )
 ```
 
-底层原理就是一次往剪贴板里塞了两个 MIME 类型。如果你想自己控制塞哪些格式——比如额外加一个 `text/csv`——用更底层的 `writeRich`：
+底层原理就是一次性往剪贴板写入两个 MIME 类型。如果你想自己控制写入哪些格式——比如额外加一个 `text/csv`——用更底层的 `writeRich`：
 
 ```ts
 import { writeRich } from '@bilibaba/ts-lab/browser'
@@ -86,7 +86,7 @@ await writeRich([
 ])
 ```
 
-反过来也成立——`readRich` 能拿到剪贴板里所有格式。用户在网页上复制一段文字，剪贴板里通常同时有 `text/plain` 和 `text/html`：
+反过来也成立——`readRich` 能读取剪贴板中的所有格式。用户在网页上复制一段文字，剪贴板里通常同时有 `text/plain` 和 `text/html`：
 
 ```ts
 import { readRich } from '@bilibaba/ts-lab/browser'
@@ -98,7 +98,7 @@ const items = await readRich()
 
 ## 图片进剪贴板：canvas 图表一键粘贴
 
-做完一个 canvas 统计图，用户想直接 Ctrl+V 贴到飞书或 PPT 里。不用先下载再插入——`writeImage` 把 Blob 写进剪贴板：
+做完一个 canvas 统计图，用户想直接 Ctrl+V 贴到飞书或 PPT 里。不必先下载再插入——`writeImage` 直接将 Blob 写入剪贴板：
 
 ```ts
 import { writeImage } from '@bilibaba/ts-lab/browser'

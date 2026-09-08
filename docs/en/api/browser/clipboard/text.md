@@ -54,7 +54,7 @@ Plain text copy and paste — the two most common operations.
 
 ## writeText
 
-Write plain text to the clipboard. Prefers Clipboard API; falls back to `execCommand('copy')` on failure or when unsupported.
+Write plain text to the clipboard. Uses Clipboard API when available; falls back to `execCommand('copy')` on failure or in older browsers.
 
 ```ts
 import { writeText } from '@bilibaba/ts-lab/browser'
@@ -62,7 +62,7 @@ import { writeText } from '@bilibaba/ts-lab/browser'
 await writeText('Hello, world!')
 ```
 
-Even works in older browsers that don't support the Clipboard API — internally creates a hidden `<textarea>`, selects it, and executes `execCommand('copy')`.
+Even works in older browsers without Clipboard API support — internally creates a hidden `<textarea>`, selects it, and runs `execCommand('copy')`.
 
 ## readText
 

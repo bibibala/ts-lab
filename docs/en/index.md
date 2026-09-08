@@ -1,6 +1,6 @@
 # Getting Started
 
-`@bilibaba/ts-lab` is a collection of browser-oriented TypeScript utility functions — zero dependencies, tree-shakeable.
+`@bilibaba/ts-lab` is a lightweight, zero-dependency TypeScript utility library for the browser — fully tree-shakeable.
 
 ## Installation
 
@@ -18,16 +18,16 @@ yarn add @bilibaba/ts-lab
 
 ## ESM Imports
 
-This package only provides ESM format. All modules can be imported on demand:
+ESM only. Import what you need:
 
 ```ts
 import { detectEnv } from '@bilibaba/ts-lab/browser'
 import { createBus, getObjById } from '@bilibaba/ts-lab/tools'
 ```
 
-Bundlers (Vite / Rollup / webpack / esbuild, etc.) will automatically tree-shake unused modules.
+Bundlers (Vite / Rollup / webpack / esbuild, etc.) will automatically tree-shake unused code.
 
-You can also continue importing existing APIs from the root entrypoint; category entrypoints are better suited for keeping things organized as the API grows:
+You can also import from the root entrypoint; category subpaths (`/browser`, `/tools`, `/ui`, `/wasm`) keep things organized as the API grows:
 
 ```ts
 import { writeText } from '@bilibaba/ts-lab/browser'
@@ -64,8 +64,7 @@ src/
 ├── browser/          # Browser APIs
 │   ├── clipboard/    # Clipboard (text/HTML/image/file)
 │   ├── env/          # Runtime environment detection
-│   ├── network/      # Network status info
-│   └── webmcp/       # WebMCP tool registration
+│   └── network/      # Network status info
 ├── ui/               # UI components
 │   ├── feedback/     # Toast notifications
 │   ├── loading/      # Global loading overlay
@@ -85,7 +84,6 @@ src/
 | [Clipboard](/en/api/browser/clipboard/) | Text / HTML / image read/write, file paste, cut, event listening |
 | [Env](/en/api/browser/env) | Runtime environment detection (OS / architecture / WeChat / QQ / App WebView) |
 | [Network](/en/api/browser/network) | Get current network status (online state, connection type, bandwidth, latency) |
-| [WebMCP](/en/api/browser/webmcp) | Expose page data / functions / forms as WebMCP tools for AI Agent consumption |
 | [Toast](/en/api/ui/feedback/) | Singleton Toast notification component with multiple types and positions |
 | [Loading](/en/api/ui/loading/) | Global loading overlay with nested call support |
 | [Progress](/en/api/ui/progress) | NProgress-style top progress bar with gradient support |
@@ -106,7 +104,6 @@ import { md5 } from '@bilibaba/ts-lab/tools'
 import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab/browser'
 import { detectEnv } from '@bilibaba/ts-lab/browser'
 import { getNetworkInfo } from '@bilibaba/ts-lab/browser'
-import { exposeData, exposeFunction, registerTool } from '@bilibaba/ts-lab/browser'
 
 // UI Components
 import { uiFeedback } from '@bilibaba/ts-lab/ui'
@@ -120,7 +117,4 @@ import { getIco, getIcns, getPngs } from '@bilibaba/ts-lab/wasm'
 
 ## Browser Compatibility
 
-All modules target modern browsers. The WebMCP module requires **Chrome 149+** with the following flags enabled:
-
-- `chrome://flags/#webmcp`
-- `chrome://flags/#devtools-webmcp-support`
+All modules target modern browsers.

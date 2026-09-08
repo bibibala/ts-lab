@@ -70,11 +70,11 @@ Show the progress bar and start auto-increment (trickle).
 progress.start()
 ```
 
-The progress bar automatically advances in small random increments, simulating a loading process.
+The progress bar advances automatically in small random increments, simulating a loading process.
 
 ## done
 
-Complete progress and hide the progress bar. The bar disappears after the transition animation finishes.
+Complete progress and hide the bar. It disappears after the transition animation finishes.
 
 ```ts
 progress.done()

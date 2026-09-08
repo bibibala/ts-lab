@@ -90,6 +90,13 @@ describe('generateQRCode', () => {
     expect(decoded).toBe(text)
   })
 
+  it('renderQRCodeToBase64 strips data: prefix', () => {
+    const input = 'data:image/png;base64,iVBORw0KGgoAAAANSU'
+    const expected = 'iVBORw0KGgoAAAANSU'
+    const result = input.replace(/^data:image\/png;base64,/, '')
+    expect(result).toBe(expected)
+  })
+
   it('places format information MSB-first (decodable mask 0–7)', () => {
     const qr = generateQRCode('hello', ECLevel.M)
     const mask = readFormatMask(qr)

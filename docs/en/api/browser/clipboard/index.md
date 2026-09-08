@@ -81,7 +81,7 @@ async function doRead() {
 
 Based on [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) + [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API)
 
-A complete wrapper for browser clipboard capabilities: text / HTML / image read/write, file paste, cut, event listening, with fallback strategies and unified error types.
+A complete wrapper for browser clipboard: text / HTML / image read/write, file paste, cut, event listening — with built-in fallback strategies and a unified error type.
 
 ## Quick Start
 
@@ -100,7 +100,7 @@ canvas.toBlob(async (blob) => { if (blob) await writeImage(blob) }, 'image/png')
 
 ## Feature Detection
 
-Before calling APIs, you can check the current environment's support:
+Before calling APIs, you can check environment support:
 
 ```ts
 import {

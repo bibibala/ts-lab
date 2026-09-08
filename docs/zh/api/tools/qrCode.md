@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { generateQRCode, renderQRCodeToDataURL, readQRCode, ECLevel } from '@bilibaba/ts-lab/tools'
+import { generateQRCode, renderQRCodeToBase64, readQRCode, ECLevel } from '@bilibaba/ts-lab/tools'
 
 const text = ref('https://ts-lab.netlify.app')
 const ecLevel = ref(ECLevel.M)
@@ -20,9 +20,9 @@ const qr = computed(() => {
   }
 })
 
-const dataUrl = computed(() => {
+const base64 = computed(() => {
   if (!qr.value) return ''
-  return renderQRCodeToDataURL(qr.value, { moduleSize: 5, margin: 4 })
+  return renderQRCodeToBase64(qr.value, { moduleSize: 5, margin: 4 })
 })
 
 // ---- 解读 ----
@@ -140,7 +140,7 @@ function handleDecodeFile(e: Event) {
       </div>
     </div>
     <div class="qr-output">
-      <img v-if="dataUrl" :src="dataUrl" alt="QR Code" />
+      <img v-if="base64" :src="`data:image/png;base64,${base64}`" alt="QR Code" />
       <div v-if="qr" class="qr-meta">
         Version {{ qr.version }} · {{ qr.size }}×{{ qr.size }} 模块
       </div>
@@ -171,7 +171,7 @@ function handleDecodeFile(e: Event) {
 
 # QR Code · 二维码生成与解析
 
-纯 TypeScript 实现的二维码生成与解码器。零依赖，支持从文本生成 QR 码、Canvas 渲染输出，以及从像素数据反向解码。
+纯 TypeScript 实现的二维码生成与解码器。零依赖，支持从文本生成 QR 码、输出 Base64，以及从像素数据反向解码。
 
 ## 类型导出
 
@@ -241,62 +241,31 @@ const qrV10 = generateQRCode('some data', ECLevel.M, 10)
 | `Q` | ≈25% | 可能部分污损 |
 | `H` | ≈30% | 需要叠加 logo 或高容错 |
 
-## renderQRCodeToCanvas
+## renderQRCodeToBase64
 
-将 QR 码渲染到指定 `<canvas>` 上。
-
-```ts
-function renderQRCodeToCanvas(
-  qr: QRCode,
-  canvas: HTMLCanvasElement,
-  options?: RenderOptions,
-): void
-```
-
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| `qr` | `QRCode` | `generateQRCode` 的返回结果 |
-| `canvas` | `HTMLCanvasElement` | 目标画布元素 |
-| `options` | `RenderOptions` | 渲染选项 |
+将 QR 码渲染为纯 Base64 字符串，可直接用于 `<img>` 的 `src`。
 
 ```ts
-import { generateQRCode, renderQRCodeToCanvas } from '@bilibaba/ts-lab/tools'
-
-const qr = generateQRCode('hello')
-const canvas = document.querySelector('canvas')!
-
-renderQRCodeToCanvas(qr, canvas, {
-  moduleSize: 8,
-  margin: 2,
-  darkColor: '#1a1a2e',
-  lightColor: '#ffffff',
-})
-```
-
-## renderQRCodeToDataURL
-
-将 QR 码渲染为 Data URL 字符串，适合直接用于 `<img>` 的 `src` 或下载。
-
-```ts
-function renderQRCodeToDataURL(
+function renderQRCodeToBase64(
   qr: QRCode,
   options?: RenderOptions,
 ): string
 ```
 
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `qr` | `QRCode` | `generateQRCode` 的返回结果 |
+| `options` | `RenderOptions` | 渲染选项 |
+
 ```ts
+import { generateQRCode, renderQRCodeToBase64 } from '@bilibaba/ts-lab/tools'
+
 const qr = generateQRCode('https://example.com')
-const dataUrl = renderQRCodeToDataURL(qr, { moduleSize: 6 })
+const base64 = renderQRCodeToBase64(qr, { moduleSize: 6 })
 
-// 用于 <img> 标签
+// 用作 <img> src
 const img = document.createElement('img')
-img.src = dataUrl
-
-// 或触发下载
-const link = document.createElement('a')
-link.href = dataUrl
-link.download = 'qrcode.png'
-link.click()
+img.src = `data:image/png;base64,${base64}`
 ```
 
 ## readQRCode
@@ -366,7 +335,7 @@ const text = readQRCode({
 ```ts
 import {
   generateQRCode,
-  renderQRCodeToDataURL,
+  renderQRCodeToBase64,
   readQRCode,
   ECLevel,
 } from '@bilibaba/ts-lab/tools'
@@ -374,12 +343,12 @@ import {
 // 1. 生成二维码
 const qr = generateQRCode('Hello, ts-lab!', ECLevel.H)
 
-// 2. 渲染为 Data URL
-const dataUrl = renderQRCodeToDataURL(qr, { moduleSize: 8 })
+// 2. 渲染为 Base64
+const base64 = renderQRCodeToBase64(qr, { moduleSize: 8 })
 
 // 3. 显示在页面上
 const img = document.createElement('img')
-img.src = dataUrl
+img.src = `data:image/png;base64,${base64}`
 document.body.appendChild(img)
 
 // 4. 等图片加载后解码回文字

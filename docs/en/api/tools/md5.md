@@ -56,7 +56,7 @@ watch(input, compute, { immediate: true })
 
 # MD5
 
-A pure TypeScript MD5 hash tool implementing [RFC 1321](https://www.ietf.org/rfc/rfc1321.txt). Zero dependencies, **fully async**, supports string (UTF-8), `ArrayBuffer`, and `Uint8Array` input.
+A pure TypeScript MD5 hash implementing [RFC 1321](https://www.ietf.org/rfc/rfc1321.txt). Zero dependencies, **fully async**, supports string (UTF-8), `ArrayBuffer`, and `Uint8Array` input.
 
 ## md5
 
@@ -81,7 +81,7 @@ await md5('你好')
 
 ## Large Files Won't Block the UI
 
-Internally yields to the event loop every ~256 KB of raw data, so the browser can render and respond normally:
+Internally yields to the event loop every ~256 KB of raw data, so the browser stays responsive:
 
 ```ts
 const fileHash = await md5(await file.arrayBuffer())

@@ -6,10 +6,6 @@ export { ClipboardError }
 export { cutFromInput }
 export { cutText }
 export { detectEnv }
-export { exposeAction }
-export { exposeData }
-export { exposeForm }
-export { exposeFunction }
 export { formatFileSize }
 export { generateId }
 export { getNetworkInfo }
@@ -17,7 +13,6 @@ export { isClipboardApiSupported }
 export { isExecCommandSupported }
 export { isRichClipboardSupported }
 export { isSecureContext }
-export { isWebMCPSupported }
 export { isWritableMimeType }
 export { onClipboardEvent }
 export { onFilePaste }
@@ -26,7 +21,6 @@ export { queryClipboardPermission }
 export { readImage }
 export { readRich }
 export { readText }
-export { registerTool }
 export { revokePastedFilePreview }
 export { WRITABLE_MIME_TYPES }
 export { writeFile }

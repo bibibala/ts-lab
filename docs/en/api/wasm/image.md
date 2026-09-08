@@ -1,6 +1,6 @@
 # Image · Image to Icon
 
-A WebAssembly-based image format conversion tool that converts PNG to ICO (Windows icon), ICNS (macOS icon), and multi-size PNG.
+A WebAssembly-based image format converter — converts PNG to ICO (Windows icon), ICNS (macOS icon), and multi-size PNG.
 
 ## initModule
 

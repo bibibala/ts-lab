@@ -153,9 +153,9 @@ async function decodeFromFile(e: Event) {
 
 # Watermark · 页面水印
 
-零依赖的页面水印组件。Canvas 生成背景图 + MutationObserver 防篡改保护。支持多行文字、明暗主题、隐藏标识追踪、像素域隐形水印和动态刷新。
+零依赖的页面水印组件。Canvas 生成背景图 + MutationObserver 防篡改保护。支持多行文字、明暗主题、身份追踪、像素域隐形水印和动态刷新。
 
-> ⚠️ **注意：** 默认水印文字为白色（适配本页面深色主题）。在浅色页面使用时请将 `colorScheme` 改为 `'dark'`（黑字）。
+> ⚠️ **注意：** 默认水印文字为白色（适配本页面深色主题）。在浅色页面使用时请将 `colorScheme` 改为 `'dark'`（黑色文字）。
 
 ## 快速开始
 
@@ -170,7 +170,7 @@ const wm = createWatermark({
 })
 ```
 
-页面会立即覆盖一层半透明水印背景（`pointer-events: none`，不影响任何交互）。默认黑字（`colorScheme: 'dark'`），深色主题页面需改为 `'light'`。
+页面会立即覆盖一层半透明水印背景（`pointer-events: none`，不影响任何交互）。默认为白字（`colorScheme: 'light'`），浅色主题页面需改为 `'dark'`。
 
 ---
 

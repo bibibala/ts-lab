@@ -1,6 +1,6 @@
 # 快速开始
 
-`@bilibaba/ts-lab` 是一组面向浏览器端的 TypeScript 工具函数集合，零依赖、Tree-shakeable。
+`@bilibaba/ts-lab` 是一个面向浏览器的 TypeScript 工具库，零依赖、支持 Tree-shaking。
 
 ## 安装
 
@@ -18,16 +18,16 @@ yarn add @bilibaba/ts-lab
 
 ## ESM 导入
 
-本包仅提供 ESM 格式，所有模块均可按需导入：
+本包仅提供 ESM 格式，所有模块均可按需引入：
 
 ```ts
 import { detectEnv } from '@bilibaba/ts-lab/browser'
 import { createBus, getObjById } from '@bilibaba/ts-lab/tools'
 ```
 
-打包工具（Vite / Rollup / webpack / esbuild 等）会自动 Tree-shake 未使用的模块。
+打包工具（Vite / Rollup / webpack / esbuild 等）会自动移除未使用的模块。
 
-也可以继续从根入口导入已有 API；分类入口更适合在 API 变多时保持清晰：
+也可以从根入口统一导入；随着 API 增多，按分类入口引入更清晰：
 
 ```ts
 import { writeText } from '@bilibaba/ts-lab/browser'
@@ -64,8 +64,7 @@ src/
 ├── browser/          # 浏览器 API
 │   ├── clipboard/    # 剪贴板（文本/HTML/图片/文件）
 │   ├── env/          # 运行环境检测
-│   ├── network/      # 网络状态信息
-│   └── webmcp/       # WebMCP 工具注册
+│   └── network/      # 网络状态信息
 ├── ui/               # UI 组件
 │   ├── feedback/     # Toast 提示
 │   ├── loading/      # 全局 Loading 遮罩
@@ -85,7 +84,6 @@ src/
 | [Clipboard](/zh/api/browser/clipboard/) | 文本 / HTML / 图片读写、文件粘贴、剪切、事件监听 |
 | [Env](/zh/api/browser/env) | 运行环境检测（OS / 架构 / 微信 / QQ / App WebView） |
 | [Network](/zh/api/browser/network) | 获取当前网络状态（在线状态、连接类型、带宽、延迟） |
-| [WebMCP](/zh/api/browser/webmcp) | 将页面数据 / 函数 / 表单暴露为 WebMCP 工具供 AI Agent 调用 |
 | [Toast](/zh/api/ui/feedback/) | 单例 Toast 提示组件，支持多种类型和位置 |
 | [Loading](/zh/api/ui/loading/) | 全局 Loading 遮罩，支持嵌套调用 |
 | [Progress](/zh/api/ui/progress) | NProgress 风格顶部进度条，支持渐变色 |
@@ -106,7 +104,6 @@ import { md5 } from '@bilibaba/ts-lab/tools'
 import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab/browser'
 import { detectEnv } from '@bilibaba/ts-lab/browser'
 import { getNetworkInfo } from '@bilibaba/ts-lab/browser'
-import { exposeData, exposeFunction, registerTool } from '@bilibaba/ts-lab/browser'
 
 // UI 组件
 import { uiFeedback } from '@bilibaba/ts-lab/ui'
@@ -120,7 +117,4 @@ import { getIco, getIcns, getPngs } from '@bilibaba/ts-lab/wasm'
 
 ## 浏览器兼容性
 
-所有模块均面向现代浏览器。WebMCP 模块需要 **Chrome 149+** 并开启以下 flags：
-
-- `chrome://flags/#webmcp`
-- `chrome://flags/#devtools-webmcp-support`
+所有模块均基于现代浏览器 API。

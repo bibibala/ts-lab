@@ -56,7 +56,7 @@ onUnmounted(() => { unbind?.() })
 ## 文件粘贴
 
 ::: warning 安全限制
-浏览器不允许网页 JS 主动把任意文件写入系统剪贴板，仅支持 `text/plain`、`text/html`、`image/png`。文件粘贴只能通过监听 `paste` 事件从用户操作中获取。
+浏览器不允许网页 JS 主动将任意文件写入系统剪贴板，仅支持 `text/plain`、`text/html`、`image/png`。文件粘贴只能通过监听 `paste` 事件从用户操作中获取。
 :::
 
 ### writeFile
@@ -72,7 +72,7 @@ await writeFile(file)
 
 ### onFilePaste
 
-监听用户粘贴文件。用户在文件管理器里选中几张图和一个 PDF，回到网页 Ctrl+V——回调一次拿到**全部**文件，图片和文档混在一起也没问题，`isImage` 标记帮你区分：
+监听用户粘贴文件。用户在文件管理器中选中几张图和一个 PDF，回到网页 Ctrl+V——回调会一次性拿到**全部**文件，图片和文档混在一起也没问题，`isImage` 标记帮你区分：
 
 ```ts
 import { onFilePaste } from '@bilibaba/ts-lab/browser'
@@ -95,7 +95,7 @@ const unbind = onFilePaste((files: ProcessedPastedFile[]) => {
 unbind()
 ```
 
-每次粘贴回调收到的 `files` 是一个数组，用户在系统里同时复制了多个文件、在文件夹里多选后 Ctrl+V，都会一次性全部拿到。图片类型的文件自动生成 `previewUrl`，非图片（PDF、文档等）`previewUrl` 为 `null`、`isImage` 为 `false`，调用方可以按 MIME 类型选择图标展示。
+每次粘贴回调收到的 `files` 是一个数组——无论用户同时复制了多个文件还是在文件夹里多选后 Ctrl+V，都会一次性返回。图片类型的文件自动生成 `previewUrl`，非图片（PDF、文档等）的 `previewUrl` 为 `null`、`isImage` 为 `false`，调用方可按 MIME 类型选择图标展示。
 
 | 选项 | 默认值 | 说明 |
 |------|--------|------|

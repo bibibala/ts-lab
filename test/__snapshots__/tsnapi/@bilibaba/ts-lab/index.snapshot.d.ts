@@ -30,29 +30,14 @@ export interface EnvInfo {
   isBrowser: boolean;
   ua: string;
 }
-export interface ExposeDataOptions<T extends Record<string, unknown>> {
-  idField: keyof T;
-  searchFields: (keyof T)[];
-  fields?: Record<string, FieldSchema>;
-  tools?: DataTool[];
-  prefix?: string;
-  signal?: AbortSignal;
-}
-export interface ExposeFormOptions {
-  description: string;
-  fields: Record<string, FieldSchema>;
-  required?: string[];
-  allowSubmit?: boolean;
-  onSubmit?: () => Promise<void> | void;
-}
-export interface FieldSchema {
-  type: 'string' | 'number' | 'boolean';
-  description: string;
-}
 export interface ImageInput {
   data: Uint8ClampedArray | Uint8Array | number[];
   width: number;
   height: number;
+}
+export interface LoadingOptions {
+  spinner?: SpinnerType;
+  size?: number;
 }
 export interface NetworkInfo {
   online: boolean;
@@ -97,9 +82,6 @@ export interface RenderOptions {
   darkColor?: string;
   lightColor?: string;
 }
-export interface ToolError {
-  error: string;
-}
 export interface TreeNode {
   id?: string | number;
   children?: TreeNode[];
@@ -131,32 +113,6 @@ export interface WatermarkOptions {
   stegoDebug?: boolean;
   styleCheckInterval?: number;
   onTamperDetected?: () => void;
-}
-export interface WebMCPContentBlock {
-  type: 'text';
-  text: string;
-}
-export interface WebMCPExecuteResult {
-  content: WebMCPContentBlock[];
-}
-export interface WebMCPInputSchema {
-  type: 'object';
-  properties: Record<string, {
-    type: string;
-    description: string;
-  }>;
-  required?: string[];
-}
-export interface WebMCPModelContext {
-  registerTool: (_: WebMCPToolDefinition, _?: {
-    signal?: AbortSignal;
-  }) => void;
-}
-export interface WebMCPToolDefinition<T = Record<string, unknown>> {
-  name: string;
-  description: string;
-  inputSchema: WebMCPInputSchema;
-  execute: (_: T) => Promise<WebMCPExecuteResult>;
 }
 export interface WSClient {
   send: (_: string | ArrayBuffer | Blob | object) => void;
@@ -190,11 +146,11 @@ export type Arch = 'arm64' | 'arm' | 'x64' | 'x86' | 'unknown';
 export type ClipboardErrorCode = 'NOT_SUPPORTED' | 'PERMISSION_DENIED' | 'NOT_FOCUSED' | 'EMPTY_CLIPBOARD' | 'INSECURE_CONTEXT' | 'UNSUPPORTED_MIME_TYPE' | 'UNKNOWN';
 export type ClipboardMimeType = 'text/plain' | 'text/html' | 'image/png' | 'image/jpeg' | 'image/gif' | 'image/svg+xml' | (string & {});
 export type ClipboardPermissionState = 'granted' | 'denied' | 'prompt' | 'unknown';
-export type DataTool = 'search' | 'get' | 'add' | 'delete' | 'stats';
 export type EventType = string | symbol;
 export type Handler<T = unknown> = (_: T) => void;
 export type OS = 'macos' | 'windows' | 'linux' | 'ios' | 'android' | 'unknown';
 export type ProgressColor = string | string[];
+export type SpinnerType = 'spin' | 'pulse' | 'wave' | 'dots' | 'dual-ring';
 export type ToastPosition = 'top' | 'bottom' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
 export type WildcardHandler<Events> = (_: keyof Events, _: Events[keyof Events]) => void;
 // #endregion
@@ -224,20 +180,6 @@ export declare function cutFromInput(_: HTMLInputElement | HTMLTextAreaElement):
 export declare function cutText(_: string): Promise<void>;
 export declare function decodeWatermark(_: HTMLImageElement | HTMLCanvasElement | ImageData): number | null;
 export declare function detectEnv(_?: string): Promise<EnvInfo>;
-export declare function exposeAction<T extends Record<string, unknown> = Record<string, never>>(_: string, _: (_: T) => Promise<void>, _: {
-  description: string;
-  params?: Record<string, FieldSchema>;
-  required?: string[];
-  signal?: AbortSignal;
-}): boolean;
-export declare function exposeData<T extends Record<string, unknown>>(_: string, _: T[] | (() => T[]), _: ExposeDataOptions<T>): boolean;
-export declare function exposeForm<T extends Record<string, unknown>>(_: string, _: T, _: ExposeFormOptions): boolean;
-export declare function exposeFunction<T extends Record<string, unknown>>(_: string, _: (_: T) => Promise<unknown>, _: {
-  description: string;
-  params?: Record<string, FieldSchema>;
-  required?: string[];
-  signal?: AbortSignal;
-}): boolean;
 export declare function formatFileSize(_: number): string;
 export declare function generateId(): string;
 export declare function generateQRCode(_: string, _?: ECLevel, _?: number): QRCode;
@@ -259,7 +201,6 @@ export declare function isClipboardApiSupported(): boolean;
 export declare function isExecCommandSupported(): boolean;
 export declare function isRichClipboardSupported(): boolean;
 export declare function isSecureContext(): boolean;
-export declare function isWebMCPSupported(): boolean;
 export declare function isWritableMimeType(_: string): boolean;
 export declare function md5(_: string | ArrayBuffer | Uint8Array): Promise<string>;
 export declare function onClipboardEvent(_: ClipboardDomEventName, _: (_: ClipboardEventPayload) => void, _?: HTMLElement | Document): () => void;
@@ -270,11 +211,7 @@ export declare function readImage(): Promise<Blob | null>;
 export declare function readQRCode(_: ImageInput): string | null;
 export declare function readRich(): Promise<ClipboardReadItem[]>;
 export declare function readText(): Promise<string>;
-export declare function registerTool<T = Record<string, unknown>>(_: WebMCPToolDefinition<T>, _?: {
-  signal?: AbortSignal;
-}): boolean;
-export declare function renderQRCodeToCanvas(_: QRCode, _: HTMLCanvasElement, _?: RenderOptions): void;
-export declare function renderQRCodeToDataURL(_: QRCode, _?: RenderOptions): string;
+export declare function renderQRCodeToBase64(_: QRCode, _?: RenderOptions): string;
 export declare function revokePastedFilePreview(_: ProcessedPastedFile): void;
 export declare function writeFile(_: File): Promise<void>;
 export declare function writeHtml(_: string, _?: string): Promise<void>;

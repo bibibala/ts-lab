@@ -53,7 +53,7 @@ onMounted(() => { info.value = getNetworkInfo() })
 
 Based on [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API)
 
-Get browser network environment information.
+Get current network information from the browser.
 
 ## getNetworkInfo
 

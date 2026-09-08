@@ -56,7 +56,7 @@ File paste, cut operations, low-level event listening, and utility functions.
 ## File Paste
 
 ::: warning Security Restriction
-Browsers do not allow page JS to actively write arbitrary files to the system clipboard — only `text/plain`, `text/html`, and `image/png` are supported. File pasting can only be obtained by listening to the `paste` event from user actions.
+Browsers do not allow page JS to write arbitrary files to the system clipboard — only `text/plain`, `text/html`, and `image/png` are supported. File pasting can only be obtained by listening to the `paste` event from user actions.
 :::
 
 ### writeFile
@@ -95,7 +95,7 @@ const unbind = onFilePaste((files: ProcessedPastedFile[]) => {
 unbind()
 ```
 
-Each paste callback receives a `files` array — whether the user copied multiple files in the system or multi-selected in a folder, all are received at once. Image-type files auto-generate `previewUrl`; non-images (PDF, documents, etc.) have `previewUrl` as `null` and `isImage` as `false`, so callers can display icons based on MIME type.
+Each paste callback receives a `files` array — whether the user copied multiple files or multi-selected in a folder, all are returned at once. Image files auto-generate `previewUrl`; non-images (PDF, documents, etc.) have `previewUrl` as `null` and `isImage` as `false`, so callers can choose icons based on MIME type.
 
 | Option | Default | Description |
 |--------|---------|-------------|

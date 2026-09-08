@@ -18,8 +18,7 @@ export { md5 }
 export { QRCode }
 export { readQRCode }
 export { RenderOptions }
-export { renderQRCodeToCanvas }
-export { renderQRCodeToDataURL }
+export { renderQRCodeToBase64 }
 export { TreeNode }
 export { WildcardHandler }
 export { WSClient }

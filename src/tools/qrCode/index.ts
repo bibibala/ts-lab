@@ -9,6 +9,7 @@ import { ECLevel } from './types'
 
 export { readQRCode } from './reader'
 export type { ImageInput, QRCode, RenderOptions } from './types'
+
 export { ECLevel } from './types'
 
 export function generateQRCode(
@@ -58,13 +59,12 @@ export function generateQRCode(
   }
 }
 
-// ===================== Canvas Rendering =====================
+// ===================== Rendering =====================
 
-export function renderQRCodeToCanvas(
+export function renderQRCodeToBase64(
   qr: QRCode,
-  canvas: HTMLCanvasElement,
   options: import('./types').RenderOptions = {},
-): void {
+): string {
   const {
     moduleSize = 4,
     margin = 4,
@@ -73,12 +73,16 @@ export function renderQRCodeToCanvas(
   } = options
 
   const totalSize = qr.size + 2 * margin
-  canvas.width = totalSize * moduleSize
-  canvas.height = totalSize * moduleSize
+  const w = totalSize * moduleSize
+  const h = totalSize * moduleSize
 
+  const canvas = document.createElement('canvas')
+  canvas.width = w
+  canvas.height = h
   const ctx = canvas.getContext('2d')!
+
   ctx.fillStyle = lightColor
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fillRect(0, 0, w, h)
   ctx.fillStyle = darkColor
 
   for (let r = 0; r < qr.size; r++) {
@@ -93,13 +97,6 @@ export function renderQRCodeToCanvas(
       }
     }
   }
-}
 
-export function renderQRCodeToDataURL(
-  qr: QRCode,
-  options: import('./types').RenderOptions = {},
-): string {
-  const canvas = document.createElement('canvas')
-  renderQRCodeToCanvas(qr, canvas, options)
-  return canvas.toDataURL()
+  return canvas.toDataURL().replace(/^data:image\/png;base64,/, '')
 }

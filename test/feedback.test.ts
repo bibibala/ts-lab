@@ -18,6 +18,8 @@ describe('uiFeedback', () => {
         className: '',
         classList: { add: vi.fn(), remove: vi.fn() },
         textContent: '',
+        innerHTML: '',
+        style: {} as Record<string, string>,
         addEventListener: vi.fn(),
         appendChild: vi.fn(),
         remove: vi.fn(function (this: any) {

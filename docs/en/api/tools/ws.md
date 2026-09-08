@@ -1,6 +1,6 @@
 # WebSocket · Real-Time Connection
 
-A WebSocket client wrapper with automatic reconnection, heartbeat keep-alive, zombie connection detection, and offline message queuing.
+A WebSocket client with automatic reconnection, heartbeat keep-alive, zombie connection detection, and offline message queuing.
 
 ## Type Exports
 
@@ -11,7 +11,7 @@ export interface WSClient { ... }
 
 ## createWS
 
-Create a WebSocket client instance. Objects passed to `send()` are automatically `JSON.stringify`-ed; received data is passed through as-is — the caller is responsible for parsing.
+Create a WebSocket client instance. Objects passed to `send()` are automatically `JSON.stringify`-ed; received data is passed through as-is — parse it yourself.
 
 ```ts
 function createWS(url: string | URL, options?: WSOptions): WSClient
@@ -61,7 +61,7 @@ interface WSClient {
 }
 ```
 
-`onClose` fires on every disconnection (including intermediate drops and final close). Callers can distinguish via `ev.code` / `readyState`.
+`onClose` fires on every disconnection (including intermediate drops and final close). Distinguish via `ev.code` / `readyState`.
 
 ## Basic Usage
 
@@ -74,7 +74,7 @@ ws.onOpen(() => console.log('Connected'))
 ws.onClose((ev) => console.log('Disconnected', ev.code))
 ws.onError((ev) => console.error('Error'))
 
-// Receive messages — data passed through as-is, caller parses
+// Receive messages — data passed through as-is, parse yourself
 ws.onMessage((data) => {
   const parsed = typeof data === 'string' ? JSON.parse(data) : data
   console.log('Received:', parsed)
@@ -126,9 +126,9 @@ ws.reconnectNow()    // Reset flags, immediately establish new connection
 
 `reconnectNow` ignores both `reconnect: false` and the `activeClose` flag, reconnecting directly.
 
-## Heartbeat · Zombie Connection Detection
+## Heartbeat · Zombie Detection
 
-Set `heartbeatInterval` to send a heartbeat message at a fixed interval. Set `heartbeatTimeoutMultiplier` — if no message (including server pong) is received within `heartbeatInterval × heartbeatTimeoutMultiplier`, the connection is considered dead and automatically closed with reconnect triggered.
+Set `heartbeatInterval` to send a heartbeat at a fixed interval. Set `heartbeatTimeoutMultiplier` — if no message (including server pong) is received within `heartbeatInterval × heartbeatTimeoutMultiplier`, the connection is considered dead, automatically closed, and reconnect is triggered.
 
 ```ts
 const ws = createWS('wss://example.com/ws', {
@@ -142,7 +142,7 @@ Receiving any message resets the heartbeat timeout timer, regardless of content.
 
 ## Offline Message Queue
 
-With `queueWhenOffline` enabled, `send()` won't throw during disconnection — messages are buffered. They are sent automatically after successful reconnect:
+With `queueWhenOffline` enabled, `send()` won't throw during disconnection — messages are buffered and sent automatically after reconnect:
 
 ```ts
 const ws = createWS('wss://example.com/ws', {

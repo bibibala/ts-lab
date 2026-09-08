@@ -28,7 +28,6 @@ const zhSidebar = [
       },
       { text: '运行环境识别', link: '/zh/api/browser/env' },
       { text: '网络状态读取', link: '/zh/api/browser/network' },
-      { text: 'WebMCP 工具暴露', link: '/zh/api/browser/webmcp' },
     ],
   },
   {
@@ -74,7 +73,6 @@ const enSidebar = [
       },
       { text: 'Environment Detection', link: '/en/api/browser/env' },
       { text: 'Network Info', link: '/en/api/browser/network' },
-      { text: 'WebMCP Tool Registration', link: '/en/api/browser/webmcp' },
     ],
   },
   {
@@ -116,7 +114,7 @@ const rootRedirectPlugin: Plugin = {
 // @ts-ignore
 export default defineConfig({
   title: 'ts-lab',
-  description: '浏览器工具库 — WebMCP、事件总线、剪贴板、网络信息、树遍历、二维码',
+  description: '浏览器工具库 — 事件总线、剪贴板、网络信息、树遍历、二维码',
   lastUpdated: true,
 
   head: [

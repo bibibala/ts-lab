@@ -54,7 +54,7 @@ async function read() {
 
 # Rich Text & Images
 
-The clipboard doesn't just store text — when you select a formatted table on a web page and press Ctrl+C, pasting into Lark preserves the table because the clipboard stores both `text/html` and `text/plain` data simultaneously. The APIs below handle this kind of rich content and require the browser to support `ClipboardItem` (`isRichClipboardSupported()` returns `true`).
+The clipboard doesn't just store text — when you select a formatted table on a web page and press Ctrl+C, pasting into Lark preserves the table because the clipboard stores both `text/html` and `text/plain` simultaneously. The APIs below handle this kind of rich content and require `ClipboardItem` support (`isRichClipboardSupported()` returns `true`).
 
 ## Copy formatted content to email / Lark
 
@@ -74,7 +74,7 @@ await writeHtml(
 )
 ```
 
-Under the hood, it puts two MIME types into the clipboard at once. If you want finer control over which formats to include — say, adding a `text/csv` — use the lower-level `writeRich`:
+Under the hood, it writes two MIME types to the clipboard at once. If you want finer control — say, adding a `text/csv` — use the lower-level `writeRich`:
 
 ```ts
 import { writeRich } from '@bilibaba/ts-lab/browser'
@@ -86,7 +86,7 @@ await writeRich([
 ])
 ```
 
-The reverse works too — `readRich` can get all formats from the clipboard. When a user copies text on a web page, the clipboard typically contains both `text/plain` and `text/html`:
+The reverse also works — `readRich` returns all formats from the clipboard. When a user copies text on a web page, the clipboard typically contains both `text/plain` and `text/html`:
 
 ```ts
 import { readRich } from '@bilibaba/ts-lab/browser'
@@ -98,7 +98,7 @@ const items = await readRich()
 
 ## Image to clipboard: one-click paste from canvas chart
 
-After rendering a canvas chart, the user wants to Ctrl+V it directly into Lark or PPT. No need to download first — `writeImage` puts the Blob into the clipboard:
+After rendering a canvas chart, the user wants to Ctrl+V it directly into Lark or PPT. No need to download first — `writeImage` puts the Blob straight into the clipboard:
 
 ```ts
 import { writeImage } from '@bilibaba/ts-lab/browser'

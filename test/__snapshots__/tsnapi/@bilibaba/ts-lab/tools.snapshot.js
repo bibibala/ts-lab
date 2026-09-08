@@ -12,6 +12,5 @@ export { getPathById }
 export { getTopLevelNode }
 export { md5 }
 export { readQRCode }
-export { renderQRCodeToCanvas }
-export { renderQRCodeToDataURL }
+export { renderQRCodeToBase64 }
 // #endregion

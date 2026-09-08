@@ -56,7 +56,7 @@ watch(input, compute, { immediate: true })
 
 # MD5
 
-根据 [RFC 1321](https://www.ietf.org/rfc/rfc1321.txt) 实现的纯 TypeScript MD5 哈希工具。零依赖，**纯异步**，支持字符串（UTF-8）、`ArrayBuffer`、`Uint8Array` 输入。
+根据 [RFC 1321](https://www.ietf.org/rfc/rfc1321.txt) 实现的纯 TypeScript MD5 哈希工具。零依赖、**全程异步**，支持字符串（UTF-8）、`ArrayBuffer`、`Uint8Array` 输入。
 
 ## md5
 
@@ -81,7 +81,7 @@ await md5('你好')
 
 ## 大文件不卡 UI
 
-内部每处理 ~256 KB 原始数据就 `yield` 给事件循环，浏览器可以正常渲染和响应：
+内部每处理约 256 KB 原始数据就会 `yield` 给事件循环，浏览器可以正常渲染和响应：
 
 ```ts
 const fileHash = await md5(await file.arrayBuffer())

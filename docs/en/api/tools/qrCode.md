@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { generateQRCode, renderQRCodeToDataURL, readQRCode, ECLevel } from '@bilibaba/ts-lab/tools'
+import { generateQRCode, renderQRCodeToBase64, readQRCode, ECLevel } from '@bilibaba/ts-lab/tools'
 
 const text = ref('https://ts-lab.netlify.app')
 const ecLevel = ref(ECLevel.M)
@@ -20,9 +20,9 @@ const qr = computed(() => {
   }
 })
 
-const dataUrl = computed(() => {
+const base64 = computed(() => {
   if (!qr.value) return ''
-  return renderQRCodeToDataURL(qr.value, { moduleSize: 5, margin: 4 })
+  return renderQRCodeToBase64(qr.value, { moduleSize: 5, margin: 4 })
 })
 
 // ---- Decode ----
@@ -140,7 +140,7 @@ function handleDecodeFile(e: Event) {
       </div>
     </div>
     <div class="qr-output">
-      <img v-if="dataUrl" :src="dataUrl" alt="QR Code" />
+      <img v-if="base64" :src="`data:image/png;base64,${base64}`" alt="QR Code" />
       <div v-if="qr" class="qr-meta">
         Version {{ qr.version }} · {{ qr.size }}×{{ qr.size }} modules
       </div>
@@ -171,7 +171,7 @@ function handleDecodeFile(e: Event) {
 
 # QR Code · Generation & Decoding
 
-A pure TypeScript QR code generator and decoder. Zero dependencies, supports generating QR codes from text, Canvas rendering output, and reverse-decoding from pixel data.
+A pure TypeScript QR code generator and decoder. Zero dependencies — generates QR codes from text, outputs Base64, and decodes from pixel data.
 
 ## Type Exports
 
@@ -241,62 +241,31 @@ const qrV10 = generateQRCode('some data', ECLevel.M, 10)
 | `Q` | ≈25% | Possibly partially damaged |
 | `H` | ≈30% | Needs logo overlay or high fault tolerance |
 
-## renderQRCodeToCanvas
+## renderQRCodeToBase64
 
-Render a QR code to a specified `<canvas>`.
-
-```ts
-function renderQRCodeToCanvas(
-  qr: QRCode,
-  canvas: HTMLCanvasElement,
-  options?: RenderOptions,
-): void
-```
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `qr` | `QRCode` | Return value of `generateQRCode` |
-| `canvas` | `HTMLCanvasElement` | Target canvas element |
-| `options` | `RenderOptions` | Rendering options |
+Render a QR code as a Base64 string, ready to use as `<img>` `src`.
 
 ```ts
-import { generateQRCode, renderQRCodeToCanvas } from '@bilibaba/ts-lab/tools'
-
-const qr = generateQRCode('hello')
-const canvas = document.querySelector('canvas')!
-
-renderQRCodeToCanvas(qr, canvas, {
-  moduleSize: 8,
-  margin: 2,
-  darkColor: '#1a1a2e',
-  lightColor: '#ffffff',
-})
-```
-
-## renderQRCodeToDataURL
-
-Render a QR code as a Data URL string, suitable for direct use as `<img>` `src` or download.
-
-```ts
-function renderQRCodeToDataURL(
+function renderQRCodeToBase64(
   qr: QRCode,
   options?: RenderOptions,
 ): string
 ```
 
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `qr` | `QRCode` | Return value of `generateQRCode` |
+| `options` | `RenderOptions` | Rendering options |
+
 ```ts
+import { generateQRCode, renderQRCodeToBase64 } from '@bilibaba/ts-lab/tools'
+
 const qr = generateQRCode('https://example.com')
-const dataUrl = renderQRCodeToDataURL(qr, { moduleSize: 6 })
+const base64 = renderQRCodeToBase64(qr, { moduleSize: 6 })
 
-// Use in <img> tag
+// Use as <img> src
 const img = document.createElement('img')
-img.src = dataUrl
-
-// Or trigger download
-const link = document.createElement('a')
-link.href = dataUrl
-link.download = 'qrcode.png'
-link.click()
+img.src = `data:image/png;base64,${base64}`
 ```
 
 ## readQRCode
@@ -366,7 +335,7 @@ const text = readQRCode({
 ```ts
 import {
   generateQRCode,
-  renderQRCodeToDataURL,
+  renderQRCodeToBase64,
   readQRCode,
   ECLevel,
 } from '@bilibaba/ts-lab/tools'
@@ -374,12 +343,12 @@ import {
 // 1. Generate QR code
 const qr = generateQRCode('Hello, ts-lab!', ECLevel.H)
 
-// 2. Render to Data URL
-const dataUrl = renderQRCodeToDataURL(qr, { moduleSize: 8 })
+// 2. Render to Base64
+const base64 = renderQRCodeToBase64(qr, { moduleSize: 8 })
 
 // 3. Display on page
 const img = document.createElement('img')
-img.src = dataUrl
+img.src = `data:image/png;base64,${base64}`
 document.body.appendChild(img)
 
 // 4. Decode back to text after image loads

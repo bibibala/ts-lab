@@ -20,7 +20,7 @@
 
 - **🪶 Lightweight & zero-dependency** — No third-party dependencies, modular imports keep your bundle lean
 - **🔒 Type-safe** — Full TypeScript declarations included, no extra `@types/*` needed
-- **🌐 Browser-native** — Built on modern browser APIs: Clipboard, Navigator, WebMCP, and more
+- **🌐 Browser-native** — Built on modern browser APIs: Clipboard, Navigator, and more
 - **📦 Modular** — Import only what you need from `@bilibaba/ts-lab`
 
 ## 📦 Installation

@@ -81,7 +81,7 @@ async function doRead() {
 
 基于 [Clipboard API](https://developer.mozilla.org/zh-CN/docs/Web/API/Clipboard_API) + [Permissions API](https://developer.mozilla.org/zh-CN/docs/Web/API/Permissions_API)
 
-浏览器剪贴板能力的完整封装：文本 / HTML / 图片读写、文件粘贴、剪切、事件监听，自带降级策略和统一错误类型。
+浏览器剪贴板的完整封装：文本 / HTML / 图片读写、文件粘贴、剪切、事件监听，内置降级策略和统一错误类型。
 
 ## 快速开始
 
@@ -100,7 +100,7 @@ canvas.toBlob(async (blob) => { if (blob) await writeImage(blob) }, 'image/png')
 
 ## 特性检测
 
-在调用 API 之前，可以先检测当前环境的支持情况：
+在调用 API 前，可以先检测当前环境的支持情况：
 
 ```ts
 import {

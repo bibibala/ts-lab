@@ -65,7 +65,7 @@ onMounted(async () => { env.value = await detectEnv() })
 
 基于 [Navigator.userAgent](https://developer.mozilla.org/zh-CN/docs/Web/API/Navigator/userAgent) + [User-Agent Client Hints API](https://developer.mozilla.org/en-US/docs/Web/API/User-Agent_Client_Hints_API)
 
-检测浏览器运行环境：操作系统、CPU 架构、以及所在容器（微信 / QQ / App WebView / 普通浏览器）。
+检测浏览器运行环境：操作系统、CPU 架构，以及所在容器（微信 / QQ / App WebView / 普通浏览器）。
 
 ## detectEnv
 
@@ -75,7 +75,7 @@ function detectEnv(appFlag?: string): Promise<EnvInfo>
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
-| `appFlag` | `string` | 可选，自定义 App WebView 标识，默认 `'MyAppWebView'` |
+| `appFlag` | `string` | 可选，自定义 App WebView 标识符，默认 `'MyAppWebView'` |
 
 ## EnvInfo
 
@@ -133,4 +133,4 @@ console.log(env.isBrowser)  // 在普通浏览器中
 
 - **OS**：通过 `navigator.userAgent` + `navigator.platform` 综合判断。
 - **架构**：优先使用 [User-Agent Client Hints](https://developer.mozilla.org/en-US/docs/Web/API/User-Agent_Client_Hints_API) 异步获取精确架构；不可用时通过 UA 关键字 + OS 上下文推断。UACH 返回 `"arm"` 时会交叉比对 UA 中的 `arm64`/`aarch64` 信号来区分 32/64 位 ARM。
-- **容器**：`isBrowser` 为 `true` 时不在微信、QQ 或自定义 App WebView 中。
+- **容器**：`isBrowser` 为 `true` 表示不在微信、QQ 或自定义 App WebView 中。

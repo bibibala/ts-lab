@@ -42,7 +42,7 @@ onMounted(async () => {
 
 # Toast
 
-Toast notification with six preset types and custom configuration.
+Toast notification with six preset types and custom options.
 
 ## Preset Types
 

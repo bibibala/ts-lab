@@ -1,10 +1,10 @@
 # Image · 图片转图标
 
-基于 WebAssembly 的图片格式转换工具，将 PNG 转换为 ICO（Windows 图标）、ICNS（macOS 图标）以及多尺寸 PNG。
+基于 WebAssembly 的图片格式转换工具，将 PNG 转为 ICO（Windows 图标）、ICNS（macOS 图标）以及多尺寸 PNG。
 
 ## initModule
 
-初始化 WASM 模块。会自动加载 WebAssembly 二进制，后续所有转换方法内部都会自动调用此方法，你无需手动调用。
+初始化 WASM 模块。会自动加载 WebAssembly 二进制文件，后续所有转换方法内部都会自动调用此方法，无需手动调用。
 
 ```ts
 function initModule(): Promise<WasmModule>
@@ -89,7 +89,7 @@ const { ico, icns, pngs } = await getImageBoth(imageData)
 ```ts
 import { getIco, getIcns, getPngs, getImageBoth } from '@bilibaba/ts-lab/wasm'
 
-// 假设你已经从 input[type=file] 或 fetch 拿到 PNG 的字节数据
+// 假设已从 input[type=file] 或 fetch 获取到 PNG 字节数据
 const response = await fetch('/photo.png')
 const imageData = new Uint8Array(await response.arrayBuffer())
 

@@ -17,10 +17,6 @@ export async function cutFromInput(_) {}
 export async function cutText(_) {}
 export function decodeWatermark(_) {}
 export async function detectEnv(_) {}
-export function exposeAction(_, _, _) {}
-export function exposeData(_, _, _) {}
-export function exposeForm(_, _, _) {}
-export function exposeFunction(_, _, _) {}
 export function formatFileSize(_) {}
 export function generateId() {}
 export function generateQRCode(_, _, _) {}
@@ -33,7 +29,6 @@ export function isClipboardApiSupported() {}
 export function isExecCommandSupported() {}
 export function isRichClipboardSupported() {}
 export function isSecureContext() {}
-export function isWebMCPSupported() {}
 export function isWritableMimeType(_) {}
 export async function md5(_) {}
 export function onClipboardEvent(_, _, _) {}
@@ -44,9 +39,7 @@ export async function readImage() {}
 export function readQRCode(_) {}
 export async function readRich() {}
 export async function readText() {}
-export function registerTool(_, _) {}
-export function renderQRCodeToCanvas(_, _, _) {}
-export function renderQRCodeToDataURL(_, _) {}
+export function renderQRCodeToBase64(_, _) {}
 export function revokePastedFilePreview(_) {}
 export async function writeFile(_) {}
 export async function writeHtml(_, _) {}

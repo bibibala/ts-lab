@@ -194,105 +194,6 @@ if (info.effectiveType === 'slow-2g') { /* 弱网 */ }
 
 ---
 
-### webmcp — WebMCP 工具注册
-
-将页面功能暴露为 AI 可调用的工具（需 Chrome 149+ 开启 WebMCP flags）。
-
-```ts
-import {
-  exposeAction,
-  exposeData,
-  exposeForm,
-  exposeFunction,
-  isWebMCPSupported,
-  registerTool,
-} from '@bilibaba/ts-lab/browser'
-```
-
-| 函数 | 签名 | 用途 |
-|------|------|------|
-| `isWebMCPSupported` | `() => boolean` | 检测 WebMCP 是否可用 |
-| `registerTool` | `(definition, opts?) => boolean` | 注册一个完整的 WebMCP 工具 |
-| `exposeFunction` | `(name, fn, opts) => boolean` | 将一个异步函数暴露为工具（有返回值） |
-| `exposeAction` | `(name, fn, opts) => boolean` | 将一个 UI 操作暴露为工具（无返回值，只返回 `{ done: true }`） |
-| `exposeData` | `(name, data, options) => boolean` | 将数组数据暴露为一组 CRUD 工具 |
-| `exposeForm` | `(name, formState, options) => boolean` | 将表单状态暴露为填写/提交工具 |
-
-**exposeFunction** — 暴露一个有返回值的函数：
-
-```ts
-exposeFunction('greet', async ({ name }: { name: string }) => {
-  return { greeting: `Hello, ${name}!` }
-}, {
-  description: 'Say hello',
-  params: { name: { type: 'string', description: 'Your name' } },
-  required: ['name'],
-})
-```
-
-**exposeAction** — 暴露一个 UI 操作（打开弹窗、切换面板等）：
-
-```ts
-exposeAction('openInvoiceDialog', async () => {
-  dialogOpen.value = true
-}, { description: 'Open the create-invoice dialog' })
-```
-
-**exposeData** — 将数组暴露为 CRUD 工具集：
-
-```ts
-const ORDERS = [
-  { id: '001', customer: 'Alice', amount: 100 },
-  { id: '002', customer: 'Bob', amount: 200 },
-]
-
-exposeData('orders', ORDERS, {
-  idField: 'id',
-  searchFields: ['id', 'customer'],
-  fields: {
-    id: { type: 'string', description: 'Order ID' },
-    customer: { type: 'string', description: 'Customer name' },
-    amount: { type: 'number', description: 'Order amount' },
-  },
-})
-// 自动生成：orders_search, orders_get, orders_add, orders_delete, orders_stats
-// 可通过 tools 参数选择性注册，如 tools: ['search', 'get']
-```
-
-**exposeForm** — 将表单暴露为填写工具：
-
-```ts
-const form = reactive({ customer: '', amount: 0 })
-exposeForm('invoiceForm', form, {
-  description: 'Fill the invoice form',
-  fields: {
-    customer: { type: 'string', description: 'Customer name' },
-    amount: { type: 'number', description: 'Invoice amount' },
-  },
-  required: ['customer', 'amount'],
-  allowSubmit: true,
-  onSubmit: () => submitInvoice(form),
-})
-// 生成：invoiceForm_fill（始终注册）、invoiceForm_submit（allowSubmit=true 时注册）
-```
-
-**`params` / `fields` 的 FieldSchema 格式**：
-
-```ts
-{ type: 'string' | 'number' | 'boolean', description: string }
-```
-
-**AbortSignal 清理**：
-
-```ts
-const controller = new AbortController()
-exposeFunction('myTool', fn, { description: '...', signal: controller.signal })
-// 组件卸载时：
-controller.abort()
-```
-
----
-
 ## tools — 通用工具
 
 ### bus — 事件总线
@@ -363,16 +264,14 @@ import {
   ECLevel,
   generateQRCode,
   readQRCode,
-  renderQRCodeToCanvas,
-  renderQRCodeToDataURL,
+  renderQRCodeToBase64,
 } from '@bilibaba/ts-lab/tools'
 ```
 
 | 函数 | 签名 | 用途 |
 |------|------|------|
 | `generateQRCode` | `(text, ecLevel?, version?) => QRCode` | 生成二维码矩阵数据 |
-| `renderQRCodeToCanvas` | `(qr, canvas, options?) => void` | 渲染到 Canvas 元素 |
-| `renderQRCodeToDataURL` | `(qr, options?) => string` | 渲染为 PNG data URL |
+| `renderQRCodeToBase64` | `(qr, options?) => string` | 渲染为 PNG Base64 字符串 |
 | `readQRCode` | `(input: ImageInput) => string \| null` | 从 RGBA 图像数据解析二维码 |
 
 `ECLevel` 纠错等级枚举：`ECLevel.L`(7%) / `ECLevel.M`(15%) / `ECLevel.Q`(25%) / `ECLevel.H`(30%)
@@ -380,18 +279,13 @@ import {
 **使用示例**：
 
 ```ts
-// 生成并渲染到 Canvas
+// 生成并渲染为 Base64
 const qr = generateQRCode('https://example.com')
-renderQRCodeToCanvas(qr, document.getElementById('canvas') as HTMLCanvasElement, {
-  moduleSize: 8,
-  margin: 4,
-  darkColor: '#000',
-  lightColor: '#fff',
-})
+const base64 = renderQRCodeToBase64(qr, { moduleSize: 8, margin: 4 })
 
-// 生成 data URL
-const qr = generateQRCode('hello', ECLevel.H)
-const dataUrl = renderQRCodeToDataURL(qr)
+// 用作 <img> src
+const img = document.createElement('img')
+img.src = `data:image/png;base64,${base64}`
 
 // 解析二维码（需要 RGBA 像素数据）
 const imageData = ctx.getImageData(0, 0, width, height)
@@ -791,10 +685,9 @@ download(icoData, 'icon.ico')
 | 读取剪贴板 | `browser` | `await readText()` |
 | 检测微信/手机/系统 | `browser` | `await detectEnv()` |
 | 获取网络状态 | `browser` | `getNetworkInfo()` |
-| 注册 AI 可调用工具 | `browser` | `exposeFunction(...)` / `exposeData(...)` / `exposeForm(...)` |
 | 发布/订阅事件 | `tools` | `createBus<Events>()` → `.on()` / `.emit()` |
 | 计算 MD5 | `tools` | `await md5('...')` |
-| 生成二维码 | `tools` | `generateQRCode('...')` → `renderQRCodeToDataURL(qr)` |
+| 生成二维码 | `tools` | `generateQRCode('...')` → `renderQRCodeToBase64(qr)` |
 | 解析二维码 | `tools` | `readQRCode({ data, width, height })` |
 | 树结构查找 | `tools` | `getObjById(tree, id)` / `getPathById(tree, id)` |
 | WebSocket 客户端 | `tools` | `createWS(url, options)` |
