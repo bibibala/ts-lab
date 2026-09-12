@@ -30,7 +30,7 @@ Bundlers (Vite / Rollup / webpack / esbuild, etc.) will automatically tree-shake
 You can also import from the root entrypoint; category subpaths (`/browser`, `/tools`, `/ui`, `/wasm`) keep things organized as the API grows:
 
 ```ts
-import { writeText } from '@bilibaba/ts-lab/browser'
+import { copyTextToBoard } from '@bilibaba/ts-lab/browser'
 import { progress } from '@bilibaba/ts-lab/ui'
 import { getIco } from '@bilibaba/ts-lab/wasm'
 ```
@@ -81,7 +81,7 @@ src/
 | [WebSocket](/en/api/tools/ws) | WebSocket client: auto-reconnect, heartbeat, offline message queue |
 | [QRCode](/en/api/tools/qrCode) | Pure TypeScript QR code generation & reading |
 | [MD5](/en/api/tools/md5) | Async MD5 hashing that yields the event loop |
-| [Clipboard](/en/api/browser/clipboard/) | Text / HTML / image read/write, file paste, cut, event listening |
+| [Clipboard](/en/api/browser/clipboard/) | Copy / paste text, HTML, images; file paste; event listening |
 | [Env](/en/api/browser/env) | Runtime environment detection (OS / architecture / WeChat / QQ / App WebView) |
 | [Network](/en/api/browser/network) | Get current network status (online state, connection type, bandwidth, latency) |
 | [Toast](/en/api/ui/feedback/) | Singleton Toast notification component with multiple types and positions |
@@ -101,7 +101,7 @@ import { generateQRCode, readQRCode } from '@bilibaba/ts-lab/tools'
 import { md5 } from '@bilibaba/ts-lab/tools'
 
 // Browser APIs
-import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab/browser'
+import { copyTextToBoard, pasteTextFromBoard, onPasteFiles } from '@bilibaba/ts-lab/browser'
 import { detectEnv } from '@bilibaba/ts-lab/browser'
 import { getNetworkInfo } from '@bilibaba/ts-lab/browser'
 

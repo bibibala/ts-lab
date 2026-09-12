@@ -13,7 +13,7 @@ pnpm add @bilibaba/ts-lab
 四个子路径入口，按需导入：
 
 ```ts
-import { detectEnv, getNetworkInfo, readText, writeText } from '@bilibaba/ts-lab/browser'
+import { detectEnv, getNetworkInfo, copyTextToBoard, pasteTextFromBoard } from '@bilibaba/ts-lab/browser'
 import { createBus, createWS, generateQRCode, getObjById, md5 } from '@bilibaba/ts-lab/tools'
 import { createWatermark, loading, progress, uiFeedback } from '@bilibaba/ts-lab/ui'
 import { getIcns, getIco, getPngs } from '@bilibaba/ts-lab/wasm'
@@ -22,7 +22,7 @@ import { getIcns, getIco, getPngs } from '@bilibaba/ts-lab/wasm'
 也可从主入口导入全部：
 
 ```ts
-import { createBus, getIco, uiFeedback, writeText } from '@bilibaba/ts-lab'
+import { createBus, getIco, uiFeedback, copyTextToBoard } from '@bilibaba/ts-lab'
 ```
 
 > 注意：`browser/`、`ui/`、`wasm/` 下的工具依赖浏览器 API（DOM、navigator、Canvas、WebAssembly）。在 Node.js 环境下部分工具会降级或报错。
@@ -33,91 +33,103 @@ import { createBus, getIco, uiFeedback, writeText } from '@bilibaba/ts-lab'
 
 ### clipboard — 剪贴板
 
-写入/读取剪贴板内容，支持纯文本、富文本（HTML）、图片、文件，自带 API 能力检测和降级。
+复制 / 粘贴的浏览器剪贴板封装。命名规则：**复制（写入）** 的函数以 `...ToBoard` 结尾，**粘贴（读取）** 的函数以 `...FromBoard` 结尾，看到名字就知道往哪写、从哪读。
 
 ```ts
 import {
   ClipboardError,
+  copyFileToBoard,
+  copyHtmlToBoard,
+  copyImageToBoard,
+  copyItemsToBoard,
+  copyTextToBoard,
   cutFromInput,
-  cutText,
   formatFileSize,
-  generateId,
-  isClipboardApiSupported,
-  isExecCommandSupported,
-  isRichClipboardSupported,
-  isSecureContext,
-  isWritableMimeType,
-  onClipboardEvent,
-  onFilePaste,
-  processPastedFiles,
-  queryClipboardPermission,
-  readImage,
-  readRich,
-  readText,
-  revokePastedFilePreview,
-  WRITABLE_MIME_TYPES,
-  writeFile,
-  writeHtml,
-  writeImage,
-  writeRich,
-  writeText,
+  isRichSupported,
+  isSupported,
+  onCopy,
+  onCut,
+  onPaste,
+  onPasteFiles,
+  pasteAllFromBoard,
+  pasteImageFromBoard,
+  pasteTextFromBoard,
+  prepareFiles,
+  queryPermission,
 } from '@bilibaba/ts-lab/browser'
 ```
 
+**复制（写入剪贴板）**：
+
 | 函数 | 签名 | 用途 |
 |------|------|------|
-| `writeText` | `(text: string) => Promise<void>` | 写入纯文本到剪贴板，优先用 Clipboard API，降级 execCommand |
-| `readText` | `() => Promise<string>` | 读取剪贴板纯文本（仅现代 API，无降级） |
-| `writeRich` | `(items: ClipboardContentItem[]) => Promise<void>` | 同时写入多种 MIME 类型（HTML + 纯文本等），需 `isRichClipboardSupported()` |
-| `readRich` | `() => Promise<ClipboardReadItem[]>` | 读取剪贴板全部内容（可能含图片、HTML），返回 `{ type, blob }[]` |
-| `writeImage` | `(blob: Blob, type?) => Promise<void>` | 写入图片 Blob 到剪贴板 |
-| `writeHtml` | `(html: string, plainTextFallback?) => Promise<void>` | 写入 HTML 富文本，可选纯文本降级 |
-| `readImage` | `() => Promise<Blob \| null>` | 读取剪贴板中第一张图片，无图片返回 null |
-| `cutText` | `(text: string) => Promise<void>` | 剪切文本到剪贴板 |
-| `cutFromInput` | `(el: HTMLInputElement \| HTMLTextAreaElement) => Promise<string>` | 从输入框剪切选中文本，返回被剪切的文本 |
-| `onClipboardEvent` | `(eventName, handler, target?) => () => void` | 监听 copy/cut/paste 事件，返回取消监听函数 |
-| `onFilePaste` | `(handler, options?, target?) => () => void` | 监听粘贴文件事件，自动处理为 `ProcessedPastedFile[]` |
-| `writeFile` | `(file: File) => Promise<void>` | 写入文件到剪贴板（仅支持图片类型的 MIME） |
-| `processPastedFiles` | `(files: File[]) => ProcessedPastedFile[]` | 将原始文件列表转为结构化信息（含预览 URL） |
-| `revokePastedFilePreview` | `(item: ProcessedPastedFile) => void` | 释放预览 URL，防止内存泄漏 |
+| `copyTextToBoard` | `(text: string) => Promise<void>` | 复制纯文本，优先 Clipboard API，降级 `execCommand('copy')` |
+| `copyHtmlToBoard` | `(html: string, plainFallback?) => Promise<void>` | 复制 HTML 富文本，可选纯文本降级 |
+| `copyImageToBoard` | `(blob: Blob) => Promise<void>` | 复制图片 Blob 到剪贴板 |
+| `copyFileToBoard` | `(file: File) => Promise<void>` | 复制文件（浏览器只允许图片类，其它抛 `UNSUPPORTED_MIME_TYPE`） |
+| `copyItemsToBoard` | `(items: BoardWriteItem[]) => Promise<void>` | 底层：一次写入多种 MIME 类型（HTML + 纯文本等），需 `isRichSupported()` |
+| `cutFromInput` | `(el: HTMLInputElement \| HTMLTextAreaElement) => Promise<string>` | 剪切输入框选中文本，返回被剪切的内容 |
+
+**粘贴（读取剪贴板）**：
+
+| 函数 | 签名 | 用途 |
+|------|------|------|
+| `pasteTextFromBoard` | `() => Promise<string>` | 读取剪贴板纯文本 |
+| `pasteImageFromBoard` | `() => Promise<Blob \| null>` | 读取剪贴板第一张图片，无图片返回 null |
+| `pasteAllFromBoard` | `() => Promise<BoardReadItem[]>` | 读取剪贴板全部内容，返回 `{ type, blob }[]` |
+
+**事件监听**（`on*` 均返回取消监听函数）：
+
+| 函数 | 签名 | 用途 |
+|------|------|------|
+| `onCopy` / `onCut` / `onPaste` | `(handler, target?) => () => void` | 监听 copy / cut / paste 事件，payload 含 `{ originalEvent, text, html, files }` |
+| `onPasteFiles` | `(handler, options?, target?) => () => void` | 监听粘贴文件，自动处理为 `PreparedFile[]`（含预览与 `dispose()`） |
+
+**能力检测**：
+
+| 函数 | 签名 | 用途 |
+|------|------|------|
+| `isSupported` | `() => boolean` | 现代 Clipboard API 是否可用 |
+| `isRichSupported` | `() => boolean` | ClipboardItem 是否可用（HTML / 图片 / `pasteAll`） |
+| `queryPermission` | `(action: 'read' \| 'write') => Promise<PermissionState>` | 查询剪贴板读/写权限：`'granted' \| 'denied' \| 'prompt' \| 'unknown'` |
+
+**辅助函数**：
+
+| 函数 | 签名 | 用途 |
+|------|------|------|
+| `prepareFiles` | `(files: File[]) => PreparedFile[]` | 将原始 `File[]` 转成结构化信息（含预览 URL 与 `dispose()`） |
 | `formatFileSize` | `(bytes: number) => string` | 格式化文件大小，如 `"1.2 MB"` |
-| `generateId` | `() => string` | 生成唯一 ID |
 
-**能力检测函数**（均返回 `boolean`）：
-
-| 函数 | 用途 |
-|------|------|
-| `isClipboardApiSupported()` | 现代 Clipboard API 是否可用 |
-| `isRichClipboardSupported()` | 富文本剪贴板（ClipboardItem）是否可用 |
-| `isSecureContext()` | 是否安全上下文（HTTPS/localhost） |
-| `isExecCommandSupported()` | execCommand 降级是否可用 |
-| `queryClipboardPermission(name)` | 查询剪贴板读/写权限状态，返回 `'granted' \| 'denied' \| 'prompt' \| 'unknown'` |
+**类型与错误**：`ClipboardError`（带 `code` 的统一错误）、`BoardWriteItem`、`BoardReadItem`、`BoardEventPayload`、`PreparedFile`、`PermissionState`、`OnPasteFilesOptions`。
 
 **使用示例**：
 
 ```ts
-// 写入纯文本
-await writeText('Hello')
+// 复制纯文本
+await copyTextToBoard('Hello')
 
-// 读取纯文本
-const text = await readText()
+// 粘贴纯文本
+const text = await pasteTextFromBoard()
 
-// 写入 HTML + 纯文本降级
-await writeHtml('<b>bold</b>', 'bold')
+// 复制 HTML + 纯文本降级
+await copyHtmlToBoard('<b>bold</b>', 'bold')
 
 // 监听粘贴文件
-const unbind = onFilePaste((files) => {
+const unbind = onPasteFiles((files) => {
   files.forEach((f) => {
     console.log(f.name, f.formattedSize, f.isImage, f.previewUrl)
-    // 用完后释放预览
-    revokePastedFilePreview(f)
+    f.dispose() // 用完释放预览 URL
   })
 })
 
 // 监听剪贴板事件
-const off = onClipboardEvent('paste', (payload) => {
+const off = onPaste((payload) => {
   console.log(payload.text, payload.html, payload.files)
 })
+
+// 能力检测
+if (isSupported()) { /* 现代浏览器 */ }
+const state = await queryPermission('read')
 ```
 
 ---
@@ -681,8 +693,8 @@ download(icoData, 'icon.ico')
 
 | 需求 | 导入 | 调用 |
 |------|------|------|
-| 复制文本到剪贴板 | `browser` | `await writeText('...')` |
-| 读取剪贴板 | `browser` | `await readText()` |
+| 复制文本到剪贴板 | `browser` | `await copyTextToBoard('...')` |
+| 读取剪贴板 | `browser` | `await pasteTextFromBoard()` |
 | 检测微信/手机/系统 | `browser` | `await detectEnv()` |
 | 获取网络状态 | `browser` | `getNetworkInfo()` |
 | 发布/订阅事件 | `tools` | `createBus<Events>()` → `.on()` / `.emit()` |

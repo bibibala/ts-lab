@@ -1,60 +1,44 @@
 /**
- * clipboard — Full-featured browser clipboard capability wrapper
- * ------------------------------------------------------------
- *  1. Modern Clipboard API: writeText / readText / writeRich / readRich
- *  2. Fallback: document.execCommand('copy' | 'cut')
- *  3. Permission queries: Permissions API (clipboard-read / clipboard-write)
- *  4. Copy / cut / paste DOM event listener wrappers
- *  5. Image, HTML rich-text, and multi-MIME-type read/write
- *  6. Feature detection and unified error types
- *  7. File paste: structured results via paste event listener
+ * clipboard — browser clipboard wrapper for copy and paste
+ * ---------------------------------------------------------
+ *  Copy (write):   copyTextToBoard / copyHtmlToBoard / copyImageToBoard / copyFileToBoard / copyItemsToBoard
+ *  Paste (read):   pasteTextFromBoard / pasteImageFromBoard / pasteAllFromBoard
+ *  Cut:            cutFromInput
+ *  Events:         onCopy / onCut / onPaste / onPasteFiles
+ *  Detection:      isSupported / isRichSupported / queryPermission
  */
 
-// cut
-export { cutFromInput, cutText } from './cut'
-
-// detection
+// copy / cut
 export {
-  isClipboardApiSupported,
-  isExecCommandSupported,
-  isRichClipboardSupported,
-  isSecureContext,
-  queryClipboardPermission,
-} from './detect'
+  copyFileToBoard,
+  copyHtmlToBoard,
+  copyImageToBoard,
+  copyItemsToBoard,
+  copyTextToBoard,
+  cutFromInput,
+} from './copy'
 
 // events
-export { onClipboardEvent } from './events'
+export { onCopy, onCut, onPaste, onPasteFiles } from './events'
 
-// file
-export {
-  formatFileSize,
-  generateId,
-  onFilePaste,
-  processPastedFiles,
-  revokePastedFilePreview,
-  writeFile,
-} from './file'
+// paste
+export { pasteAllFromBoard, pasteImageFromBoard, pasteTextFromBoard } from './paste'
 
-// rich content
-export { readImage, readRich, writeHtml, writeImage, writeRich } from './rich'
+// support
+export { isRichSupported, isSupported, queryPermission } from './support'
 
-// text
-export { readText, writeText } from './text'
-
-// types & constants
+// types & error
 export type {
-  ClipboardContentItem,
+  BoardEventPayload,
+  BoardReadItem,
+  BoardWriteItem,
   ClipboardErrorCode,
-  ClipboardEventPayload,
-  ClipboardMimeType,
-  ClipboardPermissionState,
-  ClipboardReadItem,
-  OnFilePasteOptions,
-  ProcessedPastedFile,
+  OnPasteFilesOptions,
+  PermissionState,
+  PreparedFile,
 } from './types'
 
-export {
-  ClipboardError,
-  isWritableMimeType,
-  WRITABLE_MIME_TYPES,
-} from './types'
+export { ClipboardError } from './types'
+
+// utils
+export { formatFileSize, prepareFiles } from './utils'

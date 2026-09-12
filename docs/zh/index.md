@@ -30,7 +30,7 @@ import { createBus, getObjById } from '@bilibaba/ts-lab/tools'
 也可以从根入口统一导入；随着 API 增多，按分类入口引入更清晰：
 
 ```ts
-import { writeText } from '@bilibaba/ts-lab/browser'
+import { copyTextToBoard } from '@bilibaba/ts-lab/browser'
 import { progress } from '@bilibaba/ts-lab/ui'
 import { getIco } from '@bilibaba/ts-lab/wasm'
 ```
@@ -81,7 +81,7 @@ src/
 | [WebSocket](/zh/api/tools/ws) | WebSocket 客户端：自动重连、心跳检测、离线消息队列 |
 | [QRCode](/zh/api/tools/qrCode) | 纯 TypeScript 二维码生成与读取 |
 | [MD5](/zh/api/tools/md5) | 异步 MD5 哈希计算，自动让出事件循环 |
-| [Clipboard](/zh/api/browser/clipboard/) | 文本 / HTML / 图片读写、文件粘贴、剪切、事件监听 |
+| [Clipboard](/zh/api/browser/clipboard/) | 复制 / 粘贴文本、HTML、图片，文件粘贴，事件监听 |
 | [Env](/zh/api/browser/env) | 运行环境检测（OS / 架构 / 微信 / QQ / App WebView） |
 | [Network](/zh/api/browser/network) | 获取当前网络状态（在线状态、连接类型、带宽、延迟） |
 | [Toast](/zh/api/ui/feedback/) | 单例 Toast 提示组件，支持多种类型和位置 |
@@ -101,7 +101,7 @@ import { generateQRCode, readQRCode } from '@bilibaba/ts-lab/tools'
 import { md5 } from '@bilibaba/ts-lab/tools'
 
 // 浏览器 API
-import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab/browser'
+import { copyTextToBoard, pasteTextFromBoard, onPasteFiles } from '@bilibaba/ts-lab/browser'
 import { detectEnv } from '@bilibaba/ts-lab/browser'
 import { getNetworkInfo } from '@bilibaba/ts-lab/browser'
 

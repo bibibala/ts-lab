@@ -1,19 +1,19 @@
 <script setup>
 import { ref } from 'vue'
-import { writeHtml, readRich } from '@bilibaba/ts-lab/browser'
+import { copyHtmlToBoard, pasteAllFromBoard } from '@bilibaba/ts-lab/browser'
 
 const htmlText = ref('')
 const plainText = ref('')
 const result = ref('')
 
 async function copyRich() {
-  await writeHtml(
+  await copyHtmlToBoard(
     `<p style="color:#1967d2;font-size:16px"><b>${htmlText.value || 'Rich text content'}</b></p>`,
-    plainText.value || htmlText.value || ('Plain text fallback: ' + (htmlText.value || 'Rich text content')),
+    plainText.value || htmlText.value || 'Plain text fallback content',
   )
 }
 async function read() {
-  const items = await readRich()
+  const items = await pasteAllFromBoard()
   result.value = items.map(i => `${i.type} (${(i.blob.size / 1024).toFixed(1)} KB)`).join(', ')
 }
 </script>
@@ -42,93 +42,86 @@ async function read() {
     <input v-model="htmlText" placeholder="HTML content (paste into email/Lark to see formatting)" />
     <input v-model="plainText" placeholder="Plain text fallback (optional)" />
     <div class="rich-row">
-      <button class="rich-btn" @click="copyRich">Write to clipboard</button>
+      <button class="rich-btn" @click="copyRich">Copy to clipboard</button>
       <button class="rich-btn" @click="read">Read clipboard</button>
     </div>
     <div v-if="result" class="rich-info">📋 Clipboard: {{ result }}</div>
-    <div class="rich-info">⚠️ Paste into email / Lark / document to see formatting; Firefox does not support readRich</div>
+    <div class="rich-info">⚠️ Paste into email / Lark / document to see formatting; requires ClipboardItem support</div>
   </div>
 </ClientOnly>
 
 ---
 
-# Rich Text & Images
+# HTML & Images
 
-The clipboard doesn't just store text — when you select a formatted table on a web page and press Ctrl+C, pasting into Lark preserves the table because the clipboard stores both `text/html` and `text/plain` simultaneously. The APIs below handle this kind of rich content and require `ClipboardItem` support (`isRichClipboardSupported()` returns `true`).
+Before anything else, one rule: **pages can only write text and image types to the system clipboard** — a browser security policy that can't be bypassed. Everything below relies on `ClipboardItem` (only available when `isRichSupported()` returns `true`).
 
 ## Copy formatted content to email / Lark
 
-Say you want a "Share Quotation" button: user clicks it, an HTML table goes into the clipboard, and pasting into email or Lark preserves formatting; pasting into a plain text input automatically shows the plain text version.
-
-Use `writeHtml` — it writes both HTML and a plain text fallback simultaneously:
+A "Share Quote" button: the user clicks it, an HTML table goes into the clipboard. Pasting into email or Lark keeps the formatting; pasting into a plain-text input automatically shows text. `copyHtmlToBoard` writes HTML + plain text in one call:
 
 ```ts
-import { writeHtml } from '@bilibaba/ts-lab/browser'
+import { copyHtmlToBoard } from '@bilibaba/ts-lab/browser'
 
-await writeHtml(
-  `<table style="border-collapse:collapse">
-     <tr><th>Q1</th><th>Q2</th></tr>
-     <tr><td>$12,000</td><td>$18,500</td></tr>
-   </table>`,
-  'Q1: $12,000  Q2: $18,500'  // Plain text fallback
+await copyHtmlToBoard(
+  `<table><tr><th>Q1</th><th>Q2</th></tr><tr><td>$12,000</td><td>$18,500</td></tr></table>`,
+  'Q1: $12,000  Q2: $18,500', // Plain text fallback
 )
 ```
 
-Under the hood, it writes two MIME types to the clipboard at once. If you want finer control — say, adding a `text/csv` — use the lower-level `writeRich`:
+For full control over the formats — say, adding a `text/csv` — use the low-level `copyItemsToBoard`:
 
 ```ts
-import { writeRich } from '@bilibaba/ts-lab/browser'
+import { copyItemsToBoard } from '@bilibaba/ts-lab/browser'
 
-await writeRich([
+await copyItemsToBoard([
   { type: 'text/html', data: '<table>...</table>' },
   { type: 'text/csv',  data: 'Q1,12\nQ2,18' },
   { type: 'text/plain', data: 'Q1: 12  Q2: 18' },
 ])
 ```
 
-The reverse also works — `readRich` returns all formats from the clipboard. When a user copies text on a web page, the clipboard typically contains both `text/plain` and `text/html`:
+The reverse also works — `pasteAllFromBoard` returns every format on the clipboard at once:
 
 ```ts
-import { readRich } from '@bilibaba/ts-lab/browser'
+import { pasteAllFromBoard } from '@bilibaba/ts-lab/browser'
 
-const items = await readRich()
+const items = await pasteAllFromBoard()
 // items[0] — { type: 'text/plain', blob: ... }
 // items[1] — { type: 'text/html',  blob: ... }
 ```
 
-## Image to clipboard: one-click paste from canvas chart
+## Copy a canvas chart, paste straight into PPT
 
-After rendering a canvas chart, the user wants to Ctrl+V it directly into Lark or PPT. No need to download first — `writeImage` puts the Blob straight into the clipboard:
+Rendered a canvas chart and want it Ctrl+V-able into Lark or PPT without downloading first? `copyImageToBoard` puts the Blob straight onto the clipboard:
 
 ```ts
-import { writeImage } from '@bilibaba/ts-lab/browser'
+import { copyImageToBoard } from '@bilibaba/ts-lab/browser'
 
-// canvas export → directly into clipboard
+// canvas export → straight to clipboard
 canvas.toBlob(async (blob) => {
-  if (blob) await writeImage(blob)
+  if (blob) await copyImageToBoard(blob)
 }, 'image/png')
 
 // Or copy a network image directly
 const blob = await fetch('/qrcode.png').then(r => r.blob())
-await writeImage(blob)
+await copyImageToBoard(blob)
 ```
 
-`writeImage` defaults to using `blob.type` as the MIME type; empty Blobs automatically fall back to `image/png`.
+`copyImageToBoard` uses `blob.type` as the MIME type; empty Blobs automatically fall back to `image/png`.
 
 ## User pasted a screenshot
 
-When a user Ctrl+V's a screenshot in a chat box — use `readImage` to get the Blob for preview or upload:
+A user Ctrl+V's a screenshot into the chat input — `pasteImageFromBoard` gets the Blob for preview or upload:
 
 ```ts
-import { readImage } from '@bilibaba/ts-lab/browser'
+import { pasteImageFromBoard } from '@bilibaba/ts-lab/browser'
 
-const blob = await readImage()
+const blob = await pasteImageFromBoard()
 if (blob) {
-  // Preview
-  img.src = URL.createObjectURL(blob)
-  // Or upload
-  await upload(blob)
+  img.src = URL.createObjectURL(blob) // Preview
+  await upload(blob)                    // Or upload
 }
 ```
 
-`readImage` returns `null` when there's no image in the clipboard.
+Returns `null` when there's no image on the clipboard.

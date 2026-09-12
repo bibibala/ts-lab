@@ -10,42 +10,38 @@ export class ClipboardError extends Error {
 // #endregion
 
 // #region Functions
+export async function copyFileToBoard(_) {}
+export async function copyHtmlToBoard(_, _) {}
+export async function copyImageToBoard(_) {}
+export async function copyItemsToBoard(_) {}
+export async function copyTextToBoard(_) {}
 export function createBus(_) {}
 export function createWatermark(_) {}
 export function createWS(_, _) {}
 export async function cutFromInput(_) {}
-export async function cutText(_) {}
 export function decodeWatermark(_) {}
 export async function detectEnv(_) {}
 export function formatFileSize(_) {}
-export function generateId() {}
 export function generateQRCode(_, _, _) {}
 export function getNetworkInfo() {}
 export function getObjById(_, _, _, _) {}
 export function getParentNodes(_, _, _, _) {}
 export function getPathById(_, _, _, _) {}
 export function getTopLevelNode(_, _, _, _) {}
-export function isClipboardApiSupported() {}
-export function isExecCommandSupported() {}
-export function isRichClipboardSupported() {}
-export function isSecureContext() {}
-export function isWritableMimeType(_) {}
+export function isRichSupported() {}
+export function isSupported() {}
 export async function md5(_) {}
-export function onClipboardEvent(_, _, _) {}
-export function onFilePaste(_, _, _) {}
-export function processPastedFiles(_) {}
-export async function queryClipboardPermission(_) {}
-export async function readImage() {}
+export function onCopy(_, _) {}
+export function onCut(_, _) {}
+export function onPaste(_, _) {}
+export function onPasteFiles(_, _, _) {}
+export async function pasteAllFromBoard() {}
+export async function pasteImageFromBoard() {}
+export async function pasteTextFromBoard() {}
+export function prepareFiles(_) {}
+export async function queryPermission(_) {}
 export function readQRCode(_) {}
-export async function readRich() {}
-export async function readText() {}
 export function renderQRCodeToBase64(_, _) {}
-export function revokePastedFilePreview(_) {}
-export async function writeFile(_) {}
-export async function writeHtml(_, _) {}
-export async function writeImage(_, _) {}
-export async function writeRich(_) {}
-export async function writeText(_) {}
 // #endregion
 
 // #region Variables
@@ -53,7 +49,6 @@ export var ECLevel /* let */
 export var loading /* const */
 export var progress /* const */
 export var uiFeedback /* const */
-export var WRITABLE_MIME_TYPES /* const */
 // #endregion
 
 // #region Other

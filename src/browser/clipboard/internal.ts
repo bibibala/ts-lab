@@ -31,6 +31,16 @@ export function normalizeError(err: unknown): ClipboardError {
   return new ClipboardError('UNKNOWN', message, err)
 }
 
+/** Whether running in a secure context (HTTPS / localhost). */
+export function isSecureContext(): boolean {
+  return typeof window !== 'undefined' && !!window.isSecureContext
+}
+
+/** Whether the execCommand fallback is available. */
+export function isExecCommandSupported(): boolean {
+  return typeof document !== 'undefined' && typeof document.execCommand === 'function'
+}
+
 /** Use a hidden textarea to execute execCommand as a fallback. */
 export function execCommandWithTempElement(
   text: string,

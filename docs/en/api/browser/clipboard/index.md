@@ -7,25 +7,23 @@ const clipboardText = ref('')
 const copied = ref(false)
 
 onMounted(async () => {
-  const mod = await import('@bilibaba/ts-lab/browser')
+  const { isSupported, isRichSupported } = await import('@bilibaba/ts-lab/browser')
   supported.value = {
-    secure: mod.isSecureContext(),
-    api: mod.isClipboardApiSupported(),
-    rich: mod.isRichClipboardSupported(),
-    exec: mod.isExecCommandSupported(),
+    api: isSupported(),
+    rich: isRichSupported(),
   }
 })
 
 async function doCopy() {
-  const { writeText } = await import('@bilibaba/ts-lab/browser')
-  await writeText(text.value)
+  const { copyTextToBoard } = await import('@bilibaba/ts-lab/browser')
+  await copyTextToBoard(text.value)
   copied.value = true
   setTimeout(() => { copied.value = false }, 1500)
 }
 
-async function doRead() {
-  const { readText } = await import('@bilibaba/ts-lab/browser')
-  clipboardText.value = await readText()
+async function doPaste() {
+  const { pasteTextFromBoard } = await import('@bilibaba/ts-lab/browser')
+  clipboardText.value = await pasteTextFromBoard()
 }
 </script>
 
@@ -63,101 +61,89 @@ async function doRead() {
     <div class="cb-row">
       <input v-model="text" class="cb-input" placeholder="Enter text to copy" />
       <button class="cb-btn" @click="doCopy">{{ copied ? '✓ Copied' : 'Copy to clipboard' }}</button>
-      <button class="cb-btn" @click="doRead">Read clipboard</button>
+      <button class="cb-btn" @click="doPaste">Paste</button>
     </div>
     <div v-if="clipboardText" class="cb-info">📋 Clipboard: {{ clipboardText }}</div>
     <div v-if="supported" class="cb-info">
-      <span :class="['cb-tag', supported.secure ? 'ok' : 'fail']">Secure Context {{ supported.secure ? '✓' : '✗' }}</span>
       <span :class="['cb-tag', supported.api ? 'ok' : 'fail']">Clipboard API {{ supported.api ? '✓' : '✗' }}</span>
-      <span :class="['cb-tag', supported.rich ? 'ok' : 'fail']">Rich Text {{ supported.rich ? '✓' : '✗' }}</span>
-      <span :class="['cb-tag', supported.exec ? 'ok' : 'fail']">execCommand {{ supported.exec ? '✓' : '✗' }}</span>
+      <span :class="['cb-tag', supported.rich ? 'ok' : 'fail']">Rich Text / Images {{ supported.rich ? '✓' : '✗' }}</span>
     </div>
   </div>
 </ClientOnly>
 
 ---
 
-# Overview
+# Clipboard
 
-Based on [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) + [Permissions API](https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API)
-
-A complete wrapper for browser clipboard: text / HTML / image read/write, file paste, cut, event listening — with built-in fallback strategies and a unified error type.
+A straightforward wrapper around the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API): **copy** writes to the board, **paste** reads from it. The names say it all — `copyTextToBoard` / `pasteTextFromBoard`.
 
 ## Quick Start
 
 ```ts
-import { writeText, readText, writeImage, onFilePaste } from '@bilibaba/ts-lab/browser'
+import { copyTextToBoard, pasteTextFromBoard } from '@bilibaba/ts-lab/browser'
 
-// Copy
-await writeText('Hello, world!')
+// Copy text
+await copyTextToBoard('Hello, world!')
 
-// Paste
-const text = await readText()
-
-// Image
-canvas.toBlob(async (blob) => { if (blob) await writeImage(blob) }, 'image/png')
+// Paste text
+const text = await pasteTextFromBoard()
 ```
+
+`copyTextToBoard` degrades gracefully: modern browsers use `navigator.clipboard`, older ones fall back to `execCommand('copy')` — both work. Pasting has no fallback; it needs the modern Clipboard API plus a secure context (HTTPS / localhost).
+
+## API at a Glance
+
+| What | Function |
+|------|----------|
+| Copy text | `copyTextToBoard(text)` |
+| Copy HTML (keep formatting in email/docs) | `copyHtmlToBoard(html, plainFallback?)` |
+| Copy an image | `copyImageToBoard(blob)` |
+| Copy an image file (images only) | `copyFileToBoard(file)` |
+| Low-level multi-format write | `copyItemsToBoard(items)` |
+| Cut selected text from an input | `cutFromInput(el)` |
+| Paste text | `pasteTextFromBoard()` |
+| Paste the first image | `pasteImageFromBoard()` |
+| Paste everything | `pasteAllFromBoard()` |
+| Listen for copy/cut/paste | `onCopy(fn)` / `onCut(fn)` / `onPaste(fn)` |
+| Listen for file paste | `onPasteFiles(fn)` |
+| Feature detection | `isSupported()` / `isRichSupported()` |
+| Query read/write permission | `await queryPermission('read'\|'write')` |
 
 ## Feature Detection
 
-Before calling APIs, you can check environment support:
+Check the environment before calling APIs:
 
 ```ts
-import {
-  isSecureContext,
-  isClipboardApiSupported,
-  isRichClipboardSupported,
-  isExecCommandSupported,
-  queryClipboardPermission,
-} from '@bilibaba/ts-lab/browser'
+import { isSupported, isRichSupported, queryPermission } from '@bilibaba/ts-lab/browser'
 
-isSecureContext()              // boolean — HTTPS / localhost
-isClipboardApiSupported()      // boolean — Clipboard API supported
-isRichClipboardSupported()     // boolean — ClipboardItem supported (image / HTML)
-isExecCommandSupported()       // boolean — execCommand fallback supported
+isSupported()       // boolean — modern Clipboard API available (also implies a secure context)
+isRichSupported()   // boolean — ClipboardItem supported (HTML / images / pasteAll)
 
-// Query permission status: 'granted' | 'denied' | 'prompt' | 'unknown'
-await queryClipboardPermission('clipboard-write')
-await queryClipboardPermission('clipboard-read')
+// Permission state: 'granted' | 'denied' | 'prompt' | 'unknown'
+await queryPermission('read')
+await queryPermission('write')
 ```
 
 ## Error Handling
 
-All APIs throw a unified `ClipboardError`:
+Every failed operation throws a unified `ClipboardError`; distinguish causes via `err.code`:
 
 ```ts
 import { ClipboardError } from '@bilibaba/ts-lab/browser'
 
 try {
-  await writeText('hello')
+  await pasteTextFromBoard()
 } catch (err) {
   if (err instanceof ClipboardError) {
-    console.log(err.code) // 'NOT_SUPPORTED' | 'PERMISSION_DENIED' | ...
-    console.log(err.message)
+    console.log(err.code) // 'PERMISSION_DENIED' | 'NOT_SUPPORTED' | ...
   }
 }
 ```
 
 | Error Code | Meaning |
 |------------|---------|
-| `NOT_SUPPORTED` | Current environment doesn't support this capability |
+| `NOT_SUPPORTED` | The environment doesn't support this capability |
 | `PERMISSION_DENIED` | User / system denied clipboard permission |
-| `NOT_FOCUSED` | Page is not in focus |
 | `EMPTY_CLIPBOARD` | Clipboard is empty or has no matching types |
-| `INSECURE_CONTEXT` | Not HTTPS / localhost |
-| `UNSUPPORTED_MIME_TYPE` | Attempted to write a disallowed MIME type |
+| `UNSUPPORTED_MIME_TYPE` | Attempted to write a MIME type the browser forbids |
 | `UNKNOWN` | Other unknown error |
-
-## Fallback Strategies
-
-| API | Fallback Behavior |
-|-----|-------------------|
-| `writeText` | Clipboard API → `execCommand('copy')` |
-| `readText` | No fallback; throws `NOT_SUPPORTED` if unsupported |
-| `writeRich` / `readRich` | No fallback; requires `ClipboardItem` support |
-| `cutText` | `execCommand('cut')` → `writeText` |
-
-::: tip Secure Context
-`readText`, `readRich`, `readImage`, `writeRich` require HTTPS / localhost.
-In local development, `http://localhost` is treated as a secure context.
-:::

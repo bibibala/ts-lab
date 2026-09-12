@@ -21,9 +21,8 @@ const zhSidebar = [
         text: '剪贴板',
         items: [
           { text: '概览', link: '/zh/api/browser/clipboard/' },
-          { text: '文本读写', link: '/zh/api/browser/clipboard/text' },
-          { text: '图片与富文本', link: '/zh/api/browser/clipboard/rich' },
-          { text: '文件 · 剪切 · 事件', link: '/zh/api/browser/clipboard/file' },
+          { text: 'HTML 与图片', link: '/zh/api/browser/clipboard/rich' },
+          { text: '文件粘贴 · 剪切 · 事件', link: '/zh/api/browser/clipboard/events' },
         ],
       },
       { text: '运行环境识别', link: '/zh/api/browser/env' },
@@ -66,9 +65,8 @@ const enSidebar = [
         text: 'Clipboard',
         items: [
           { text: 'Overview', link: '/en/api/browser/clipboard/' },
-          { text: 'Text Read/Write', link: '/en/api/browser/clipboard/text' },
-          { text: 'Rich Text & Images', link: '/en/api/browser/clipboard/rich' },
-          { text: 'Files · Cut · Events', link: '/en/api/browser/clipboard/file' },
+          { text: 'HTML & Images', link: '/en/api/browser/clipboard/rich' },
+          { text: 'Files · Cut · Events', link: '/en/api/browser/clipboard/events' },
         ],
       },
       { text: 'Environment Detection', link: '/en/api/browser/env' },
